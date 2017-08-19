@@ -1,0 +1,6 @@
+# Exclude log
+*.log
+
+# Exclude node modules
+node_modules/
+dest/

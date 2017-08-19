@@ -1,0 +1,21 @@
+{
+  "name": "blog-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./dest/main.js"
+  },
+  "author": "Ali Ismael",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^8.0.24",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.1",
+    "mongodb": "^2.2.31",
+    "nodemon": "^1.11.0",
+    "typescript": "^2.4.2"
+  }
+}
