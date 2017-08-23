@@ -1,7 +1,7 @@
 import { Blog } from './../models/Blog'
 
 export interface IBlogRepository {
-    getAllBlogs (callback);
-    add (blog: Blog, callback);
-    delete (blog: Blog, callback);
+    getAllBlogs ();
+    add (blog: Blog);
+    delete (blog: Blog);
 }
