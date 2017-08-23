@@ -1,37 +1,33 @@
 import { IBlogRepository } from './../repositories/IBlogRepository'
-import { BlogMongoRepository } from './../repositories/BlogMongoRepository'
-import { ObjectId } from 'mongodb'
+import { BlogMysqlRepository } from './../repositories/BlogMysqlRepository'
 
 // Blog repository
-let _repository: IBlogRepository = new BlogMongoRepository();
+let _repository: IBlogRepository = new BlogMysqlRepository();
 
 export class Blog {
-    
-    
+
+
     // Public attributes
-    public _id: ObjectId;
+    public id: number;
     public title: string;
     public description: string;
-    public user_id: string;
+    public created_by: number;
+    public created_at: Date;
+    public updated_by: number;
+    public updated_at: Date;
 
     // Get all Blogs
-    public getAllBlogs( callback ) {
-        _repository.getAllBlogs(function (res) {
-            callback(res);
-        });
+    public getAllBlogs() {
+        return _repository.getAllBlogs();
     }
 
     // Add new Blog
-    public add(callback) {
-        _repository.add(this, function (res) {
-            callback(res);
-        });
+    public add() {
+        return _repository.add(this);
     }
 
     // Delete Blog    
-    public delete(callback) {
-        _repository.delete(this, function (res) {
-            callback(res);
-        });
+    public delete() {
+        return _repository.delete(this);
     }
 }
