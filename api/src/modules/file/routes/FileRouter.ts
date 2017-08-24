@@ -1,6 +1,5 @@
 import * as express from 'express'
 import { File } from '../models/File'
-import { ObjectId } from 'mongodb'
 
 export let fileRouter = express.Router();
 
