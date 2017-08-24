@@ -1,46 +1,38 @@
-import { IFileRepository } from './../repositories/IFileRepository'
-import { FileMongoRepository } from './../repositories/FileMongoRepository'
-import { ObjectId } from 'mongodb'
+import { FileService } from './../services/FileService'
 
 // File repository
-let _repository: IFileRepository = new FileMongoRepository();
+let _fileService: FileService = new FileService();
 
 export class File {
     
     
     // Public attributes
-    public _id: ObjectId;
+    public id: number;
     public title: string;
-    public objectModel: string;
-    public objectId: ObjectId;
-    public created_by: ObjectId;
+    public object_model: string;
+    public object_id: number;
+    public created_by: number;
     public created_at: string;
+    public updated_by: number;
+    public updated_at: string;
 
     // Get all Files
-    public async getFile(_id: ObjectId, callback ) {
-        _repository.getFile( _id, function (res) {
-            callback(res);
-        });
+    public getFile(id: number) {
+        return _fileService.getFile(id);
     }
 
     // Get all Files
-    public async getFiles(objectId: ObjectId, objectModel: string, callback ) {
-        _repository.getFiles( objectId, objectModel, function (res) {
-            callback(res);
-        });
+    public getFiles(objectId: number, objectModel: string) {
+        return _fileService.getFiles( objectId, objectModel)
     }
 
     // Add new File
-    public async add(callback) {
-        _repository.add(this, function (res) {
-            callback(res);
-        });
+    public add() {
+        return _fileService.add(this);
     }
 
     // Delete File    
-    public async delete(callback) {
-        _repository.delete(this, function (res) {
-            callback(res);
-        });
+    public async delete() {
+        return _fileService.delete(this);
     }
 }
