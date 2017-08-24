@@ -5,12 +5,12 @@ import { ObjectId } from 'mongodb'
 export let fileRouter = express.Router();
 
 // Default get route
-fileRouter.get('/all', async (req, res, next) => {
+fileRouter.get('/all/:model/:id', async (req, res, next) => {
 
     let file = new File();
 
-    let objectId = req.body.objectId;
-    let objectModel = req.body.objectModel;
+    let objectId = req.params.id;    
+    let objectModel = req.params.model;    
     
 
     // Get all files
