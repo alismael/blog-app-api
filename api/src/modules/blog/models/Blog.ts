@@ -1,8 +1,7 @@
-import { IBlogRepository } from './../repositories/IBlogRepository'
-import { BlogMysqlRepository } from './../repositories/BlogMysqlRepository'
+import { BlogService } from './../services/BlogService'
 
 // Blog repository
-let _repository: IBlogRepository = new BlogMysqlRepository();
+let _blogService: BlogService = new BlogService();
 
 export class Blog {
 
@@ -18,16 +17,16 @@ export class Blog {
 
     // Get all Blogs
     public getAllBlogs() {
-        return _repository.getAllBlogs();
+        return _blogService.getAllBlogs();
     }
 
     // Add new Blog
     public add() {
-        return _repository.add(this);
+        return _blogService.add(this);
     }
 
     // Delete Blog    
     public delete() {
-        return _repository.delete(this);
+        return _blogService.delete(this);
     }
 }
