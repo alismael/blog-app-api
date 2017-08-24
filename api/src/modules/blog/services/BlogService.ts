@@ -4,25 +4,21 @@ import { Blog } from './../models/Blog'
 
 
 export class BlogService {
+
+    private blogRepository: IBlogRepository = new BlogMysqlRepository();
     
     // get all blogs
-    public async getAllBlogs () {
-        let blogRepository: IBlogRepository = new BlogMysqlRepository();
-        
-        return blogRepository.getAllBlogs();
+    public getAllBlogs () {
+        return this.blogRepository.getAllBlogs();
     }
 
     // Add new blog
-    public async add (blog: Blog) {
-        let blogRepository: IBlogRepository = new BlogMysqlRepository();
-        
-        return blogRepository.add(blog);
+    public add (blog: Blog) {
+        return this.blogRepository.add(blog);
     }
 
     // Delete blog
-    public async delete (blog: Blog) {
-        let blogRepository: IBlogRepository = new BlogMysqlRepository();
-        
-        return blogRepository.delete(blog);
+    public delete (blog: Blog) {
+        return this.blogRepository.delete(blog);
     }
 }
