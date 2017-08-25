@@ -1,6 +1,6 @@
 import { IBlogRepository } from './IBlogRepository'
 import { Blog } from './../models/Blog'
-import { knex } from './../../knex/knex'
+import knex  from './../../knex/knex'
 
 
 export class BlogMysqlRepository implements IBlogRepository {
