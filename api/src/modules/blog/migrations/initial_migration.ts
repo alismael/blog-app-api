@@ -1,5 +1,5 @@
 import { config } from './../../../config/config';
-import { knex } from './../../knex/knex'
+import knex  from './../../knex/knex'
 
 class CreateBlogTable {
     
