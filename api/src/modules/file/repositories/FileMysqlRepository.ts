@@ -1,6 +1,6 @@
 import { IFileRepository } from './IFileRepository'
 import { File } from './../models/File'
-import { knex } from './../../knex/knex'
+import  knex  from './../../knex/knex'
 
 
 export class FileMysqlRepository implements IFileRepository {

@@ -1,6 +1,7 @@
+import  * as knex  from 'knex';
 import { config } from './../../config/config';
 
-export var knex = require('knex')({
+export default knex({
     dialect: 'mysql',
     connection: {
         host: config.host,
