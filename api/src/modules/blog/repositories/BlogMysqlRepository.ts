@@ -1,6 +1,7 @@
 import { IBlogRepository } from './IBlogRepository'
 import { Blog } from './../models/Blog'
 import knex  from './../../knex/knex'
+var uuid = require('uuid')
 
 
 export class BlogMysqlRepository implements IBlogRepository {
@@ -17,6 +18,7 @@ export class BlogMysqlRepository implements IBlogRepository {
 
     // Add new blog
     public async add (blog: Blog) {
+        blog.guid = uuid.v1();
         return await knex('blog')
                     .insert( blog )
                     .catch( function (err) {
