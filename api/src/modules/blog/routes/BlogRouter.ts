@@ -23,6 +23,8 @@ blogRouter.post('/', async (req, res, next) => {
     
     blog.title = req.body.title;
     blog.description = req.body.description;
+    blog.created_by = req.body.user_id;
+    blog.updated_by = req.body.user_id;
 
     // Add new blog
     let response = await blog.add();
