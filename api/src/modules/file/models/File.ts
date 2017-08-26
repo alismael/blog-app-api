@@ -11,6 +11,7 @@ export class File {
     public title: string;
     public object_model: string;
     public object_id: number;
+    public guid: string;    
     public created_by: number;
     public created_at: string;
     public updated_by: number;
