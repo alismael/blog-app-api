@@ -1,5 +1,8 @@
 import * as express from 'express'
 import { File } from '../models/File'
+var multer = require('multer')
+var uuid = require('uuid')
+var fs = require('fs')
 
 export let fileRouter = express.Router();
 
@@ -32,6 +35,52 @@ fileRouter.get('/:id', async (req, res, next) => {
     // Return files to response
     res.json( response );
 });
+
+fileRouter.post('/upload', async function(req, res){
+
+    let fileObj = new File();
+    
+    fileObj.guid = uuid.v1();
+    fileObj.object_id = 1;
+    fileObj.object_model = 'blog';
+    fileObj.created_by = 1;
+    fileObj.updated_by = 1;
+
+    var storage =   multer.diskStorage({
+        destination: function (req, file, callback) {
+            let dest = './uploads/' + fileObj.guid;
+            let stat = null;
+            try {
+                stat = fs.statSync(dest);
+            }
+            catch (err) {
+                fs.mkdirSync(dest);
+            }
+            if (stat && !stat.isDirectory()) {
+                res.json("error");
+            } 
+            callback(null, dest);
+        },
+        filename: function (req, file, callback) {
+            fileObj.title = file.originalname;    
+            callback(null, file.originalname);
+        }
+    });
+    var upload = multer({ storage : storage}).single('file');
+
+    upload(req, res, async function(err) {
+        if(err) {
+            res.json("error");
+        }
+        
+        // Add new file
+        let response = await fileObj.add();
+    
+        // Return categories to response
+        res.json( response );
+    });
+});
+    
 
 // Default post route
 fileRouter.post('/', async (req, res, next) => {
