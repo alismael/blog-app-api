@@ -5,11 +5,6 @@ exports.up = function (knex, Promise) {
         table.increments();
         table.string('title');
         table.text('description');
-        table.integer('user_id', 10)
-            .unsigned()
-            .notNullable()
-            .references('id')
-            .inTable('user');
         table.string('guid')
             .unique()
             .notNullable();
