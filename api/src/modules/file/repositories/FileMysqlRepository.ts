@@ -1,7 +1,7 @@
 import { IFileRepository } from './IFileRepository'
 import { File } from './../models/File'
 import  knex  from './../../knex/knex'
-
+var uuid = require('uuid')
 
 export class FileMysqlRepository implements IFileRepository {
     
@@ -30,6 +30,7 @@ export class FileMysqlRepository implements IFileRepository {
 
     // Add new file
     public async add (file: File) {
+        file.guid = uuid.v1();        
         return await knex('file')
                     .insert( file )
                     .catch( function (err) {
