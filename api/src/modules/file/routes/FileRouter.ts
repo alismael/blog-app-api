@@ -41,6 +41,8 @@ fileRouter.post('/', async (req, res, next) => {
     file.title = req.body.title;
     file.object_id = req.body.object_id;
     file.object_model = req.body.object_model;
+    file.created_by = req.body.user_id;
+    file.updated_by = req.body.user_id;
 
     // Add new file
     let response = await file.add();
