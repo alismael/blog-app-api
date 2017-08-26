@@ -10,6 +10,7 @@ export class Blog {
     public id: number;
     public title: string;
     public description: string;
+    public guid: string;
     public created_by: number;
     public created_at: Date;
     public updated_by: number;
