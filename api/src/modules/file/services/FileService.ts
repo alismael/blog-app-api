@@ -27,4 +27,9 @@ export class FileService {
     public delete (guid: string) {
         return this.fileRepository.delete(guid);
     }
+
+    // Attach file with object
+    public attach(objectId: number, objectModel: string, filesGuid: string[]) {
+        return this.fileRepository.attach(objectId, objectModel, filesGuid);
+    }
 }

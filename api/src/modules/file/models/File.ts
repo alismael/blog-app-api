@@ -36,4 +36,9 @@ export class File {
     public delete() {
         return _fileService.delete(this.guid);
     }
+
+    // Attach file with object
+    public attach(objectId: number, objectModel: string, filesGuid: string[]) {
+        return _fileService.attach(objectId, objectModel, filesGuid);
+    }
 }
