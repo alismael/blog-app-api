@@ -17,23 +17,23 @@ export class File {
     public updated_by: number;
     public updated_at: string;
 
-    // Get all Files
-    public getFile(id: number) {
-        return _fileService.getFile(id);
+    // Get file by guid
+    public getFile(guid: string) {
+        return _fileService.getFile(guid);
     }
 
-    // Get all Files
+    // Get files by object_model, object_id
     public getFiles(objectId: number, objectModel: string) {
         return _fileService.getFiles( objectId, objectModel)
     }
 
-    // Add new File
+    // Add new file
     public add() {
         return _fileService.add(this);
     }
 
-    // Delete File    
-    public async delete() {
-        return _fileService.delete(this);
+    // Delete file by guid
+    public delete() {
+        return _fileService.delete(this.guid);
     }
 }

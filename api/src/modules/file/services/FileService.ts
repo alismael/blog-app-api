@@ -8,23 +8,23 @@ export class FileService {
     private fileRepository: IFileRepository = new FileMysqlRepository();
     
 
-    // get all files
-    public getFile (id: number) {
-        return this.fileRepository.getFile(id);
+    // Get file by guid
+    public getFile (guid: string) {
+        return this.fileRepository.getFile(guid);
     }
 
-    // get all files
+    // Get file by object_model, object_id
     public getFiles (objectId: number, objectModel: string) {
         return this.fileRepository.getFiles(objectId, objectModel);
     }
 
-    // Add new blog
+    // Add new file
     public add (file: File) {
         return this.fileRepository.add(file);
     }
 
-    // Delete blog
-    public delete (file: File) {
-        return this.fileRepository.delete(file);
+    // Delete file
+    public delete (guid: string) {
+        return this.fileRepository.delete(guid);
     }
 }

@@ -6,11 +6,11 @@ var uuid = require('uuid')
 export class FileMysqlRepository implements IFileRepository {
     
     // get file
-    public async getFile (id: number) {
+    public async getFile (guid: string) {
         return await knex
                     .select('*')
                     .from('file')
-                    .where('id', id)
+                    .where('guid', guid)
                     .catch( function (err) {
                         return "error"
                     });
@@ -39,9 +39,9 @@ export class FileMysqlRepository implements IFileRepository {
     }
 
     // Delete file
-    public async delete (file: File) {
+    public async delete (guid: string) {
         return await knex('file')
-                    .where('id', file.id)
+                    .where('guid', guid)
                     .del()
                     .catch( function (err) {
                         return "error"
