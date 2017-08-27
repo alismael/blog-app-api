@@ -48,12 +48,14 @@ fileRouter.post('/upload', async function(req, res){
 
     var storage =   multer.diskStorage({
         destination: function (req, file, callback) {
-            let dest = './uploads/' + fileObj.guid;
+            let uploadDir = './uploads/';
+            let dest = uploadDir + fileObj.guid;
             let stat = null;
             try {
                 stat = fs.statSync(dest);
             }
             catch (err) {
+                fs.mkdirSync(uploadDir);
                 fs.mkdirSync(dest);
             }
             if (stat && !stat.isDirectory()) {
