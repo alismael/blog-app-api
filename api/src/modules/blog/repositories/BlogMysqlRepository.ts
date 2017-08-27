@@ -7,10 +7,11 @@ var uuid = require('uuid')
 export class BlogMysqlRepository implements IBlogRepository {
     
     // get all blogs
-    public async getAllBlogs () {
+    public async getBlog (guid) {
         return await knex
                     .select('*')
                     .from('blog')
+                    .where('guid', guid)
                     .catch( function (err) {
                         return "error"
                     });

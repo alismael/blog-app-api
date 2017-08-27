@@ -8,8 +8,8 @@ export class BlogService {
     private blogRepository: IBlogRepository = new BlogMysqlRepository();
     
     // get all blogs
-    public getAllBlogs () {
-        return this.blogRepository.getAllBlogs();
+    public getBlog (guid: string) {
+        return this.blogRepository.getBlog(guid);
     }
 
     // Add new blog
