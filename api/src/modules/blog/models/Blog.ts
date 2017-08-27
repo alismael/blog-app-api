@@ -16,9 +16,9 @@ export class Blog {
     public updated_by: number;
     public updated_at: Date;
 
-    // Get all Blogs
-    public getAllBlogs() {
-        return _blogService.getAllBlogs();
+    // Get blog by guid
+    public getBlog(guid: string) {
+        return _blogService.getBlog(guid);
     }
 
     // Add new Blog

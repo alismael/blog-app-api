@@ -4,12 +4,14 @@ import { Blog } from '../models/Blog'
 export let blogRouter = express.Router();
 
 // Default get route
-blogRouter.get('/', async (req, res, next) => {
+blogRouter.get('/:guid', async (req, res, next) => {
     
     let blog = new Blog();
 
+    let guid = req.params.guid;
+
     // Get all blogs
-    let blogs = await blog.getAllBlogs();
+    let blogs = await blog.getBlog(guid);
 
     // Return to response
     res.json( blogs );
