@@ -1,8 +1,8 @@
 import { File } from './../models/File'
 
 export interface IFileRepository {
-    getFile (id: number);
+    getFile (guid: string);
     getFiles (objectId: number, objectModel: string);
     add (file: File);
-    delete (file: File);
+    delete (guid: string);
 }

@@ -6,7 +6,7 @@ var fs = require('fs')
 
 export let fileRouter = express.Router();
 
-// Default get route
+// Get files by object_model, object_id
 fileRouter.get('/all/:model/:id', async (req, res, next) => {
 
     let file = new File();
@@ -18,19 +18,19 @@ fileRouter.get('/all/:model/:id', async (req, res, next) => {
     // Get all files
     let response = await file.getFiles(objectId, objectModel);
 
-    // Return files to response
+    // Return file to response
     res.json( response );
 });
 
-// Default get route
-fileRouter.get('/:id', async (req, res, next) => {
+// Get file with guid
+fileRouter.get('/:guid', async (req, res, next) => {
 
     let file = new File();
 
-    let id = req.params.id;
+    let guid = req.params.guid;
 
     // Get file
-    let response = await file.getFile(id);
+    let response = await file.getFile(guid);
 
     // Return files to response
     res.json( response );
@@ -76,39 +76,20 @@ fileRouter.post('/upload', async function(req, res){
         // Add new file
         let response = await fileObj.add();
     
-        // Return categories to response
+        // Return to response
         res.json( response );
     });
 });
-    
-
-// Default post route
-fileRouter.post('/', async (req, res, next) => {
-    
-    let file = new File();
-    
-    file.title = req.body.title;
-    file.object_id = req.body.object_id;
-    file.object_model = req.body.object_model;
-    file.created_by = req.body.user_id;
-    file.updated_by = req.body.user_id;
-
-    // Add new file
-    let response = await file.add();
-
-    // Return categories to response
-    res.json( response );
-});
 
 // Default delete route
-fileRouter.delete('/', async (req, res, next) => {
+fileRouter.delete('/:guid', async (req, res, next) => {
     
     let file = new File();
-    file.id = req.body.id;
+    file.guid =  req.params.guid;
     
     // delete file
     let response = await file.delete();
 
-    // Return categories to response
+    // Return to response
     res.json( response );
 });
