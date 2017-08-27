@@ -18,7 +18,7 @@ export class BlogService {
     }
 
     // Delete blog
-    public delete (blog: Blog) {
-        return this.blogRepository.delete(blog);
+    public delete (guid: string) {
+        return this.blogRepository.delete(guid);
     }
 }

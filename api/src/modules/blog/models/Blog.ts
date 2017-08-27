@@ -28,6 +28,6 @@ export class Blog {
 
     // Delete Blog    
     public delete() {
-        return _blogService.delete(this);
+        return _blogService.delete(this.guid);
     }
 }

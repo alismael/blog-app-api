@@ -8,10 +8,10 @@ blogRouter.get('/', async (req, res, next) => {
     
     let blog = new Blog();
 
-    // Get all categories
+    // Get all blogs
     let blogs = await blog.getAllBlogs();
 
-    // Return categories to response
+    // Return to response
     res.json( blogs );
 });
 
@@ -29,19 +29,18 @@ blogRouter.post('/', async (req, res, next) => {
     // Add new blog
     let response = await blog.add();
 
-    // Return categories to response
+    // Return to response
     res.json( response );
 });
 
 // Default delete route
-blogRouter.delete('/', async (req, res, next) => {
-    
+blogRouter.delete('/:guid', async (req, res, next) => {
     let blog = new Blog();
-    blog.id = req.body.id;
+    blog.guid = req.params.guid;
     
     // Add new blog
     let response = await blog.delete();
     
-    // Return categories to response
+    // Return to response
     res.json( response );
 });
