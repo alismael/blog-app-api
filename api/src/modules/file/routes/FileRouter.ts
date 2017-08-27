@@ -55,7 +55,12 @@ fileRouter.post('/upload', async function(req, res){
                 stat = fs.statSync(dest);
             }
             catch (err) {
-                fs.mkdirSync(uploadDir);
+                try {
+                    fs.statSync(uploadDir);
+                }
+                catch (err) {
+                    fs.mkdirSync(uploadDir);
+                }
                 fs.mkdirSync(dest);
             }
             if (stat && !stat.isDirectory()) {
