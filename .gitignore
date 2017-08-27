@@ -4,3 +4,4 @@
 # Exclude node modules
 node_modules/
 dest/
+uploads/
