@@ -47,4 +47,17 @@ export class FileMysqlRepository implements IFileRepository {
                         return "error"
                     });
     }
+
+    // Attach file with object
+    public async attach (object_id: number, object_model: string, guid: string[]) {
+        return await knex('file')
+                    .where('guid', 'IN', guid)
+                    .update({
+                        object_model: object_model,
+                        object_id: object_id
+                    })
+                    .catch( function (err) {
+                        return "error"
+                    });
+    }
 }

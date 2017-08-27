@@ -100,3 +100,19 @@ fileRouter.delete('/:guid', async (req, res, next) => {
     // Return to response
     res.json( response );
 });
+
+// Attach files with object_id, object_model
+fileRouter.put('/attach', async (req, res, next) => {
+    
+    let file = new File();
+    
+    let objectId: number = req.body.object_id;
+    let objectModel: string = req.body.object_model;
+    let files: string[] = req.body.files;
+
+    // delete file
+    let response = await file.attach(objectId, objectModel, files);
+
+    // Return to response
+    res.json( response );
+});
