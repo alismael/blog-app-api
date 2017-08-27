@@ -27,9 +27,9 @@ export class BlogMysqlRepository implements IBlogRepository {
     }
 
     // Delete blog
-    public async delete (blog: Blog) {
+    public async delete (guid: string) {
         return await knex('blog')
-                    .where('id', blog.id)
+                    .where('guid', guid)
                     .del()
                     .catch( function (err) {
                         return "error"
