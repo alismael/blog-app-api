@@ -54,6 +54,9 @@ class LoginPage extends React.Component {
         if (!result.error) {
             // static login
             if (username == "admin" && password == "admin") {
+                this.setState({
+                    errors: {}
+                });
                 console.log("Success login!");
             } else {
                 this.setState({
