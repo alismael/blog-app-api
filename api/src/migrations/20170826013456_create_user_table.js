@@ -6,8 +6,7 @@ exports.up = function (knex, Promise) {
         table.string('guid')
             .unique()
             .notNullable();
-        table.string('title')
-            .notNullable();
+        table.string('title');
     })
 };
 
