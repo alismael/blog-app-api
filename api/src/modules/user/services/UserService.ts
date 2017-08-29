@@ -18,9 +18,6 @@ export class UserService {
     async register(request: RegistrationRequest): Promise<number> {
         let userId = await this.userRepository.add(<UserData>{title: null})
         let hashed = await this.hash(request.password)
-        console.log(userId)
-        console.log("**************************")
-        console.log("**************************")
         return this.passwordRepository.add(<UserPasswordData>{
             email: request.email,
             password: hashed,
