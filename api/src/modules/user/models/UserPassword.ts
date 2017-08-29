@@ -5,23 +5,23 @@ import { UserId } from "./User";
 export type UserPasswordId = number
 
 export interface UserPasswordRef {
-    userId: UserId
+    readonly userId: UserId
 }
 
 export interface UserPasswordData {
-    password: string
-    email: string
-    username: string
+    readonly password: string
+    readonly email: string
+    readonly username: string
 }
 
 export interface UserPassword {
-    id?: UserPasswordId
-    ref: UserPasswordRef
-    data: UserPasswordData
-    trace: Trace
+    readonly id?: UserPasswordId
+    readonly ref: UserPasswordRef
+    readonly data: UserPasswordData
+    readonly trace: Trace
 }
 
-export interface RegistrationRequest extends UserPasswordData {repeatedPassword: string} {
+export interface RegistrationRequest extends UserPasswordData {readonly repeatedPassword: string} {
 }
 
 export const vaidateRegistrationRequest = (registrationRequest: RegistrationRequest): boolean => {

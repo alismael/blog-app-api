@@ -7,6 +7,7 @@ exports.up = function (knex, Promise) {
         table.string('email')
             .notNullable();
         table.string('username')
+            .unique()
             .notNullable();
         table.integer('user_id', 10)
             .unsigned()
