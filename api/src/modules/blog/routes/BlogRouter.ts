@@ -1,30 +1,21 @@
 import * as express from 'express'
 import { Blog } from '../models/Blog'
+import { BlogService } from '../services/BlogService'
 var uuid = require('uuid')
 
 export let blogRouter = express.Router();
 
+let blogService = new BlogService();
+
 // Get all blogs
 blogRouter.get('/', async (req, res, next) => {
-    
-    let blog = new Blog();
-
-    // Get all blogs
-    let blogs = await blog.find();
-
-    // Return to response
+    let blogs = await blogService.find();
     res.json( blogs );
 });
 
 // Get blog
 blogRouter.get('/:guid', async (req, res, next) => {
-    
-    let blog = new Blog();
-
-    // Get all blogs
-    let blogs = await blog.find( { 'guid': req.params.guid} );
-
-    // Return to response
+    let blogs = await blogService.find( {'guid': req.params.guid} );
     res.json( blogs );
 });
 
@@ -39,20 +30,12 @@ blogRouter.post('/', async (req, res, next) => {
     blog.created_by = req.body.user_id;
     blog.updated_by = req.body.user_id;
 
-    // Add new blog
-    let response = await blog.insert(blog);
-
-    // Return to response
+    let response = await blogService.insert(blog);
     res.json( response );
 });
 
 // Delete blog
 blogRouter.delete('/:guid', async (req, res, next) => {
-    let blog = new Blog();
-    
-    // Add new blog
-    let response = await blog.delete( {'guid': req.params.guid} );
-    
-    // Return to response
+    let response = await blogService.delete( {'guid': req.params.guid} );
     res.json( response );
 });
