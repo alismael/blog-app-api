@@ -1,39 +1,24 @@
 import * as express from 'express'
 import { File } from '../models/File'
+import { FileService } from '../services/FileService'
 var multer = require('multer')
 var uuid = require('uuid')
 var fs = require('fs')
 
 export let fileRouter = express.Router();
 
+let fileService = new FileService();
+
 // Get files by object_model, object_id
 fileRouter.get('/all/:model/:id', async (req, res, next) => {
-
-    let file = new File();
-
-    let objectId = req.params.id;    
-    let objectModel = req.params.model;    
-    
-
-    // Get all files
-    let response = await file.getFiles(objectId, objectModel);
-
-    // Return file to response
-    res.json( response );
+    let files = await fileService.find( { 'object_id': req.params.id, 'object_model': req.params.model } );
+    res.json( files );
 });
 
 // Get file with guid
 fileRouter.get('/:guid', async (req, res, next) => {
-
-    let file = new File();
-
-    let guid = req.params.guid;
-
-    // Get file
-    let response = await file.getFile(guid);
-
-    // Return files to response
-    res.json( response );
+    let file = await fileService.find( { 'guid': req.params.guid } );
+    res.json( file );
 });
 
 fileRouter.post('/upload', async function(req, res){
@@ -81,38 +66,19 @@ fileRouter.post('/upload', async function(req, res){
         }
         
         // Add new file
-        let response = await fileObj.add();
-    
-        // Return to response
+        let response = await fileService.insert(fileObj);
         res.json( response );
     });
 });
 
 // Default delete route
 fileRouter.delete('/:guid', async (req, res, next) => {
-    
-    let file = new File();
-    file.guid =  req.params.guid;
-    
-    // delete file
-    let response = await file.delete();
-
-    // Return to response
+    let response = await fileService.delete( {'guid': req.params.guid} );
     res.json( response );
 });
 
 // Attach files with object_id, object_model
 fileRouter.put('/attach', async (req, res, next) => {
-    
-    let file = new File();
-    
-    let objectId: number = req.body.object_id;
-    let objectModel: string = req.body.object_model;
-    let files: string[] = req.body.files;
-
-    // delete file
-    let response = await file.attach(objectId, objectModel, files);
-
-    // Return to response
+    let response = await fileService.attach(req.body.object_id, req.body.object_model, req.body.files);
     res.json( response );
 });
