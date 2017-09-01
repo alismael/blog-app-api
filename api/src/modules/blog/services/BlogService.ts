@@ -1,24 +1,21 @@
-import { IBlogRepository } from './../repositories/IBlogRepository'
-import { BlogMysqlRepository } from './../repositories/BlogMysqlRepository'
 import { Blog } from './../models/Blog'
 
 
 export class BlogService {
-
-    private blogRepository: IBlogRepository = new BlogMysqlRepository();
+    private blog = new Blog();
     
-    // get all blogs
-    public getBlog (guid: string) {
-        return this.blogRepository.getBlog(guid);
+    // Get blogs
+    public find (condition?: any) {
+        return this.blog.find(condition);
     }
 
     // Add new blog
-    public add (blog: Blog) {
-        return this.blogRepository.add(blog);
+    public insert (blog: Blog) {
+        return this.blog.insert(blog);
     }
 
     // Delete blog
-    public delete (guid: string) {
-        return this.blogRepository.delete(guid);
+    public delete (condition: any) {
+        return this.blog.delete(condition);
     }
 }
