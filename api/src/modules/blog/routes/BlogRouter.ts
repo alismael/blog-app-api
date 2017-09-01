@@ -1,47 +1,57 @@
 import * as express from 'express'
 import { Blog } from '../models/Blog'
+var uuid = require('uuid')
 
 export let blogRouter = express.Router();
 
-// Default get route
-blogRouter.get('/:guid', async (req, res, next) => {
+// Get all blogs
+blogRouter.get('/', async (req, res, next) => {
     
     let blog = new Blog();
 
-    let guid = req.params.guid;
-
     // Get all blogs
-    let blogs = await blog.getBlog(guid);
+    let blogs = await blog.find();
 
     // Return to response
     res.json( blogs );
 });
 
+// Get blog
+blogRouter.get('/:guid', async (req, res, next) => {
+    
+    let blog = new Blog();
 
-// Default post route
+    // Get all blogs
+    let blogs = await blog.find( { 'guid': req.params.guid} );
+
+    // Return to response
+    res.json( blogs );
+});
+
+// Insert new blog
 blogRouter.post('/', async (req, res, next) => {
     
     let blog = new Blog();
     
     blog.title = req.body.title;
     blog.description = req.body.description;
+    blog.guid = uuid.v1();
     blog.created_by = req.body.user_id;
     blog.updated_by = req.body.user_id;
 
     // Add new blog
-    let response = await blog.add();
+    let response = await blog.insert(blog);
 
     // Return to response
     res.json( response );
 });
 
-// Default delete route
+// Delete blog
 blogRouter.delete('/:guid', async (req, res, next) => {
     let blog = new Blog();
-    blog.guid = req.params.guid;
     
     // Add new blog
-    let response = await blog.delete();
+    let response = await blog.delete( {'guid': req.params.guid} );
     
     // Return to response
     res.json( response );
