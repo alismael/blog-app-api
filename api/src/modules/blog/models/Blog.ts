@@ -1,9 +1,7 @@
-import { BlogService } from './../services/BlogService'
+import { Entity } from './../../entity/models/Entity'
 
-// Blog repository
-let _blogService: BlogService = new BlogService();
 
-export class Blog {
+export class Blog extends Entity {
 
 
     // Public attributes
@@ -16,18 +14,12 @@ export class Blog {
     public updated_by: number;
     public updated_at: Date;
 
-    // Get blog by guid
-    public getBlog(guid: string) {
-        return _blogService.getBlog(guid);
+
+    public tableName() {
+        return "blog";
     }
 
-    // Add new Blog
-    public add() {
-        return _blogService.add(this);
-    }
-
-    // Delete Blog    
-    public delete() {
-        return _blogService.delete(this.guid);
+    public tableColumns() {
+        return ['id', 'title', 'description', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
     }
 }
