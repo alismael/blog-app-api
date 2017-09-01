@@ -2,8 +2,6 @@ import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 
 export abstract class Entity {
-
-    private _entity: Entity;
     private _entityRepository: IEntityRepository = new EntityMysqlRepository(this);
 
     abstract tableName() : string;
