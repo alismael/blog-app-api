@@ -15,6 +15,10 @@ export abstract class Entity {
         return this._entityRepository.insert( this.getDto(entity) );
     }
 
+    public update (updates: any, condition: any) {
+        return this._entityRepository.update( updates, condition );
+    }
+
     public delete(condition) {
         return this._entityRepository.delete(condition);
     }
