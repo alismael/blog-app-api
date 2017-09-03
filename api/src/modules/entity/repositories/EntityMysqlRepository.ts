@@ -11,12 +11,6 @@ export class EntityMysqlRepository implements IEntityRepository {
         this._columns = entity.tableColumns();
     }
 
-    public wrapper() {
-        return knex
-            .select('*')
-            .from(this._table).clone();
-    }
-
     // get entity
     public find(columns?: string[]) {
         return knex
