@@ -34,6 +34,16 @@ blogRouter.post('/', async (req, res, next) => {
     res.json( response );
 });
 
+// Update blog
+blogRouter.put('/:guid', async (req, res, next) => {
+    
+    let guid = req.params.guid;
+    let updates = req.body;
+
+    let response = await blogService.update(updates, {'guid': guid});
+    res.json( response );
+});
+
 // Delete blog
 blogRouter.delete('/:guid', async (req, res, next) => {
     let response = await blogService.delete( {'guid': req.params.guid} );
