@@ -39,6 +39,21 @@ export class EntityMysqlRepository implements IEntityRepository {
                     });
     }
 
+    // Add new entity
+    public async update (updates: any, condition: any) {
+        return await knex(this._table)
+                    .where(function(){
+                        let that = this;
+                        Object.keys(condition).forEach(function(key) {
+                            that.where(key, condition[key]);
+                        })
+                    })
+                    .update(updates)
+                    .catch( function (err) {
+                        return "error" + err
+                    });
+    }
+
     // Delete entity
     public async delete (condition: any) {
         return await knex(this._table)
