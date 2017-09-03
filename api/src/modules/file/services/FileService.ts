@@ -19,6 +19,11 @@ export class FileService {
         return this.file.delete(condition);
     }
 
+    // Update file
+    public update (updates: any, condition: any) {
+        return this.file.update(updates, condition);
+    }
+
     // Attach file
     public attach (object_id: number, object_model: string, fileGuid: string[]) {
         return this.file.attach(object_id, object_model, fileGuid);

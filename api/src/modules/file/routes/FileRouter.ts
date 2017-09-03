@@ -71,6 +71,16 @@ fileRouter.post('/upload', async function(req, res){
     });
 });
 
+// Update file
+fileRouter.put('/:guid', async (req, res, next) => {
+    
+    let guid = req.params.guid;
+    let updates = req.body;
+
+    let response = await fileService.update(updates, {'guid': guid});
+    res.json( response );
+});
+
 // Default delete route
 fileRouter.delete('/:guid', async (req, res, next) => {
     let response = await fileService.delete( {'guid': req.params.guid} );
