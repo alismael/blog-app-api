@@ -4,23 +4,27 @@ import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 export abstract class Entity {
     private _entityRepository: IEntityRepository = new EntityMysqlRepository(this);
 
-    abstract tableName() : string;
-    abstract tableColumns() : Array<any>;
+    abstract tableName(): string;
+    abstract tableColumns(): Array<any>;
 
-    public find(condition?: any) {
-        return this._entityRepository.find(condition);
+    public find(columns?: string[]) {
+        return this._entityRepository.find(columns);
     }
 
     public insert(entity: Entity) {
-        return this._entityRepository.insert( this.getDto(entity) );
+        return this._entityRepository.insert(this.getDto(entity));
     }
 
-    public delete(condition) {
-        return this._entityRepository.delete(condition);
+    public update(updates: any) {
+        return this._entityRepository.update(updates);
+    }
+
+    public delete() {
+        return this._entityRepository.delete();
     }
 
     private getDto(entity: Entity) {
-        let obj = { };
+        let obj = {};
         this.tableColumns().forEach(element => {
             obj[element] = entity[element];
         });

@@ -9,21 +9,20 @@ let blogService = new BlogService();
 
 // Get all blogs
 blogRouter.get('/', async (req, res, next) => {
-    let blogs = await blogService.find();
+    let blogs = await blogService.findAll();
     res.json( blogs );
 });
 
 // Get blog
 blogRouter.get('/:guid', async (req, res, next) => {
-    let blogs = await blogService.find( {'guid': req.params.guid} );
-    res.json( blogs );
+    let blog = await blogService.findByGuid(req.params.guid);
+    res.json(blog);
 });
 
 // Insert new blog
 blogRouter.post('/', async (req, res, next) => {
-    
     let blog = new Blog();
-    
+
     blog.title = req.body.title;
     blog.description = req.body.description;
     blog.guid = uuid.v1();
@@ -31,11 +30,21 @@ blogRouter.post('/', async (req, res, next) => {
     blog.updated_by = req.body.user_id;
 
     let response = await blogService.insert(blog);
-    res.json( response );
+    res.json(response);
+});
+
+// Update blog
+blogRouter.put('/:guid', async (req, res, next) => {
+    let guid = req.params.guid;
+    let updates = req.body;
+
+    let response = await blogService.update(guid, updates);
+    res.json(response);
 });
 
 // Delete blog
 blogRouter.delete('/:guid', async (req, res, next) => {
-    let response = await blogService.delete( {'guid': req.params.guid} );
-    res.json( response );
+    let guid = req.params.guid;
+    let response = await blogService.delete(guid);
+    res.json(response);
 });

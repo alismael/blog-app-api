@@ -6,14 +6,14 @@ import { FileMysqlRepository } from './../repositories/FileMysqlRepository'
 let _fileRepository: IFileRepository = new FileMysqlRepository();
 
 export class File extends Entity {
-    
-    
+
+
     // Public attributes
     public id: number;
     public title: string;
     public object_id: number;
     public object_model: string;
-    public guid: string;    
+    public guid: string;
     public created_by: number;
     public created_at: string;
     public updated_by: number;
@@ -28,7 +28,7 @@ export class File extends Entity {
     }
 
     // Attach file with object
-    public attach(objectId: number, objectModel: string, filesGuid: string[]) {
-        return _fileRepository.attach(objectId, objectModel, filesGuid);
+    public attach(objectId: number, objectModel: string, files: string[]) {
+        return _fileRepository.attach(objectId, objectModel, files);
     }
 }

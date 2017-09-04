@@ -12,42 +12,30 @@ export class EntityMysqlRepository<T> implements IEntityRepository {
     }
 
     // get entity
-    public async find(condition?: any) {
-        return await knex
-            .select('*')
+    public find(columns?: string[]) {
+        return knex
+            .select(columns)
             .from(this._table)
-            .where(function () {
-                if (condition) {
-                    let that = this;
-                    Object.keys(condition).forEach(function (key) {
-                        that.where(key, condition[key]);
-                    })
-                }
-            })
-            .catch(function (err) {
-                return "error" + err
-            });
+            .clone();
     }
 
     // Add new entity
-    public async insert(entity: any) {
-        console.log(entity)
-        return await knex(this._table)
+    public insert(entity: any) {
+        return knex(this._table)
             .insert(entity)
+            .clone()
+    }
+
+    // Update new entity
+    public update(updates: any) {
+        return knex(this._table)
+            .update(updates)
+            .clone();
     }
 
     // Delete entity
-    public async delete(condition: any) {
-        return await knex(this._table)
-            .where(function () {
-                let that = this;
-                Object.keys(condition).forEach(function (key) {
-                    that.where(key, condition[key]);
-                })
-            })
-            .del()
-            .catch(function (err) {
-                return "error"
-            });
+    public delete() {
+        return knex(this._table)
+            .del();
     }
 }
