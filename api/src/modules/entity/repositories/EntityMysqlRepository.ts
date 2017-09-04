@@ -2,7 +2,7 @@ import { IEntityRepository } from './IEntityRepository'
 import { Entity } from './../models/Entity'
 import knex from './../../knex/knex'
 
-export class EntityMysqlRepository<T> implements IEntityRepository {
+export class EntityMysqlRepository implements IEntityRepository {
     private _table: string;
     private _columns: Array<any>;
 

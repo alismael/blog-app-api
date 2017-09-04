@@ -1,11 +1,10 @@
-import { Trace } from './../../../helper/models';
 import { Entity } from "../../entity/models/Entity";
 
 export type RegistrationRequest = {
+    username: string
+    email: string
     password: string
     repeatedPassword: string
-    email: string
-    username: string
 }
 
 export class UserPassword extends Entity {
@@ -20,7 +19,7 @@ export class UserPassword extends Entity {
     public updated_by: number;
     public updated_at: Date;
 
-    public constructor(password: string, email: string, username: string) {
+    public constructor(username: string, email: string, password: string) {
         super()
         this.password = password
         this.email = email
@@ -37,7 +36,7 @@ export class UserPassword extends Entity {
     static vaidateRegistrationRequest = (registrationRequest: RegistrationRequest): Promise<UserPassword> => {
         return new Promise((resolve, reject) => {
             if (registrationRequest.email && registrationRequest.password && registrationRequest.username) {
-                let userPassword = new UserPassword(registrationRequest.password, registrationRequest.email, registrationRequest.username)
+                let userPassword = new UserPassword(registrationRequest.username, registrationRequest.email, registrationRequest.password)
                 if (UserPassword.validateUserPasswordDataModel(userPassword)
                     && (registrationRequest.password === registrationRequest.repeatedPassword))
                     resolve(userPassword)
