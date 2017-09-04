@@ -1,59 +1,61 @@
 import { Trace } from './../../../helper/models';
-import { UserId } from "./User";
 import { Entity } from "../../entity/models/Entity";
 
-
-export type UserPasswordId = number
-
-export interface UserPasswordRef {
-    readonly userId: UserId
+export type RegistrationRequest = {
+    password: string
+    repeatedPassword: string
+    email: string
+    username: string
 }
 
-export interface UserPasswordData {
-    readonly password: string
-    readonly email: string
-    readonly username: string
-}
+export class UserPassword extends Entity {
 
-export interface UserPassword {
-    readonly id?: UserPasswordId
-    readonly ref: UserPasswordRef
-    readonly data: UserPasswordData
-    readonly trace: Trace
-}
+    // public
+    public user_id: number
+    public password: string
+    public email: string
+    public username: string
+    public created_by: number;
+    public created_at: Date;
+    public updated_by: number;
+    public updated_at: Date;
 
-export interface RegistrationRequest extends UserPasswordData { readonly repeatedPassword: string } {
-}
-
-export const vaidateRegistrationRequest = (registrationRequest: RegistrationRequest): boolean => {
-    return validateUserPasswordDataModel(<UserPasswordData>registrationRequest)
-        && (registrationRequest.password === registrationRequest.repeatedPassword)
-}
-
-export const validateUserPasswordDataModel = (userPasswordData: UserPasswordData): boolean => {
-    let email = new RegExp("/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/g")
-    return email.test(userPasswordData.email)
-}
-
-class UserPasswordEntity extends Entity<UserPassword> {
-    getDto(model: UserPassword) {
-        return {
-            email: model.data.email,
-            username: model.data.username,
-            password: model.data.password,
-            user_id: model.ref.userId,
-            created_by: model.trace.createdBy,
-            updated_by: model.trace.updatedBy,
-            created_at: model.trace.createdAt,
-            updated_at: model.trace.updatedAt
-        }
+    public constructor(password: string, email: string, username: string) {
+        super()
+        this.password = password
+        this.email = email
+        this.username = username
     }
+
     tableName(): string {
         return "user_password"
     }
     tableColumns(): string[] {
         return ["email", "username", "password", "user_id", "created_by", "updated_by", "created_at", "updated_at"]
     }
+
+    static vaidateRegistrationRequest = (registrationRequest: RegistrationRequest): Promise<UserPassword> => {
+        return new Promise((resolve, reject) => {
+            if (registrationRequest.email && registrationRequest.password && registrationRequest.username) {
+                let userPassword = new UserPassword(registrationRequest.password, registrationRequest.email, registrationRequest.username)
+                if (UserPassword.validateUserPasswordDataModel(userPassword)
+                    && (registrationRequest.password === registrationRequest.repeatedPassword))
+                    resolve(userPassword)
+                else
+                    reject("Invalid request")
+            }
+            else
+                reject("Invalid request")
+        })
+    }
+
+    static validateUserPasswordDataModel = (userPassword: UserPassword): boolean => {
+        let email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return email.test(userPassword.email)
+    }
 }
 
-export const userPasswordEntity = new UserPasswordEntity()
+
+
+
+

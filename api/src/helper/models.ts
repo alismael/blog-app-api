@@ -1,13 +1,11 @@
-import { UserId } from "../modules/user/models/User";
-
 export interface Trace {
-    createdBy: UserId
+    createdBy: number
     createdAt: Date
-    updatedBy: UserId
+    updatedBy: number
     updatedAt: Date
 }
 
-export const createTrace = (id: UserId): Trace => {
+export const createTrace = (id: number): Trace => {
     return {
         createdBy: id,
         createdAt: new Date(),

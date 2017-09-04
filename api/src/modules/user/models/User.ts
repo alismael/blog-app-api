@@ -1,32 +1,22 @@
 import { Entity } from "../../entity/models/Entity";
 
-export type UserId = number
-export type UserUUID = string
+export class User extends Entity {
 
-export interface UserData {
-    readonly title: string
-}
+    // Public attributes
+    // public id: number;
+    public guid: string;
+    public title: string
+    public created_by: number;
+    public created_at: Date;
+    public updated_by: number;
+    public updated_at: Date;
 
-export interface User {
-    readonly id?: UserId
-    readonly uuid: UserUUID
-    readonly data: UserData
-}
 
-class UserEntity extends Entity<User> {
-    getDto(user: User) {
-        return {
-            guid: user.uuid,
-            title: user.data.title
-        }
-    }
     tableName(): string {
         return "user"
     }
     tableColumns(): string[] {
         return ["guid", "title"]
     }
-
 }
 
-export const userEntity = new UserEntity()
