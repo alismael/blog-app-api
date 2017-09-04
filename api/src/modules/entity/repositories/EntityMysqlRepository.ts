@@ -6,7 +6,7 @@ export class EntityMysqlRepository<T> implements IEntityRepository {
     private _table: string;
     private _columns: Array<any>;
 
-    constructor(entity: Entity<T>) {
+    constructor(entity: Entity) {
         this._table = entity.tableName();
         this._columns = entity.tableColumns();
     }
@@ -34,9 +34,6 @@ export class EntityMysqlRepository<T> implements IEntityRepository {
         console.log(entity)
         return await knex(this._table)
             .insert(entity)
-            .catch(function (err) {
-                return "error" + err
-            });
     }
 
     // Delete entity
