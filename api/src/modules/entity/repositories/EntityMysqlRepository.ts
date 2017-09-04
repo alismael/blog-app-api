@@ -19,12 +19,10 @@ export class EntityMysqlRepository implements IEntityRepository {
     }
 
     // Add new entity
-    public async insert(entity: any) {
-        return await knex(this._table)
+    public insert(entity: any) {
+        return knex(this._table)
             .insert(entity)
-            .catch(function (err) {
-                return "error" + err
-            });
+            .clone()
     }
 
     // Update new entity
