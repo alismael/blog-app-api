@@ -3,7 +3,7 @@ import { Entity } from "../../entity/models/Entity";
 export class User extends Entity {
 
     // Public attributes
-    // public id: number;
+    public id: number;
     public guid: string;
     public title: string
     public created_by: number;
@@ -16,7 +16,7 @@ export class User extends Entity {
         return "user"
     }
     tableColumns(): string[] {
-        return ["guid", "title"]
+        return ["guid", "title", "created_by", "created_at", "updated_by", "updated_at"]
     }
 }
 

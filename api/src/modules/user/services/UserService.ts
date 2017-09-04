@@ -1,5 +1,4 @@
 import { UserPassword } from './../models/UserPassword';
-import { createTrace } from './../../../helper/models';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
 import { User } from "../models/User"
@@ -19,12 +18,11 @@ export class UserService {
         user.updated_at = new Date()
         user.guid = uuid.v4()
         let userId = await this.user.insert(user)
-        let trace = createTrace(userId[0])
         userPassword.user_id = userId[0]
-        userPassword.created_at = trace.createdAt
-        userPassword.updated_at = trace.updatedAt
-        userPassword.created_by = trace.createdBy
-        userPassword.updated_by = trace.updatedBy
+        userPassword.created_at = new Date()
+        userPassword.updated_at = new Date()
+        userPassword.created_by = userId[0]
+        userPassword.updated_by = userId[0]
         let hashed = await this.hash(userPassword.password)
         userPassword.password = hashed
         return userPassword.insert(userPassword)
