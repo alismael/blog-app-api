@@ -15,7 +15,8 @@ export class EntityMysqlRepository implements IEntityRepository {
     public find(columns?: string[]) {
         return knex
             .select(columns)
-            .from(this._table).clone();
+            .from(this._table)
+            .clone();
     }
 
     // Add new entity
