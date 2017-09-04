@@ -16,14 +16,20 @@ export class FileService {
     // Get all files
     public async findAll() {
         return await this.file
-            .find();
+            .find()
+            .catch(function(err){
+                return err
+            });
     }
 
     // Get file by guid
     public async findByGuid(guid: string) {
         return await this.file
             .find()
-            .where('guid', guid);
+            .where('guid', guid)
+            .catch(function(err){
+                return err
+            });
     }
 
     // Get file by guid
@@ -31,31 +37,47 @@ export class FileService {
         return await this.file
             .find()
             .where('object_id', objectId)
-            .where('object_model', objectModel);
+            .where('object_model', objectModel)
+            .catch(function(err){
+                return err
+            });
     }
 
     // Add new file
     public async insert(file: File) {
         return await this.file
-            .insert(file);
+            .insert(file)
+            .catch(function(err){
+                return err
+            });
     }
 
     // Update file
     public async update(guid: string, updates: any) {
         return await this.file
             .update(updates)
-            .where('guid', guid);
+            .where('guid', guid)
+            .catch(function(err){
+                return err
+            });
     }
 
     // Delete file
     public async delete(guid: string) {
         return await this.file
             .delete()
-            .where('guid', guid);
+            .where('guid', guid)
+            .catch(function(err){
+                return err
+            });
     }
 
     // Attach file
-    public attach(object_id: number, object_model: string, fileGuid: string[]) {
-        return this.file.attach(object_id, object_model, fileGuid);
+    public attach(objectId: number, objectModel: string, files: string[]) {
+        return this.file
+            .attach(objectId, objectModel, files)
+            .catch(function(err){
+                return err
+            });
     }
 }
