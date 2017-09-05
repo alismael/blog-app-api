@@ -26,10 +26,10 @@ class DBIO<T> {
     return new Promise((resolve, reject) => {
       connection.query(this.query, this.params, (err, result, fields) => {
         if (err) {
-          connection.rollback(() => {
-            reject(err);
-          })
-          reject(err)
+          if (isTransaction)
+            connection.rollback(() => { reject(err) })
+          else
+            reject(err)
         }
         else
           resolve(result)
@@ -111,9 +111,7 @@ let io = new DBIO<User[]>("select * from user", [])
 
 // rollback io
 let io2 = new DBIO("insert into user(guid, created_at, updated_at) values(uuid(), now(), now());", [])
-  .flatMap(id => {
-    return new DBIO("select * from user_password", [])
-  })
+  .flatMap(id => new DBIO("select * from user_password", []))
 
 DBIO.ioTransaction(io2).execute(connection)
   .then(a => console.log("success success success success success"))
