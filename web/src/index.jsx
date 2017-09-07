@@ -1,16 +1,11 @@
 import React from 'react';
-import {render} from 'react-dom';
+import ReactDom from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import LoginPage from './containers/LoginPage.jsx'
+import { browserHistory, Router } from 'react-router';
+import routes from './routes';
 
-class App extends React.Component {
-  render () {
-    return (
-            <MuiThemeProvider muiTheme={getMuiTheme()}>
-                <LoginPage />
-            </MuiThemeProvider>
-            );
-  }
-}
-render(<App/>, document.getElementById('app'));
+ReactDom.render((
+  <MuiThemeProvider muiTheme={getMuiTheme()}>
+    <Router history={browserHistory} routes={routes} />
+  </MuiThemeProvider>), document.getElementById('app'));
