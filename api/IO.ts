@@ -18,8 +18,20 @@ class DBIO<T> {
     return new IOMap(this, action)
   }
 
+  filter(action: (a: T) => boolean): DBIO<T> {
+    return new IOFilter<T>(this, action)
+  }
+
   static ioTransaction<A>(io: DBIO<A>): DBIO<A> {
     return new IOTransaction(io)
+  }
+
+  static ioSequance<A>(ios: DBIO<A>[]): DBIO<A[]> {
+    return new IOSequance(ios)
+  }
+
+  static ioPure<A>(a: A): DBIO<A> {
+    return new IOPure(a)
   }
 
   execute(connection: mysql.IConnection, isTransaction: boolean = false): Promise<T> {
@@ -35,6 +47,38 @@ class DBIO<T> {
           resolve(result)
       })
     })
+  }
+}
+
+class IOFilter<A> extends DBIO<A> {
+  constructor(public io:DBIO<A>, public action: (a: A) => boolean) { super() }
+
+  execute(connection: mysql.IConnection, isTransaction: boolean = false): Promise<A> {
+    return this.io.execute(connection, isTransaction)
+    .then(result => {
+      if(this.action(result)) {
+        return result
+      } else {
+        throw "No such element";
+      }
+    })
+  }
+
+}
+
+class IOPure<A> extends DBIO<A> {
+  constructor(public val: A) { super() }
+
+  execute(connection: mysql.IConnection, isTransaction: boolean = false): Promise<A> {
+    return Promise.resolve(this.val)
+  }
+}
+
+class IOSequance<A> extends DBIO<A[]> {
+  constructor(public ios: DBIO<A>[]) { super() }
+
+  execute(connection: mysql.IConnection, isTransaction: boolean = false): Promise<A[]> {
+    return Promise.all(this.ios.map(io => io.execute(connection, isTransaction)))
   }
 }
 
