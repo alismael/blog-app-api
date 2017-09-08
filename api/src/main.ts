@@ -1,9 +1,8 @@
 import { config } from './config/config'
 
 // Import modules routes
-import { blogRouter } from './modules/blog/routes/BlogRouter';
-import { fileRouter } from './modules/file/routes/FileRouter';
-import { userRouter } from "./modules/user/routes/UserRouter"
+import { apiRoutes } from './apiRoutes';
+import { webRoutes } from './webRoutes';
 
 const express = require('express');
 const app = express();
@@ -12,14 +11,11 @@ const bodyParser = require('body-parser')
 // parse application/json
 app.use(bodyParser.json())
 
-// use blog routes under /api/blog
-app.use('/api/blog', blogRouter);
+// use api routes under /api
+app.use('/api', apiRoutes);
 
-// use file routes under /api/file
-app.use('/api/file', fileRouter);
-
-// use file routes under /api/file
-app.use('/api', userRouter);
+// use web routes under /
+app.use('/', webRoutes);
 
 // Handle error routes
 app.use(function(req, res){
