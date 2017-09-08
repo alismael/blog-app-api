@@ -15,6 +15,6 @@ webRoutes.use(require('webpack-dev-middleware')(compiler, {
 }));
 webRoutes.use(require('webpack-hot-middleware')(compiler));
 webRoutes.use("/public", express.static(path.join(__dirname, './../../web/public')));
-webRoutes.get('/', function(req, res) {
+webRoutes.get('*', function(req, res) {
     res.sendFile(path.join(__dirname + "./../../web/index.html"));
 });
