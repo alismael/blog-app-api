@@ -19,7 +19,7 @@ export class UserPassword extends Entity {
     public updated_by: number;
     public updated_at: Date;
 
-    public constructor(username: string, email: string, password: string) {
+    public constructor(username?: string, email?: string, password?: string) {
         super()
         this.password = password
         this.email = email
