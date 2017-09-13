@@ -11,7 +11,7 @@ var config = {
         filename: 'bundle.js',
         publicPath: "/public/"
     },
-     resolve: {
+    resolve: {
         extensions: [".js", ".jsx", ".json"],
         modules: ["src", "node_modules"]
     },
@@ -26,7 +26,10 @@ var config = {
     },
     devServer: {
         inline: true,
-        port: 8001
+        port: 8001,
+        historyApiFallback: {
+            index: 'index.html'
+        }
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
