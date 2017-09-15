@@ -1,0 +1,16 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "indent": [true, "spaces", 2],
+        "trailing-comma": false,
+        "semicolon": false,
+        "no-empty-interface": false,
+        "object-literal-sort-keys": false,
+        "ordered-imports": false,
+        "arrow-parens": false,
+        "no-console": false,
+        "max-classes-per-file": false,
+        "curly": false,
+        "max-line-length": false
+    }
+  }

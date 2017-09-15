@@ -1,5 +1,5 @@
-import { File } from './../models/File'
+import { File } from "./../models/File"
 
 export interface IFileRepository {
-    attach (object_id: number, object_model: string, files: string[]);
+  attach(objectId: number, objectModel: string, files: string[]);
 }
