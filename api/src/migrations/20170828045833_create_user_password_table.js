@@ -1,37 +1,37 @@
 
 exports.up = function (knex, Promise) {
-    return knex.schema.createTable('user_password', function (table) {
+    return knex.schema.createTable("user_password", function (table) {
         table.increments();
-        table.text('password')
+        table.text("password")
             .notNullable();
-        table.string('email')
+        table.string("email")
             .notNullable();
-        table.string('username')
+        table.string("username")
             .unique()
             .notNullable();
-        table.integer('user_id', 10)
+        table.integer("user_id", 10)
             .unsigned()
             .notNullable()
-            .references('id')
-            .inTable('user');
-        table.integer('created_by', 10)
+            .references("id")
+            .inTable("user");
+        table.integer("created_by", 10)
             .unsigned()
             .notNullable()
-            .references('id')
-            .inTable('user');
-        table.dateTime('created_at')
+            .references("id")
+            .inTable("user");
+        table.dateTime("created_at")
             .notNullable();
-        table.integer('updated_by')
+        table.integer("updated_by")
             .unsigned()
             .notNullable()
-            .references('id')
-            .inTable('user');
-        table.dateTime('updated_at')
+            .references("id")
+            .inTable("user");
+        table.dateTime("updated_at")
             .notNullable();
 
     })
 };
 
 exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('user_password')
+    return knex.schema.dropTable("user_password")
 };

@@ -34,12 +34,16 @@
     "react": "^15.6.1",
     "react-router": "^4.2.0",
     "sass-loader": "^6.0.6",
+    "squel": "^5.11.1",
     "style-loader": "^0.18.2",
     "typescript": "^2.4.2",
-    "uuid": "^3.1.0",
-    "webpack": "^3.5.6",
-    "webpack-dev-middleware": "^1.12.0",
-    "webpack-dev-server": "^2.7.1",
-    "webpack-hot-middleware": "^2.19.1"
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "gulp-changed-in-place": "^2.2.0",
+    "gulp-tsfmt": "^1.0.2",
+    "gulp-tslint": "^8.1.2",
+    "tslint": "^5.7.0"
   }
 }

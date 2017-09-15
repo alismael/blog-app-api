@@ -1,22 +1,31 @@
+import { Trace } from "./../../common/models";
 import { Entity } from "../../entity/models/Entity";
 
-export class User extends Entity {
-
-    // Public attributes
-    public id: number;
-    public guid: string;
-    public title: string
-    public created_by: number;
-    public created_at: Date;
-    public updated_by: number;
-    public updated_at: Date;
-
-
-    tableName(): string {
-        return "user"
-    }
-    tableColumns(): string[] {
-        return ["guid", "title", "created_by", "created_at", "updated_by", "updated_at"]
-    }
+export class UserId {
+  constructor(public id: number) {}
 }
 
+export class UserUUID {
+  constructor(public uuid: string) {}
+}
+
+export class UserData {
+  constructor(public title: string) {}
+}
+
+export class User {
+  constructor(
+    public id: UserId,
+    public guid: UserUUID,
+    public data: UserData,
+    public trace: Trace) {}
+}
+
+export class UserEntity extends Entity {
+  public tableName(): string {
+    return "user"
+  }
+  public tableColumns(): string[] {
+    return ["guid", "title", "created_by", "created_at", "updated_by", "updated_at"]
+  }
+}

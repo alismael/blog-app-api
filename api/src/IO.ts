@@ -1,17 +1,17 @@
-import * as mysql from 'mysql'
+import * as mysql from "mysql";
 
-let connection = mysql.createConnection({
-  user: 'root',
-  password: 'abdo',
-  database: "blog"
+const connection = mysql.createConnection({
+  database: "blog",
+  password: "abdo",
+  user: "root"
 });
 
 class DBIO<T> {
 
   constructor(public query?: string, public params?: any[]) { }
 
-  flatMap<B>(action: (a: T) => DBIO<B>): DBIO<B> {
-    return new IOFlatMap(this, action)
+  public flatMap<B>(action: (a: T) => DBIO<B>): DBIO<B> {
+    return new IOFlatMap(this, action);
   }
 
   map<B>(action: (a: T) => B): DBIO<B> {
@@ -51,17 +51,17 @@ class DBIO<T> {
 }
 
 class IOFilter<A> extends DBIO<A> {
-  constructor(public io:DBIO<A>, public action: (a: A) => boolean) { super() }
+  constructor(public io: DBIO<A>, public action: (a: A) => boolean) { super() }
 
   execute(connection: mysql.IConnection, isTransaction: boolean = false): Promise<A> {
     return this.io.execute(connection, isTransaction)
-    .then(result => {
-      if(this.action(result)) {
-        return result
-      } else {
-        throw "No such element";
-      }
-    })
+      .then(result => {
+        if (this.action(result)) {
+          return result
+        } else {
+          throw "No such element";
+        }
+      })
   }
 
 }
