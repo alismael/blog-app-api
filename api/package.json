@@ -21,6 +21,7 @@
     "babel-preset-react": "^6.24.1",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
     "css-loader": "^0.28.7",
     "express": "^4.15.4",
     "extract-text-webpack-plugin": "^3.0.0",
