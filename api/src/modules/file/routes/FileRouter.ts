@@ -1,16 +1,16 @@
-import * as express from 'express'
-import { File } from '../models/File'
-import { FileService } from '../services/FileService'
-var multer = require('multer')
-var uuid = require('uuid')
-var fs = require('fs')
+import * as express from "express"
+import { File } from "../models/File"
+import { FileService } from "../services/FileService"
+var multer = require("multer")
+var uuid = require("uuid")
+var fs = require("fs")
 
 export let fileRouter = express.Router();
 
 let fileService = new FileService();
 
 // Get files by object_model, object_id
-fileRouter.get('/all/:model/:id', async (req, res, next) => {
+fileRouter.get("/all/:model/:id", async (req, res, next) => {
   let objectId = req.params.id;
   let objectModel = req.params.model;
   let files = await fileService.findByObject(objectId, objectModel);
@@ -18,25 +18,25 @@ fileRouter.get('/all/:model/:id', async (req, res, next) => {
 });
 
 // Get file with guid
-fileRouter.get('/:guid', async (req, res, next) => {
+fileRouter.get("/:guid", async (req, res, next) => {
   let guid = req.params.guid;
   let file = await fileService.find(guid);
   res.json(file);
 });
 
-fileRouter.post('/upload', async function(req, res) {
+fileRouter.post("/upload", async function(req, res) {
 
   let fileObj = new File();
 
   fileObj.guid = uuid.v1();
   fileObj.object_id = 1;
-  fileObj.object_model = 'blog';
+  fileObj.object_model = "blog";
   fileObj.created_by = 1;
   fileObj.updated_by = 1;
 
   var storage = multer.diskStorage({
     destination: function(req, file, callback) {
-      let uploadDir = './uploads/';
+      let uploadDir = "./uploads/";
       let dest = uploadDir + fileObj.guid;
       let stat = null;
       try {
@@ -61,7 +61,7 @@ fileRouter.post('/upload', async function(req, res) {
       callback(null, file.originalname);
     }
   });
-  var upload = multer({ storage: storage }).single('file');
+  var upload = multer({ storage: storage }).single("file");
 
   upload(req, res, async function(err) {
     if (err) {
@@ -75,13 +75,13 @@ fileRouter.post('/upload', async function(req, res) {
 });
 
 // Attach files with object_id, object_model
-fileRouter.put('/attach', async (req, res, next) => {
+fileRouter.put("/attach", async (req, res, next) => {
   let response = await fileService.attach(req.body.object_id, req.body.object_model, req.body.files);
   res.json(response);
 });
 
 // Update file
-fileRouter.put('/:guid', async (req, res, next) => {
+fileRouter.put("/:guid", async (req, res, next) => {
   let guid = req.params.guid;
   let updates = req.body;
 
@@ -90,7 +90,7 @@ fileRouter.put('/:guid', async (req, res, next) => {
 });
 
 // Default delete route
-fileRouter.delete('/:guid', async (req, res, next) => {
+fileRouter.delete("/:guid", async (req, res, next) => {
   let guid = req.params.guid;
   let response = await fileService.delete(guid);
   res.json(response);

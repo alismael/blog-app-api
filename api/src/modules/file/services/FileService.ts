@@ -1,4 +1,4 @@
-import { File } from './../models/File'
+import { File } from "./../models/File"
 
 
 export class FileService {
@@ -26,7 +26,7 @@ export class FileService {
   public async findByGuid(guid: string) {
     return await this.file
       .find()
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
@@ -36,8 +36,8 @@ export class FileService {
   public async findByObject(objectId: number, objectModel: string) {
     return await this.file
       .find()
-      .where('object_id', objectId)
-      .where('object_model', objectModel)
+      .where("object_id", objectId)
+      .where("object_model", objectModel)
       .catch(function(err) {
         return err
       });
@@ -56,7 +56,7 @@ export class FileService {
   public async update(guid: string, updates: any) {
     return await this.file
       .update(updates)
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
@@ -66,7 +66,7 @@ export class FileService {
   public async delete(guid: string) {
     return await this.file
       .delete()
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
