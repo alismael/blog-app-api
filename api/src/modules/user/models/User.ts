@@ -2,11 +2,11 @@ import { Trace } from "./../../common/models";
 import { Entity } from "../../entity/models/Entity";
 
 export class UserId {
-  constructor(public id: number) {}
+  constructor(public value: number) {}
 }
 
 export class UserUUID {
-  constructor(public uuid: string) {}
+  constructor(public value: string) {}
 }
 
 export class UserData {
