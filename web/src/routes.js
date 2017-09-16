@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './app/components/App';
 import Home from './app/components/Home';
-import LoginPage from './login/containers/LoginPage';
+import LoginPage from './auth/containers/LoginPage';
 import DashboardPage from './dashboard/containers/DashboardPage';
 
 export default (
