@@ -1,0 +1,17 @@
+.login-container {
+    margin: 0 auto;
+    text-align: center;
+    width: 700px;
+    height: 350px;
+}
+.login-container .card-heading {
+    padding-top: 20px;
+}
+.login-container .button-line {
+    margin-top: 35px;
+}
+
+.error-message {
+    height: 10px;
+    color: tomato;
+}
