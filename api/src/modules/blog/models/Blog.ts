@@ -1,4 +1,4 @@
-import { Entity } from './../../entity/models/Entity'
+import { Entity } from "./../../entity/models/Entity"
 
 
 export class Blog extends Entity {
@@ -20,6 +20,6 @@ export class Blog extends Entity {
   }
 
   public tableColumns() {
-    return ['id', 'title', 'description', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+    return ["id", "title", "description", "guid", "created_by", "created_at", "updated_by", "updated_at"];
   }
 }

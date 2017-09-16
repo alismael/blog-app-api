@@ -1,4 +1,4 @@
-import { Blog } from './../models/Blog'
+import { Blog } from "./../models/Blog"
 
 
 export class BlogService {
@@ -17,7 +17,7 @@ export class BlogService {
   public async findByGuid(guid: string) {
     return await this.blog
       .find()
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
@@ -36,7 +36,7 @@ export class BlogService {
   public async update(guid: string, updates: any) {
     return await this.blog
       .update(updates)
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
@@ -46,7 +46,7 @@ export class BlogService {
   public async delete(guid: string) {
     return await this.blog
       .delete()
-      .where('guid', guid)
+      .where("guid", guid)
       .catch(function(err) {
         return err
       });
