@@ -11,87 +11,87 @@ let fileService = new FileService();
 
 // Get files by object_model, object_id
 fileRouter.get('/all/:model/:id', async (req, res, next) => {
-    let objectId = req.params.id;
-    let objectModel = req.params.model;
-    let files = await fileService.findByObject(objectId, objectModel);
-    res.json(files);
+  let objectId = req.params.id;
+  let objectModel = req.params.model;
+  let files = await fileService.findByObject(objectId, objectModel);
+  res.json(files);
 });
 
 // Get file with guid
 fileRouter.get('/:guid', async (req, res, next) => {
-    let guid = req.params.guid;
-    let file = await fileService.find(guid);
-    res.json(file);
+  let guid = req.params.guid;
+  let file = await fileService.find(guid);
+  res.json(file);
 });
 
-fileRouter.post('/upload', async function (req, res) {
+fileRouter.post('/upload', async function(req, res) {
 
-    let fileObj = new File();
+  let fileObj = new File();
 
-    fileObj.guid = uuid.v1();
-    fileObj.object_id = 1;
-    fileObj.object_model = 'blog';
-    fileObj.created_by = 1;
-    fileObj.updated_by = 1;
+  fileObj.guid = uuid.v1();
+  fileObj.object_id = 1;
+  fileObj.object_model = 'blog';
+  fileObj.created_by = 1;
+  fileObj.updated_by = 1;
 
-    var storage = multer.diskStorage({
-        destination: function (req, file, callback) {
-            let uploadDir = './uploads/';
-            let dest = uploadDir + fileObj.guid;
-            let stat = null;
-            try {
-                stat = fs.statSync(dest);
-            }
-            catch (err) {
-                try {
-                    fs.statSync(uploadDir);
-                }
-                catch (err) {
-                    fs.mkdirSync(uploadDir);
-                }
-                fs.mkdirSync(dest);
-            }
-            if (stat && !stat.isDirectory()) {
-                res.json("error");
-            }
-            callback(null, dest);
-        },
-        filename: function (req, file, callback) {
-            fileObj.title = file.originalname;
-            callback(null, file.originalname);
+  var storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+      let uploadDir = './uploads/';
+      let dest = uploadDir + fileObj.guid;
+      let stat = null;
+      try {
+        stat = fs.statSync(dest);
+      }
+      catch (err) {
+        try {
+          fs.statSync(uploadDir);
         }
-    });
-    var upload = multer({ storage: storage }).single('file');
-
-    upload(req, res, async function (err) {
-        if (err) {
-            res.json("error");
+        catch (err) {
+          fs.mkdirSync(uploadDir);
         }
+        fs.mkdirSync(dest);
+      }
+      if (stat && !stat.isDirectory()) {
+        res.json("error");
+      }
+      callback(null, dest);
+    },
+    filename: function(req, file, callback) {
+      fileObj.title = file.originalname;
+      callback(null, file.originalname);
+    }
+  });
+  var upload = multer({ storage: storage }).single('file');
 
-        // Add new file
-        let response = await fileService.insert(fileObj);
-        res.json(response);
-    });
+  upload(req, res, async function(err) {
+    if (err) {
+      res.json("error");
+    }
+
+    // Add new file
+    let response = await fileService.insert(fileObj);
+    res.json(response);
+  });
 });
 
 // Attach files with object_id, object_model
 fileRouter.put('/attach', async (req, res, next) => {
-    let response = await fileService.attach(req.body.object_id, req.body.object_model, req.body.files);
-    res.json(response);
+  let response = await fileService.attach(req.body.object_id, req.body.object_model, req.body.files);
+  res.json(response);
 });
 
 // Update file
 fileRouter.put('/:guid', async (req, res, next) => {
-    let guid = req.params.guid;
-    let updates = req.body;
+  let guid = req.params.guid;
+  let updates = req.body;
 
-    let response = await fileService.update(guid, updates);
-    res.json(response);
+  let response = await fileService.update(guid, updates);
+  res.json(response);
 });
 
 // Default delete route
 fileRouter.delete('/:guid', async (req, res, next) => {
-    let guid = req.params.guid;
-    let response = await fileService.delete(guid);
-    res.json(response);
+  let guid = req.params.guid;
+  let response = await fileService.delete(guid);
+  res.json(response);
 });
