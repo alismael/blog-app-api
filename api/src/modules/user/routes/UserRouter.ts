@@ -7,11 +7,11 @@ export let userRouter = express.Router();
 let userService = new UserService()
 
 userRouter.post("/register", (req, res) => {
-    UserPassword.vaidateRegistrationRequest(req.body)
+  UserPassword.vaidateRegistrationRequest(req.body)
     .then(userPassword => userService.register(userPassword))
     .then(_ => res.sendStatus(201))
     .catch(err => {
-        res.sendStatus(500)
-        console.error(err)
+      res.sendStatus(500)
+      console.error(err)
     })
 })
