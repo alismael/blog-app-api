@@ -18,8 +18,8 @@ app.use('/api', apiRoutes);
 app.use('/', webRoutes);
 
 // Handle error routes
-app.use(function(req, res){
-    res.sendStatus(404);
+app.use(function(req, res) {
+  res.sendStatus(404);
 });
 
 // app listens on http://{{host}}:{{port}}
