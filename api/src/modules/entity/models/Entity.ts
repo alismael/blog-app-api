@@ -1,8 +1,8 @@
 import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 
-export abstract class Entity {
-  private _entityRepository: IEntityRepository = new EntityMysqlRepository(this);
+export abstract class Entity<T> {
+  private _entityRepository: IEntityRepository = new EntityMysqlRepository<T>(this);
 
   abstract tableName(): string;
   abstract tableColumns(): Array<any>;
@@ -11,8 +11,8 @@ export abstract class Entity {
     return this._entityRepository.find(columns);
   }
 
-  public insert(entity: Entity) {
-    return this._entityRepository.insert(this.getDto(entity));
+  public insert(...args: T[]) {
+    return this._entityRepository.insert(args);
   }
 
   public update(updates: any) {
