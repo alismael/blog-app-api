@@ -1,4 +1,4 @@
-import { UserPassword } from './../models/UserPassword';
+import { UserPassword, UserPasswordData } from './../models/UserPassword';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
 import { User } from "../models/User"
@@ -12,7 +12,7 @@ export class UserService {
     return bcrypt.hash(plainPassword, config.hash.saltRounds)
   }
 
-  async register(userPassword: UserPassword): Promise<number> {
+  async register(userPasswordData: UserPasswordData): Promise<number> {
     let user = new User()
     user.created_at = new Date()
     user.updated_at = new Date()
