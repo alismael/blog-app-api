@@ -1,6 +1,21 @@
 import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 
+
+export abstract class Column<T> {
+  public value: T
+  public constructor(public columnName: string) { }
+  public setValue(x: T): Column<T> {
+    this.value = x
+    return Object.create(this)
+  }
+  public abstract getValue: () => any
+}
+
+export abstract class Composite<T, S> {
+  public abstract columns: (composite: T) => Column<S>[]
+}
+
 export abstract class Entity<T> {
   private _entityRepository: IEntityRepository = new EntityMysqlRepository<T>(this);
 
@@ -23,7 +38,7 @@ export abstract class Entity<T> {
     return this._entityRepository.delete();
   }
 
-  private getDto(entity: Entity) {
+  private getDto(entity: Entity<T>) {
     let obj = {};
     this.tableColumns().forEach(element => {
       obj[element] = entity[element];
