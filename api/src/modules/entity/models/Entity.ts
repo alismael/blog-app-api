@@ -2,22 +2,24 @@ import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 
 
+export class ColumnValue<T> {
+  public constructor(public columnName: string, public value: T) { }
+}
+
 export abstract class Column<T> {
-  public value: T
   public constructor(public columnName: string) { }
-  public setValue(x: T): Column<T> {
-    this.value = x
-    return Object.create(this)
+  public set(x: T): ColumnValue<T> {
+    return new ColumnValue(this.columnName, this.getValue(x))
   }
-  public abstract getValue: () => any
+  public abstract getValue: (x: T) => any
 }
 
 export abstract class Composite<T, S> {
-  public abstract columns: (composite: T) => Column<S>[]
+  public abstract columns: (composite: T) => ColumnValue<S>[]
 }
 
 export abstract class Entity<T> {
-  private _entityRepository: IEntityRepository = new EntityMysqlRepository<T>(this);
+  private _entityRepository: IEntityRepository<T> = new EntityMysqlRepository<T>(this);
 
   abstract tableName(): string;
   abstract tableColumns(): Array<any>;
@@ -26,8 +28,8 @@ export abstract class Entity<T> {
     return this._entityRepository.find(columns);
   }
 
-  public insert(...args: T[]) {
-    return this._entityRepository.insert(args);
+  public insert(first: ColumnValue<T>, ...args: ColumnValue<T>[]) {
+    return this._entityRepository.insert(args.concat([first]));
   }
 
   public update(updates: any) {

@@ -1,8 +1,8 @@
-import { Entity } from './../models/Entity'
+import { Entity, ColumnValue } from './../models/Entity'
 
-export interface IEntityRepository {
+export interface IEntityRepository<T> {
   find(columns?: string[]);
-  insert(entity: any);
+  insert(columns: ColumnValue<T>[]);
   update(updates: any);
   delete();
 }
