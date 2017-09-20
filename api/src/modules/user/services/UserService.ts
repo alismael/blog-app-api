@@ -1,5 +1,5 @@
 import { Trace } from './../../common/models';
-import { UserPassword, UserPasswordData } from './../models/UserPassword';
+// import { UserPassword, UserPasswordData } from './../models/UserPassword';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
 import { User, userEntity, UserUUID } from "../models/User"
@@ -11,11 +11,11 @@ export class UserService {
     return bcrypt.hash(plainPassword, config.hash.saltRounds)
   }
 
-  async register(userPasswordData: UserPasswordData): Promise<number> {
+  async register(userPasswordData: any): Promise<number> {
     const userId = await userEntity.insert(
-      userEntity.trace.created.At.setValue(new Date()), 
-      userEntity.trace.updated.At.setValue(new Date()),
-      userEntity.uuid.setValue(new UserUUID(uuid.v4()))
+      userEntity.trace.created.At.set(new Date()), 
+      userEntity.trace.updated.At.set(new Date()),
+      userEntity.uuid.set(new UserUUID(uuid.v4()))
     )
     // const userpassword = new UserPassword(userId[0], userPasswordData, Trace.createTrace(userId[0]))
     // let hashed = await this.hash(userPassword.password)

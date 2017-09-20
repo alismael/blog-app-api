@@ -1,5 +1,5 @@
 import { Trace, Id, Signture, CompositeTrace } from "./../../common/models";
-import { Entity, Column, Composite } from "../../entity/models/Entity";
+import { Entity, Column, Composite, ColumnValue } from "../../entity/models/Entity";
 
 export class UserId {
   constructor(public value: Id) { }
@@ -21,34 +21,34 @@ export class User {
     public trace: Trace) { }
 }
 
-type UserEntityType = Column<UserId> | Column<UserUUID> | Column<Date> | Composite<Trace, UserId | Date>
+type UserEntityType = UserId | UserUUID | Date | string
 class UserEntity extends Entity<UserEntityType> {
 
   public id = new class extends Column<UserId> {
-    constructor() { super("`id`") }
-    public getValue = (): Id => {
-      return this.value.value
+    constructor() { super("id") }
+    public getValue = (value: UserId): Id => {
+      return value.value
     }
   }()
 
 
   public uuid = new class extends Column<UserUUID> {
-    constructor() { super('`guid`') }
-    public getValue = (): string => {
-      return this.value.value
+    constructor() { super("guid") }
+    public getValue = (x: UserUUID): string => {
+      return x.value
     }
   }
 
   public data = new class extends Composite<UserData, string> {
     public title = new class extends Column<string> {
-      constructor() { super("`title`") }
-      public getValue = (): string => {
-        return this.value
+      constructor() { super("title") }
+      public getValue = (val: string): string => {
+        return val
       }
     }()
 
-    public columns = (composite: UserData): Column<string>[] => {
-      return [this.title.setValue(composite.title)]
+    public columns = (composite: UserData): ColumnValue<string>[] => {
+      return [this.title.set(composite.title)]
     }
   }
 
