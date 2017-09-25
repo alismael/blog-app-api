@@ -1,25 +1,26 @@
 import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
 
+export type Primative = string | boolean | number | Date;
 
-export class ColumnValue<T> {
-  public constructor(public columnName: string, public value: T) { }
+export class ColumnValue<T, S extends Primative> {
+  public constructor(public columnName: string, public value: S) { }
 }
 
-export abstract class Column<T> {
+export abstract class Column<T, S extends Primative> {
   public constructor(public columnName: string) { }
-  public set(x: T): ColumnValue<T> {
-    return new ColumnValue(this.columnName, this.getValue(x))
+  public set(value: T): ColumnValue<T, S> {
+    return new ColumnValue(this.columnName, this.getValue(value))
   }
-  public abstract getValue: (x: T) => any
+  public abstract getValue(x: T): S
 }
 
-export abstract class Composite<T, S> {
-  public abstract columns: (composite: T) => ColumnValue<S>[]
+export abstract class Composite<T, S extends Primative> {
+  public abstract columns: (composite: T) => ColumnValue<T, S>[]
 }
 
-export abstract class Entity<T> {
-  private _entityRepository: IEntityRepository<T> = new EntityMysqlRepository<T>(this);
+export abstract class Entity<T, S extends Primative> {
+  private _entityRepository: IEntityRepository<T, S> = new EntityMysqlRepository<T, S>(this);
 
   abstract tableName(): string;
   abstract tableColumns(): Array<any>;
@@ -28,8 +29,8 @@ export abstract class Entity<T> {
     return this._entityRepository.find(columns);
   }
 
-  public insert(first: ColumnValue<T>, ...args: ColumnValue<T>[]) {
-    return this._entityRepository.insert(args.concat([first]));
+  public insert(...args: ColumnValue<T, S>[]) {
+    return this._entityRepository.insert(args);
   }
 
   public update(updates: any) {
@@ -40,7 +41,7 @@ export abstract class Entity<T> {
     return this._entityRepository.delete();
   }
 
-  private getDto(entity: Entity<T>) {
+  private getDto(entity: Entity<T, S>) {
     let obj = {};
     this.tableColumns().forEach(element => {
       obj[element] = entity[element];

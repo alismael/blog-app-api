@@ -1,9 +1,9 @@
 import { Trace } from './../../common/models';
-// import { UserPassword, UserPasswordData } from './../models/UserPassword';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
-import { User, userEntity, UserUUID } from "../models/User"
+import { User, userEntity, UserUUID, UserId } from "../models/User"
 import * as uuid from "uuid"
+import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef } from "../models/UserPassword";
 
 export class UserService {
 
@@ -11,16 +11,22 @@ export class UserService {
     return bcrypt.hash(plainPassword, config.hash.saltRounds)
   }
 
-  async register(userPasswordData: any): Promise<number> {
-    const userId = await userEntity.insert(
+  async register(data: UserPasswordData): Promise<number> {
+    const id = await userEntity.insert(
       userEntity.trace.created.At.set(new Date()), 
       userEntity.trace.updated.At.set(new Date()),
       userEntity.uuid.set(new UserUUID(uuid.v4()))
     )
-    // const userpassword = new UserPassword(userId[0], userPasswordData, Trace.createTrace(userId[0]))
-    // let hashed = await this.hash(userPassword.password)
-    // userPassword.password = hashed
-    // return userPassword.insert(userPassword)
-    return userId
+    const hashed = await this.hash(data.password)
+    const userPasswordData = Object.assign({}, data, {
+      password: hashed
+    })
+    const userId = new UserId(id[0])
+    const userPasswordRef = new UserPasswordRef(userId)
+    return userPasswordEntity.insert(
+      ...userPasswordEntity.ref.columns(userPasswordRef), 
+      ...userPasswordEntity.data.columns(userPasswordData), 
+      ...userPasswordEntity.trace.columns(Trace.createTrace(userId))
+    )
   }
 } 
