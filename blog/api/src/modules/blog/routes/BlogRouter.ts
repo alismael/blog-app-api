@@ -1,17 +1,17 @@
-// import * as express from 'express'
-// import { Blog } from '../models/Blog'
-// import { BlogService } from '../services/BlogService'
-// var uuid = require('uuid')
+import * as express from 'express'
+import { Blog } from '../models/Blog'
+import { BlogService } from '../services/BlogService'
+var uuid = require('uuid')
 
-// export let blogRouter = express.Router();
+export let blogRouter = express.Router();
 
-// let blogService = new BlogService();
+let blogService = new BlogService();
 
-// // Get all blogs
-// blogRouter.get('/', async (req, res, next) => {
-//   let blogs = await blogService.findAll();
-//   res.json(blogs);
-// });
+// Get all blogs
+blogRouter.get('/', async (req, res, next) => {
+  let blogs = await blogService.findAll();
+  res.json(blogs);
+});
 
 // // Get blog
 // blogRouter.get('/:guid', async (req, res, next) => {
