@@ -1,0 +1,9 @@
+mysql:
+  image: mysql/mysql-server
+  container_name: mysql
+  ports:
+    - "3306:3306"
+  volumes:
+    - /var/lib/mysql:/var/lib/mysql
+  environment:
+    - MYSQL_ROOT_PASSWORD=blog
