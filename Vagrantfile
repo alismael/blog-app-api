@@ -93,6 +93,12 @@ Vagrant.configure(2) do |config|
       sudo apt-get install -y build-essential      
     fi
 
+    # install gulp
+    sudo npm install -g gulp
+    
+    # install knex
+    sudo npm install -g knex
+
     export COMPOSE_FILE=/vagrant/docker/docker-compose.yml
     docker-compose up -d
   SHELL
