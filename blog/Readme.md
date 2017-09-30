@@ -31,8 +31,20 @@ You can connect to your mysql container
 docker exec -it mysql mysql -uroot -pblog
  ```
  
- Then run the next to commands
+ Then run the next two commands
  ```sql
  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'blog';
  CREATE DATABASE blog;
+ ```
+
+ - Migrations
+
+Change directory to migrations folder
+ ```sh
+cd /vagrant/blog/api/src/migrations/
+ ```
+ 
+ Then run the next command
+ ```sh
+ knex migrate:latest
  ```
