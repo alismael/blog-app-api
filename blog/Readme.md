@@ -39,12 +39,35 @@ docker exec -it mysql mysql -uroot -pblog
 
  - Migrations
 
-Change directory to migrations folder
+Change directory to migrations folder and run migrations
  ```sh
 cd /vagrant/blog/api/src/migrations/
+knex migrate:latest
  ```
- 
- Then run the next command
+
+## Install packages
+
+API packages
  ```sh
- knex migrate:latest
- ```
+cd /vagrant/blog/api/src/
+npm install
+```
+
+Front-end packages
+ ```sh
+cd /vagrant/blog/web/src/
+npm install
+```
+
+## Start API
+
+Gulp watch
+ ```sh
+cd /vagrant/blog/api/src/
+gulp watch
+```
+Start node server 
+ ```sh
+cd /vagrant/blog/api/src/
+npm start
+```
