@@ -1,6 +1,6 @@
 import { UserId } from "./User";
-import { Trace } from "./../../common/models";
-import { Entity } from "../../entity/models/Entity";
+import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn } from "./../../common/models";
+import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
 export interface IRegistrationRequest {
   username: string
@@ -10,7 +10,11 @@ export interface IRegistrationRequest {
 }
 
 export class UserPasswordData {
-  constructor(public username: string, public email: string, public password: string) {}
+  constructor(public username: string, public email: string, public password: string) { }
+}
+
+export class UserPasswordRef {
+  constructor(public userId: UserId) { }
 }
 
 export class UserPassword {
@@ -28,7 +32,7 @@ export class UserPassword {
           resolve(userPassword)
         else
           reject("Invalid request")
-      }else
+      } else
         reject("Invalid request")
     })
   }
@@ -39,13 +43,41 @@ export class UserPassword {
   }
 
   public constructor(
-    public userId: UserId,
+    public ref: UserPasswordRef,
     public data: UserPasswordData,
     public trace: Trace
-  ) {}
+  ) { }
 }
 
-export class UserPasswordEntity extends Entity {
+type UserPasswordEntityType = UserId | Date | string
+class UserPasswordEntity extends Entity<UserPasswordEntityType, Primative> {
+
+  public data = new class extends Composite<UserPasswordData, string> {
+    public email = stringColumn("email")
+    public username = stringColumn("username")
+    public password = stringColumn("password")
+
+    public columns = (composite: UserPasswordData): ColumnValue<UserPasswordData, string>[] => {
+      return [
+        this.email.set(composite.email), 
+        this.username.set(composite.username),
+        this.password.set(composite.password)
+      ]
+    }
+  }
+
+  public ref = new class extends Composite<UserPasswordRef, number> {
+    public userId = UserIdColumn("user_id") 
+
+    public columns = (composite: UserPasswordRef) => {
+      return [
+        this.userId.set(composite.userId) 
+      ]
+    }
+  }    
+  
+  public trace = CompositeTrace  
+
   public tableName(): string {
     return "user_password"
   }
@@ -53,3 +85,6 @@ export class UserPasswordEntity extends Entity {
     return ["email", "username", "password", "user_id", "created_by", "updated_by", "created_at", "updated_at"]
   }
 }
+
+
+export const userPasswordEntity = new UserPasswordEntity()

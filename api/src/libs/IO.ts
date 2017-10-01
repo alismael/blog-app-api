@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
   user: "root"
 });
 
-class DBIO<T> {
+export class DBIO<T> {
 
   constructor(public query?: string, public params?: any[]) { }
 
@@ -153,6 +153,7 @@ let io = new DBIO<User[]>("select * from user", [])
     return res
   })
 
+  
 // rollback io
 let io2 = new DBIO("insert into user(guid, created_at, updated_at) values(uuid(), now(), now());", [])
   .flatMap(id => new DBIO("select * from user_password", []))

@@ -1,53 +1,41 @@
-import { UserPassword } from "./../models/UserPassword";
-import { config } from "./../../../config/config"
-import * as bcrypt from "bcrypt"
-import { User } from "../models/User"
+import { ColumnValue } from './../../entity/models/Entity';
+import { Trace } from './../../common/models';
+import { config } from './../../../config/config'
+import * as bcrypt from 'bcrypt'
+import { User, userEntity, UserUUID, UserId } from "../models/User"
 import * as uuid from "uuid"
-import * as jwt from "jsonwebtoken"
+import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef } from "../models/UserPassword";
+import { Operation, OperatorEnum, Primative } from "../../entity/models/Entity";
+
+function and<T, S extends Primative, B extends Primative>(c1: ColumnValue<T, S>, c2: ColumnValue<T, B>) {
+  return new Operation<T, S | B>(OperatorEnum.AND, [c1, c2])
+}
 
 export class UserService {
 
-  private userPassword = new UserPassword()
-
-  public async hash(plainPassword: string): Promise<string> {
+  async hash(plainPassword: string): Promise<string> {
     return bcrypt.hash(plainPassword, config.hash.saltRounds)
   }
 
-  public async register(userPassword: UserPassword): Promise<number> {
-    let user = new User()
-    user.created_at = new Date()
-    user.updated_at = new Date()
-    user.guid = uuid.v4()
-    let userId = await this.user.insert(user)
-    userPassword.user_id = userId[0]
-    userPassword.created_at = new Date()
-    userPassword.updated_at = new Date()
-    userPassword.created_by = userId[0]
-    userPassword.updated_by = userId[0]
-    let hashed = await this.hash(userPassword.password)
-    userPassword.password = hashed
-    return userPassword.insert(userPassword)
-  }
+  async register(data: UserPasswordData): Promise<number> {
 
-  async login(username: string, password: string): Promise<any> {
-    let hased = await this.hash(password)
-    let userPassword: any[] = await this.userPassword.find(["username", "password"])
-      .where({
-        username: username,
-      })
-    console.log(userPassword)
-    if (userPassword.length > 0) {
-      let result = await bcrypt.compareSync(password, userPassword[0].password)
-      if (result) {
-        let token = jwt.sign({
-          uuid: userPassword[0].guid
-        }, config.jwt.issuer, { expiresIn: "24h" });
-        return Promise.resolve(token)
-      }
-      else
-        return Promise.reject("password Invalid")
-    } else
-      return Promise.reject("username not found")
+    // userEntity.findOne(userEntity.uuid.set(UserUUID("abdo")))
 
+    const id = await userEntity.insert(
+      userEntity.trace.created.At.set(new Date()), 
+      userEntity.trace.updated.At.set(new Date()),
+      userEntity.uuid.set(new UserUUID(uuid.v4()))
+    )
+    const hashed = await this.hash(data.password)
+    const userPasswordData = Object.assign({}, data, {
+      password: hashed
+    })
+    const userId = new UserId(id[0])
+    const userPasswordRef = new UserPasswordRef(userId)
+    return userPasswordEntity.insert(
+      ...userPasswordEntity.ref.columns(userPasswordRef), 
+      ...userPasswordEntity.data.columns(userPasswordData), 
+      ...userPasswordEntity.trace.columns(Trace.createTrace(userId))
+    )
   }
-}
+} 

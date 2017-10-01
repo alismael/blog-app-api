@@ -1,9 +1,8 @@
-import { Select } from "squel";
-import { Entity } from "./../models/Entity"
+import { Entity, ColumnValue, Primative } from './../models/Entity'
 
-export interface IEntityRepository {
-    find(columns?: string[]): Select
-    insert(entity: any);
-    update(updates: any);
-    delete();
+export interface IEntityRepository<T, S extends Primative> {
+  find(columns?: string[]);
+  insert(columns: ColumnValue<T, S>[]);
+  update(updates: any);
+  delete();
 }
