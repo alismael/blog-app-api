@@ -1,7 +1,6 @@
 import { Maybe } from 'tsmonad';
 import { IEntityRepository } from './IEntityRepository'
 import { Entity, Column, ColumnValue, Primative } from './../models/Entity'
-import knex from './../../knex/knex'
 import * as squel from "squel"
 import { DBIO } from "../../../libs/IO";
 
@@ -15,12 +14,12 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // get entity
-  public find(columns?: string[]) {
-    // squel.select()
-    return knex
-      .select(columns)
-      .from(this._table)
-      .clone();
+  public find(columns?: string[]): DBIO<T[]> {
+    let query = squel.select({ separator: "\n" })
+    .from(this._table)
+    .toParam()
+
+    return new DBIO<T[]>(query.text, query.values)
   }
 
   public findOne(column: ColumnValue<T, S>): DBIO<Maybe<T>> {
@@ -39,25 +38,35 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // Add new entity
-  public insert(columns: ColumnValue<T, S>[]) {
+  public insert(columns: ColumnValue<T, S>[]): DBIO<number> {
     let cols = columns.reduce((acc, next) => 
-      Object.assign(acc, {[next.columnName]: next.value}) 
-     , {})
-    return knex(this._table)
-      .insert(cols)
-      .clone()
+    Object.assign(acc, {[next.columnName]: next.value}) 
+   , {})
+
+    let query = squel.insert()
+    .into(this._table)
+    .setFields(cols)
+    .toParam()
+
+    return new DBIO<number>(query.text, query.values)
   }
 
   // Update new entity
-  public update(updates: any) {
-    return knex(this._table)
-      .update(updates)
-      .clone();
+  public update(columns: ColumnValue<T, S>[]): DBIO<number> {
+    let cols = columns.reduce((acc, next) => 
+    Object.assign(acc, {[next.columnName]: next.value}) 
+   , {})
+
+    let query = squel.update()
+    .table(this._table)
+    .setFields(cols)
+    .toParam()
+
+    return new DBIO<number>(query.text, query.values)
   }
 
   // Delete entity
   public delete() {
-    return knex(this._table)
-      .del();
+    return true
   }
 }

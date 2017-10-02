@@ -1,6 +1,7 @@
 import { Maybe } from 'tsmonad';
 import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
+import { DBIO } from "../../../libs/IO";
 
 export type Primative = string | boolean | number | Date;
 
@@ -44,25 +45,25 @@ export abstract class Entity<T, S extends Primative> {
   abstract tableName(): string;
   abstract tableColumns(): Array<any>;
 
-  public find(columns?: string[]) {
+  public find(columns?: string[]): DBIO<T[]> {
     return this._entityRepository.find(columns);
   }
 
-  public findOne(column: ColumnValue<T, S>): Maybe<T> {
-    return this._entityRepository.findOne(ColumnValue) 
+  public findOne(column: ColumnValue<T, S>): DBIO<Maybe<T>> {
+    return this._entityRepository.findOne(column) 
   }
 
-  public insert<N extends keyof this>(...args: ColumnValue<T, S>[]) {
+  public insert<N extends keyof this>(...args: ColumnValue<T, S>[]): DBIO<number> {
     return this._entityRepository.insert(args);
   }
 
-  public update(updates: any) {
-    return this._entityRepository.update(updates);
+  public update(...args: ColumnValue<T, S>[]): DBIO<number> {
+    return this._entityRepository.update(args);
   }
 
-  public delete() {
-    return this._entityRepository.delete();
-  }
+  // public delete() {
+  //   return this._entityRepository.delete();
+  // }
 
   private getDto(entity: Entity<T, S>) {
     let obj = {};
