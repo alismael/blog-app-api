@@ -87,4 +87,4 @@ class UserPasswordEntity extends Entity<UserPasswordEntityType, Primative> {
 }
 
 
-export const userPasswordEntity = new UserPasswordEntity
+export const userPasswordEntity = new UserPasswordEntity()
