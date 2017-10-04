@@ -126,33 +126,3 @@ class IOTransaction<A> extends DBIO<A> {
 
   }
 }
-
-interface User {
-  id: number,
-  guid: string,
-  title: string,
-  created_by: number,
-  created_at: string,
-  updated_by: number,
-  updated_at: string
-}
-
-
-// let io = new DBIO<User[]>("select * from user", [])
-//   .flatMap(res => {
-//     let user = res.filter(user => user.id == 16)[0]
-//     return new DBIO("select * from user_password where user_id = ?", [user.id])
-//   })
-//   .map(res => {
-//     return res
-//   })
-
-  
-// // rollback io
-// let io2 = new DBIO("insert into user(guid, created_at, updated_at) values(uuid(), now(), now());", [])
-//   .flatMap(id => new DBIO("select * from user_password", []))
-
-// DBIO.ioTransaction(io2).execute(connection)
-//   .then(a => console.log("success success success success success"))
-//   .catch(err => console.log(err))
-
