@@ -20,12 +20,12 @@ export class UserService {
 
   register(data: UserPasswordData): DBIO<number> {
     
-    function insertPassword(id: number) {
+    const insertPassword = (id: number): DBIO<number> => {
       const hashed = this.hash(data.password)
       const userPasswordData = Object.assign({}, data, {
         password: hashed
       })
-      const userId = new UserId(id[0])
+      const userId = new UserId(id)
       const userPasswordRef = new UserPasswordRef(userId)
       return userPasswordEntity.insert(
         ...userPasswordEntity.ref.columns(userPasswordRef), 
@@ -34,10 +34,12 @@ export class UserService {
       )
     }
     
-    return userEntity.insert(
+    let io = userEntity.insert(
       userEntity.trace.created.At.set(new Date()), 
       userEntity.trace.updated.At.set(new Date()),
       userEntity.uuid.set(new UserUUID(uuid.v4()))
     ).flatMap(id => insertPassword(id))
+    
+    return DBIO.ioTransaction(io)
   }
 } 

@@ -4,6 +4,17 @@ import { Entity, Column, ColumnValue, Primative } from './../models/Entity'
 import * as squel from "squel"
 import { DBIO } from "../../../libs/IO";
 
+interface IOkPacket {
+  fieldCount: number,
+  affectedRows: number,
+  insertId: number,
+  serverStatus: number,
+  warningCount: number,
+  message: string,
+  protocol41: boolean,
+  changedRows: number
+}
+
 export class EntityMysqlRepository<T, S extends Primative> implements IEntityRepository<T, S> {
   private _table: string;
   private _columns: Array<any>;
@@ -40,15 +51,18 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   // Add new entity
   public insert(columns: ColumnValue<T, S>[]): DBIO<number> {
     let cols = columns.reduce((acc, next) => 
-    Object.assign(acc, {[next.columnName]: next.value}) 
+    Object.assign(acc, {[next.columnName]: `${next.value}`}) 
    , {})
+
+   console.log(cols)
 
     let query = squel.insert()
     .into(this._table)
     .setFields(cols)
     .toParam()
 
-    return new DBIO<number>(query.text, query.values)
+    return new DBIO<IOkPacket>(query.text, query.values)
+    .map(result => result.insertId)
   }
 
   // Update new entity
