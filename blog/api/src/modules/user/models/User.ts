@@ -21,9 +21,7 @@ export class User {
     public trace: Trace) { }
 }
 
-type UserEntityType = UserId | UserUUID | Date | string
-
-class UserEntity extends Entity<UserEntityType, Primative> {
+class UserEntity extends Entity<User, Primative> {
 
   public id = UserIdColumn("id")
   public uuid = new class extends Column<UserUUID, UUID> {
@@ -52,7 +50,5 @@ class UserEntity extends Entity<UserEntityType, Primative> {
 
 }
 
-export const userEntity = new UserEntity
-
-
+export const userEntity = new UserEntity()
 

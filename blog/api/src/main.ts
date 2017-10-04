@@ -1,26 +1,31 @@
-import { config } from './config/config'
+import { config } from "./config/config"
 
 // Import modules routes
-import { apiRoutes } from './apiRoutes';
-import { webRoutes } from './webRoutes';
+import * as cookieParser from "cookie-parser"
+import { apiRoutes } from "./apiRoutes"
+import { webRoutes } from "./webRoutes"
 
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser')
+import * as bodyParser from "body-parser"
+import * as express from "express"
+
+const app = express()
 
 // parse application/json
 app.use(bodyParser.json())
 
+// cookie parser
+// app.use(cookieParser)
+
 // use api routes under /api
-app.use('/api', apiRoutes);
+app.use("/api", apiRoutes)
 
 // use web routes under /
-app.use('/', webRoutes);
+app.use("/", webRoutes)
 
 // Handle error routes
-app.use(function(req, res) {
-  res.sendStatus(404);
-});
+app.use((req, res) => {
+  res.sendStatus(404)
+})
 
 // app listens on http://{{host}}:{{port}}
-app.listen(config.port, config.host);
+app.listen(config.port, config.host)
