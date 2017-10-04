@@ -54,8 +54,6 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
     Object.assign(acc, {[next.columnName]: `${next.value}`}) 
    , {})
 
-   console.log(cols)
-
     let query = squel.insert()
     .into(this._table)
     .setFields(cols)
