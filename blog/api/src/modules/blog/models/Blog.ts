@@ -1,6 +1,10 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID } from "./../../common/models";
 import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
+export interface IInsertBlogRequest {
+  title: string
+  description: string
+}
 
 export class BlogId {
   constructor(public value: Id) { }
@@ -12,6 +16,19 @@ export class BlogUUID {
 
 export class BlogData {
   constructor(public title: string, public description: string) { }
+
+  public static vaidateInsertBlogRequest = (insertBlogRequest: IInsertBlogRequest): Promise<BlogData> => {
+    return new Promise((resolve, reject) => {
+      if (insertBlogRequest.title && insertBlogRequest.description) {
+        const blogData = new BlogData(
+          insertBlogRequest.title,
+          insertBlogRequest.description
+        )
+        resolve(blogData)
+      } else
+        reject("Invalid request")
+    })
+  }
 }
 
 export class Blog {
@@ -22,16 +39,16 @@ export class Blog {
     public trace: Trace) { }
 }
 
-type BlogEntityType = BlogId | BlogUUID | Date | string
+export type BlogEntityType = BlogId | BlogUUID | Date | string
 
 class BlogEntity extends Entity<BlogEntityType, Primative> {
 
   public id = new class extends Column<BlogId, Id> {
-		constructor() { super("id") }
-		public getValue(value: BlogId): Id {
-			return value.value
-		}
-	}
+    constructor() { super("id") }
+    public getValue(value: BlogId): Id {
+      return value.value
+    }
+  }
 
   public uuid = new class extends Column<BlogUUID, UUID> {
     constructor() { super("guid") }
