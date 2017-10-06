@@ -41,10 +41,7 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
 
     return new DBIO<T[]>(query.text, query.values)
     .map(users => {
-      if(users.length == 0)
-        return Maybe.nothing()
-      else 
-        return Maybe.just(users[0])
+      return users.head()
     })
   }
 
