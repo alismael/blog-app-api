@@ -1,4 +1,4 @@
-import { Blog, blogEntity, BlogUUID, BlogId, BlogData, BlogEntityType } from "../models/Blog"
+import { Blog, blogEntity, BlogUUID, BlogId, BlogData } from "../models/Blog"
 import { DBIO } from "../../../libs/IO"
 import { Maybe } from 'tsmonad'
 import { Trace } from './../../common/models'
@@ -8,12 +8,12 @@ import * as uuid from "uuid"
 export class BlogService {
 
   // Get all blogs
-  findAll(): DBIO<BlogEntityType[]> {
+  findAll(): DBIO<Blog[]> {
     return blogEntity.find()
   }
 
   // Get blog by guid
-  findByGuid(guid: string): DBIO<Maybe<BlogEntityType>> {
+  findByGuid(guid: string): DBIO<Maybe<Blog>> {
     return blogEntity.findOne(blogEntity.uuid.set(new BlogUUID(guid)))
   }
 
