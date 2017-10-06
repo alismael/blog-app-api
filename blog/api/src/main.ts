@@ -1,7 +1,6 @@
 import { config } from "./config/config"
-
+import * as global from "./global"
 // Import modules routes
-import * as cookieParser from "cookie-parser"
 import { apiRoutes } from "./apiRoutes"
 import { webRoutes } from "./webRoutes"
 
@@ -12,9 +11,6 @@ const app = express()
 
 // parse application/json
 app.use(bodyParser.json())
-
-// cookie parser
-// app.use(cookieParser)
 
 // use api routes under /api
 app.use("/api", apiRoutes)
