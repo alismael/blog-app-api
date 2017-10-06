@@ -48,7 +48,6 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
 
     return new DBIO<T[]>(query.text, query.values)
       .map(entites => {
-        console.log('entites', entites)
         return entites.head().map((enitiy) => {
           console.log(enitiy)
           return this._entity.map(enitiy)
