@@ -44,6 +44,7 @@ export abstract class Entity<T, S extends Primative> {
 
   abstract tableName(): string;
   abstract tableColumns(): Array<any>;
+  abstract map(object: any): T;
 
   public find(columns?: string[]): DBIO<T[]> {
     return this._entityRepository.find(columns);
