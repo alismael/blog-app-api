@@ -39,9 +39,7 @@ export class Blog {
     public trace: Trace) { }
 }
 
-export type BlogEntityType = BlogId | BlogUUID | Date | string
-
-class BlogEntity extends Entity<BlogEntityType, Primative> {
+class BlogEntity extends Entity<Blog, Primative> {
 
   public id = new class extends Column<BlogId, Id> {
     constructor() { super("id") }

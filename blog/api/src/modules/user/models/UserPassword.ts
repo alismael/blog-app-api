@@ -49,8 +49,7 @@ export class UserPassword {
   ) { }
 }
 
-type UserPasswordEntityType = UserId | Date | string
-class UserPasswordEntity extends Entity<UserPasswordEntityType, Primative> {
+class UserPasswordEntity extends Entity<UserPassword, Primative> {
 
   public data = new class extends Composite<UserPasswordData, string> {
     public email = stringColumn("email")
