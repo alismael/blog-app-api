@@ -2,7 +2,7 @@ import * as express from 'express'
 import { Blog, BlogData } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
-var uuid = require('uuid')
+import * as uuid from 'uuid'
 
 export let blogRouter = express.Router();
 
