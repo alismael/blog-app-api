@@ -34,8 +34,6 @@ export class UserService {
   register(data: UserPasswordData): DBIO<number> {
     let io = userPasswordEntity.findOne(userPasswordEntity.data.username.set(data.username))
       .flatMap(result => {
-        console.log(result)
-        console.log("*******************************************************")
         return result.caseOf({
           just: (_) => DBIO.failed("Dublicate user name"),
           nothing: () => DBIO.successful(true)

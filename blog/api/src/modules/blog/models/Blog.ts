@@ -1,7 +1,15 @@
-import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID } from "./../../common/models";
+import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models";
 import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
+import { UserId } from "../../user/models/User"
 
 export interface IInsertBlogRequest {
+  title: string
+  description: string
+}
+
+export interface IBlogRecord extends ITraceRecord {
+  id: Id
+  guid: string
   title: string
   description: string
 }
@@ -71,6 +79,15 @@ class BlogEntity extends Entity<Blog, Primative> {
   }
   public tableColumns() {
     return ['id', 'title', 'description', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+  }
+
+  public map(object: IBlogRecord): Blog {
+    let id = new BlogId(object.id),
+      guid = new BlogUUID(object.guid),
+      data = new BlogData(object.title, object.description),
+      trace = new Trace(new Signture(new UserId(object.created_by), new Date(object.created_at)), new Signture(new UserId(object.updated_by), new Date(object.updated_at)))
+
+    return new Blog(id, guid, data, trace);
   }
 
 }

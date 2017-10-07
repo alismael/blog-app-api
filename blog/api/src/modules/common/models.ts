@@ -16,6 +16,13 @@ export class Trace {
   constructor(public created: Signture, public updated: Signture) { }
 }
 
+export interface ITraceRecord {
+  created_by: Id
+  created_at: string
+  updated_by: Id
+  updated_at: string
+}
+
 export const UserIdColumn = (columnName: string) => new class extends Column<UserId, Id> {
   constructor() { super(columnName) }
   public getValue(value: UserId): Id {
