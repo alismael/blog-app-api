@@ -1,5 +1,5 @@
 import { UserId } from "./User";
-import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn } from "./../../common/models";
+import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn, ITraceRecord, Signture } from "./../../common/models";
 import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
 export interface IRegistrationRequest {
@@ -15,6 +15,13 @@ export class UserPasswordData {
 
 export class UserPasswordRef {
   constructor(public userId: UserId) { }
+}
+
+export interface IUserPasswordRecord extends ITraceRecord {
+  userId: Id
+  username: string
+  email: string
+  password: string
 }
 
 export class UserPassword {
@@ -76,6 +83,14 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
   }    
   
   public trace = CompositeTrace  
+
+  public map(object: IUserPasswordRecord): UserPassword {
+    const ref = new UserPasswordRef(new UserId(object.userId)),
+      data = new UserPasswordData(object.username, object.email, object.password),
+      trace = new Trace(new Signture(new UserId(object.created_by), new Date(object.created_at)), new Signture(new UserId(object.updated_by), new Date(object.updated_at)))
+
+    return new UserPassword(ref, data, trace);
+  }
 
   public tableName(): string {
     return "user_password"

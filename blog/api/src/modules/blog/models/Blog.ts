@@ -1,4 +1,4 @@
-import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID } from "./../../common/models";
+import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models";
 import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 import { UserId } from "../../user/models/User"
 
@@ -7,15 +7,11 @@ export interface IInsertBlogRequest {
   description: string
 }
 
-export interface IBlogRecord {
+export interface IBlogRecord extends ITraceRecord {
   id: Id
   guid: string
   title: string
   description: string
-  created_by: Id
-  created_at: string
-  updated_by: Id
-  updated_at: string
 }
 
 export class BlogId {

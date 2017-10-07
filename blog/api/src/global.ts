@@ -2,11 +2,12 @@ import { Maybe } from 'tsmonad';
 
 // extend native typescript types
 declare global {
-    interface Array<T> {
-      head(): Maybe<T>;
-    }
+  interface Array<T> {
+    head(): Maybe<T>;
   }
-  
+}
+
+export default (function() {
   if (!Array.prototype.head) {
     Array.prototype.head = function<T>(): Maybe<T> {
       if(this.length != 0)
@@ -15,5 +16,4 @@ declare global {
         return Maybe.nothing()
     }
   }
-  
-  export {}
+})
