@@ -3,7 +3,6 @@ import { IEntityRepository } from './IEntityRepository'
 import { Entity, Column, ColumnValue, Primative } from './../models/Entity'
 import * as squel from "squel"
 import { DBIO } from "../../../libs/IO";
-import * as global from "../../../global"
 
 interface IOkPacket {
   fieldCount: number,
