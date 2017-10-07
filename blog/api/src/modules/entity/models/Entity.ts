@@ -61,7 +61,6 @@ export abstract class Entity<T, S extends Primative> {
   public update(...args: ColumnValue<T, S>[]): DBIO<number> {
     return this._entityRepository.update(args);
   }
-
   // public delete() {
   //   return this._entityRepository.delete();
   // }

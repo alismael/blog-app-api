@@ -1,11 +1,14 @@
+import { Maybe } from 'tsmonad';
 import { config } from "./config/config"
-import * as global from "./global"
+import global from "./global"
 // Import modules routes
 import { apiRoutes } from "./apiRoutes"
 import { webRoutes } from "./webRoutes"
 
 import * as bodyParser from "body-parser"
 import * as express from "express"
+
+global()
 
 const app = express()
 
