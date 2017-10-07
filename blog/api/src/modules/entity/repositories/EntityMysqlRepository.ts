@@ -70,13 +70,14 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // Update new entity
-  public update(columns: ColumnValue<T, S>[]): DBIO<number> {
+  public update(condition: ColumnValue<T, S>, columns: ColumnValue<T, S>[]): DBIO<number> {
     let cols = columns.reduce((acc, next) =>
       Object.assign(acc, { [next.columnName]: next.value })
       , {})
 
     let query = squel.update()
       .table(this._table)
+      .where(`${condition.columnName} = ?`, [condition.value])
       .setFields(cols)
       .toParam()
 
