@@ -18,28 +18,38 @@ export class UserService {
     return bcrypt.hashSync(plainPassword, config.hash.saltRounds)
   }
 
+  private insertPassword(userId: UserId, data: UserPasswordData): DBIO<number> {
+    const hashed = this.hash(data.password)
+    const userPasswordData = Object.assign({}, data, {
+      password: hashed
+    })
+    const userPasswordRef = new UserPasswordRef(userId)
+    return userPasswordEntity.insert(
+      ...userPasswordEntity.ref.columns(userPasswordRef),
+      ...userPasswordEntity.data.columns(userPasswordData),
+      ...userPasswordEntity.trace.columns(Trace.createTrace(userId))
+    )
+  }
+
   register(data: UserPasswordData): DBIO<number> {
-    
-    const insertPassword = (id: number): DBIO<number> => {
-      const hashed = this.hash(data.password)
-      const userPasswordData = Object.assign({}, data, {
-        password: hashed
+    let io = userPasswordEntity.findOne(userPasswordEntity.data.username.set(data.username))
+      .flatMap(result => {
+        console.log(result)
+        console.log("*******************************************************")
+        return result.caseOf({
+          just: (_) => DBIO.failed("Dublicate user name"),
+          nothing: () => DBIO.successful(true)
+        })
       })
-      const userId = new UserId(id)
-      const userPasswordRef = new UserPasswordRef(userId)
-      return userPasswordEntity.insert(
-        ...userPasswordEntity.ref.columns(userPasswordRef), 
-        ...userPasswordEntity.data.columns(userPasswordData), 
-        ...userPasswordEntity.trace.columns(Trace.createTrace(userId))
-      )
-    }
-    
-    let io = userEntity.insert(
-      userEntity.trace.created.At.set(new Date()), 
-      userEntity.trace.updated.At.set(new Date()),
-      userEntity.uuid.set(new UserUUID(uuid.v4()))
-    ).flatMap(id => insertPassword(id))
-    
+      .flatMap(_ => {
+        return userEntity.insert(
+          userEntity.trace.created.At.set(new Date()),
+          userEntity.trace.updated.At.set(new Date()),
+          userEntity.uuid.set(new UserUUID(uuid.v4()))
+        )
+      })
+      .flatMap(id => this.insertPassword(new UserId(id), data))
+
     return DBIO.ioTransaction(io)
   }
 } 

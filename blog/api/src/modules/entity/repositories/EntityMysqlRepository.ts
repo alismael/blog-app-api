@@ -3,6 +3,7 @@ import { IEntityRepository } from './IEntityRepository'
 import { Entity, Column, ColumnValue, Primative } from './../models/Entity'
 import * as squel from "squel"
 import { DBIO } from "../../../libs/IO";
+import * as global from "../../../global"
 
 interface IOkPacket {
   fieldCount: number,
@@ -39,8 +40,9 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
     .where(`${column.columnName} = ?`, [column.value])
     .toParam()
 
-    return new DBIO<T[]>(query.text, query.values)
+    return new DBIO<Array<any>>(query.text, query.values)
     .map(users => {
+      console.log(users)
       return users.head()
     })
   }
