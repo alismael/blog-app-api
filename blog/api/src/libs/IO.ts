@@ -24,8 +24,12 @@ export class DBIO<T> {
     return new IOSequance(ios)
   }
 
-  static ioPure<A>(a: A): DBIO<A> {
-    return new IOPure(a)
+  static successful<A>(a: A): DBIO<A> {
+    return new IOSuccessful(a)
+  }
+
+  static failed<A>(err: string): DBIO<A> {
+    return new IOFail<A>(err)
   }
 
   execute(connection: IConnection, isTransaction: boolean = false): Promise<T> {
@@ -60,7 +64,16 @@ class IOFilter<A> extends DBIO<A> {
 
 }
 
-class IOPure<A> extends DBIO<A> {
+class IOFail<A> extends DBIO<A> {
+  constructor(public err: string) { super() }
+
+  execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {
+    throw this.err
+  }
+}
+
+
+class IOSuccessful<A> extends DBIO<A> {
   constructor(public val: A) { super() }
 
   execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {

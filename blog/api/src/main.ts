@@ -1,11 +1,30 @@
+import { Maybe } from 'tsmonad';
 import { config } from "./config/config"
-import * as global from "./global"
+import global from "./global"
 // Import modules routes
 import { apiRoutes } from "./apiRoutes"
 import { webRoutes } from "./webRoutes"
 
 import * as bodyParser from "body-parser"
 import * as express from "express"
+
+global()
+
+// extend native typescript types
+// declare global {
+//   interface Array<T> {
+//     head(): Maybe<T>;
+//   }
+// }
+
+// if (!Array.prototype.head) {
+//   Array.prototype.head = function<T>(): Maybe<T> {
+//     if(this.length == 0)
+//       return Maybe.just(this[0])
+//     else
+//       return Maybe.nothing()
+//   }
+// }
 
 const app = express()
 
