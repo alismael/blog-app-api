@@ -1,4 +1,4 @@
-import { Blog, blogEntity, BlogUUID, BlogId, BlogData} from "../models/Blog"
+import { Blog, blogEntity, BlogUUID, BlogId, BlogData } from "../models/Blog"
 import { DBIO } from "../../../libs/IO"
 import { Maybe } from 'tsmonad'
 import { Trace } from './../../common/models'

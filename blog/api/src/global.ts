@@ -11,8 +11,8 @@ declare global {
 
 export default (function() {
   if (!Array.prototype.head) {
-    Array.prototype.head = function <T>(): Maybe<T> {
-      if (this.length == 0)
+    Array.prototype.head = function<T>(): Maybe<T> {
+      if(this.length != 0)
         return Maybe.just(this[0])
       else
         return Maybe.nothing()
