@@ -68,7 +68,7 @@ class BlogEntity extends Entity<Blog, Primative> {
     public description = stringColumn("description")
 
     public columns = (composite: BlogData) => {
-      return [this.title.set(composite.title), this.title.set(composite.description)]
+      return [this.title.set(composite.title), this.description.set(composite.description)]
     }
   }
 
