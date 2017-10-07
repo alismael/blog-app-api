@@ -27,15 +27,15 @@ export class BlogService {
     )
   }
 
-  //   // Update blog
-  //   public async update(guid: string, updates: any) {
-  //     return await blogEntity
-  //       .update(updates)
-  //       .where('guid', guid)
-  //       .catch(function(err) {
-  //         return err
-  //       });
-  //   }
+  // Update blog
+  update(guid: string, data: BlogData): DBIO<number> {
+    const userId = new UserId(1) // use test id=1    
+    return blogEntity.update(
+      blogEntity.uuid.set(new BlogUUID(guid)),
+      ...blogEntity.data.columns(new BlogData(data.title, data.description)),
+      // ...blogEntity.trace.columns(Trace.createTrace(userId))
+    )
+  }
 
   //   // Delete blog
   //   public async delete(guid: string) {
