@@ -7,8 +7,6 @@ declare global {
   }
 }
 
-
-
 export default (function() {
   if (!Array.prototype.head) {
     Array.prototype.head = function<T>(): Maybe<T> {
