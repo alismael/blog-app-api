@@ -19,7 +19,7 @@ export class BlogService {
 
   // Add new blog
   insert(data: BlogData): DBIO<number> {
-    const userId = new UserId(1) // use test id=1
+    let userId = new UserId(1) // use test id=1
     return blogEntity.insert(
       blogEntity.uuid.set(new BlogUUID(uuid.v4())),
       ...blogEntity.data.columns(new BlogData(data.title, data.description)),
@@ -29,11 +29,11 @@ export class BlogService {
 
   // Update blog
   update(guid: string, data: BlogData): DBIO<number> {
-    const userId = new UserId(1) // use test id=1    
+    let userId = new UserId(2) // use test id=2
     return blogEntity.update(
       blogEntity.uuid.set(new BlogUUID(guid)),
       ...blogEntity.data.columns(new BlogData(data.title, data.description)),
-      // ...blogEntity.trace.columns(Trace.createTrace(userId))
+      ...blogEntity.trace.updated.columns(Trace.createTrace(userId).updated)
     )
   }
 
