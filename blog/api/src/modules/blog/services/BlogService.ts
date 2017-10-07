@@ -36,14 +36,4 @@ export class BlogService {
       ...blogEntity.trace.updated.columns(Trace.createTrace(userId).updated)
     )
   }
-
-  //   // Delete blog
-  //   public async delete(guid: string) {
-  //     return await blogEntity
-  //       .delete()
-  //       .where('guid', guid)
-  //       .catch(function(err) {
-  //         return err
-  //       });
-  //   }
 }

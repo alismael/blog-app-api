@@ -59,9 +59,6 @@ class UserEntity extends Entity<User, Primative> {
   public tableName(): string {
     return "user"
   }
-  public tableColumns() {
-    return ["guid", "title", "created_by", "created_at", "updated_by", "updated_at"]
-  }
 
 }
 

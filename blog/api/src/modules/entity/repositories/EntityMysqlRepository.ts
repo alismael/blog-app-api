@@ -18,12 +18,10 @@ interface IOkPacket {
 export class EntityMysqlRepository<T, S extends Primative> implements IEntityRepository<T, S> {
   private _entity: Entity<T, S>;
   private _table: string;
-  private _columns: Array<any>;
 
   constructor(entity: Entity<T, S>) {
     this._entity = entity;
     this._table = entity.tableName();
-    this._columns = entity.tableColumns();
   }
 
   // get entity

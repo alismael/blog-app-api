@@ -73,10 +73,3 @@ blogRouter.put('/:guid', (req, res, next) => {
     console.log(err)
   })
 });
-
-// // Delete blog
-// blogRouter.delete('/:guid', async (req, res, next) => {
-//   let guid = req.params.guid;
-//   let response = await blogService.delete(guid);
-//   res.json(response);
-// });
