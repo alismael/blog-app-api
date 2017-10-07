@@ -77,9 +77,6 @@ class BlogEntity extends Entity<Blog, Primative> {
   public tableName(): string {
     return "blog"
   }
-  public tableColumns() {
-    return ['id', 'title', 'description', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
-  }
 
   public map(object: IBlogRecord): Blog {
     let id = new BlogId(object.id),

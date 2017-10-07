@@ -5,12 +5,8 @@ import * as bcrypt from 'bcrypt'
 import { User, userEntity, UserUUID, UserId } from "../models/User"
 import * as uuid from "uuid"
 import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef } from "../models/UserPassword";
-import { Operation, OperatorEnum, Primative } from "../../entity/models/Entity";
+import { Primative } from "../../entity/models/Entity";
 import { DBIO } from "../../../libs/IO";
-
-function and<T, S extends Primative, B extends Primative>(c1: ColumnValue<T, S>, c2: ColumnValue<T, B>) {
-  return new Operation<T, S | B>(OperatorEnum.AND, [c1, c2])
-}
 
 export class UserService {
 
