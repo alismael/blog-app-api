@@ -56,18 +56,20 @@ blogRouter.post('/', (req, res, next) => {
     })
 });
 
-// // Update blog
-// blogRouter.put('/:guid', async (req, res, next) => {
-//   let guid = req.params.guid;
-//   let updates = req.body;
-
-//   let response = await blogService.update(guid, updates);
-//   res.json(response);
-// });
-
-// // Delete blog
-// blogRouter.delete('/:guid', async (req, res, next) => {
-//   let guid = req.params.guid;
-//   let response = await blogService.delete(guid);
-//   res.json(response);
-// });
+// Update blog
+blogRouter.put('/:guid', (req, res, next) => {
+  BlogData.vaidateInsertBlogRequest(req.body)
+  .then(blogData => {
+    blogService.update(req.params.guid, blogData)
+      .execute(connection)
+      .then(_ => res.sendStatus(200))
+      .catch(err => {
+        res.sendStatus(500)
+        console.log(err)
+      })
+  })
+  .catch(err => {
+    res.sendStatus(500)
+    console.log(err)
+  })
+});

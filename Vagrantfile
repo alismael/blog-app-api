@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
 
   # don't mount vagrant shared folder
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ['actimeo=2']
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

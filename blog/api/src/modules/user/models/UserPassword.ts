@@ -95,9 +95,6 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
   public tableName(): string {
     return "user_password"
   }
-  public tableColumns(): string[] {
-    return ["email", "username", "password", "user_id", "created_by", "updated_by", "created_at", "updated_at"]
-  }
 }
 
 
