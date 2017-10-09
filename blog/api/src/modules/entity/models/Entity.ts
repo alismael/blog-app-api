@@ -27,10 +27,6 @@ export abstract class Entity<T, S extends Primative> {
   abstract tableName(): string;
   abstract map(object: any): T;
 
-  public find(columns?: string[]): DBIO<T[]> {
-    return this._entityRepository.find(columns);
-  }
-
   public findOne(column: ColumnValue<T, S>): DBIO<Maybe<T>> {
     return this._entityRepository.findOne(column) 
   }
