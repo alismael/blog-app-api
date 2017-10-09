@@ -16,28 +16,21 @@ interface IOkPacket {
 }
 
 export class EntityMysqlRepository<T, S extends Primative> implements IEntityRepository<T, S> {
-  private _entity: Entity<T, S>;
-  private _table: string;
+  protected _entity: Entity<T, S>;
+  protected _table: string;
 
   constructor(entity: Entity<T, S>) {
     this._entity = entity;
     this._table = entity.tableName();
   }
 
-  // get entity
-  public find(columns?: string[]): DBIO<T[]> {
-    let query = squel.select({ separator: "\n" })
+  // Find entity
+  protected find(columns?: string[]): SqlSelect {
+    return squel.select({ separator: "\n" })
       .from(this._table)
-      .toParam()
-
-    return new DBIO<T[]>(query.text, query.values)
-      .map(entities => {
-        return entities.map((entity) => {
-          return this._entity.map(entity)
-        })
-      })
   }
 
+  // Find entity by column value
   public findOne(column: ColumnValue<T, S>): DBIO<Maybe<T>> {
     let query = squel.select({ separator: "\n" })
       .from(this._table)
