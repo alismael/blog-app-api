@@ -21,29 +21,10 @@ export abstract class Composite<T, S extends Primative> {
   public abstract columns: (composite: T) => ColumnValue<T, S>[]
 }
 
-export enum OperatorEnum {
-  OR = "or",
-  AND = "AND"
-}
-
-export class Operation<T, S extends Primative> {
-  constructor(public op: OperatorEnum, public columns: ColumnValue<T, S>[]) {}
-  
-    sql(): string {
-      return this.columns.reduce((acc, pref) => {
-        if(acc) 
-          return `${acc} ${this.op} ${pref.columnName} = ${pref.value}`
-        else 
-          return `${pref.columnName} = ${pref.value}`
-      }, "")
-    }
-}
-
 export abstract class Entity<T, S extends Primative> {
   private _entityRepository: IEntityRepository<T, S> = new EntityMysqlRepository<T, S>(this);
 
   abstract tableName(): string;
-  abstract tableColumns(): Array<any>;
   abstract map(object: any): T;
 
   public find(columns?: string[]): DBIO<T[]> {
@@ -58,19 +39,7 @@ export abstract class Entity<T, S extends Primative> {
     return this._entityRepository.insert(args);
   }
 
-  public update(...args: ColumnValue<T, S>[]): DBIO<number> {
-    return this._entityRepository.update(args);
-  }
-  // public delete() {
-  //   return this._entityRepository.delete();
-  // }
-
-  private getDto(entity: Entity<T, S>) {
-    let obj = {};
-    this.tableColumns().forEach(element => {
-      obj[element] = entity[element];
-    });
-
-    return obj;
+  public update(condition: ColumnValue<T, S>, ...args: ColumnValue<T, S>[]): DBIO<number> {
+    return this._entityRepository.update(condition, args);
   }
 }

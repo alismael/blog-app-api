@@ -68,7 +68,7 @@ class BlogEntity extends Entity<Blog, Primative> {
     public description = stringColumn("description")
 
     public columns = (composite: BlogData) => {
-      return [this.title.set(composite.title), this.title.set(composite.description)]
+      return [this.title.set(composite.title), this.description.set(composite.description)]
     }
   }
 
@@ -76,9 +76,6 @@ class BlogEntity extends Entity<Blog, Primative> {
 
   public tableName(): string {
     return "blog"
-  }
-  public tableColumns() {
-    return ['id', 'title', 'description', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
   }
 
   public map(object: IBlogRecord): Blog {

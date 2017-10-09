@@ -30,17 +30,19 @@ export const UserIdColumn = (columnName: string) => new class extends Column<Use
   }
 }()
 
-export const DateColumn = (columnName: string) => new class extends Column<Date, Date> {
+export const DateColumn = (columnName: string) => new class extends Column<Date, string> {
   constructor() { super(columnName) }
-  public getValue(value: Date): Date {
-    return value
+  public getValue(value: Date): string {
+    return value.toISOString()
+      .replace(/T/, ' ')
+      .replace(/\..+/, '')
   }
 }()
 
-export const CompositeTrace = new class extends Composite<Trace, Id | Date> {
+export const CompositeTrace = new class extends Composite<Trace, Id | string> {
 
   private constructComposite(by: string, at: string) {
-    return new class extends Composite<Signture, Id | Date> {
+    return new class extends Composite<Signture, Id | string> {
       public By = UserIdColumn(by)
       public At = DateColumn(at)
 
