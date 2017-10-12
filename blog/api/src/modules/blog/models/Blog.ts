@@ -1,6 +1,9 @@
-import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models";
-import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
-import { UserId } from "../../user/models/User"
+import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models"
+import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity"
+import { UserId, UserUUID } from "../../user/models/User"
+import { DBIO } from "../../../libs/IO"
+import { IBlogRepository } from "../repositories/IBlogRepository"
+import { BlogMysqlRepository } from "../repositories/BlogMysqlRepository"
 
 export interface IInsertBlogRequest {
   title: string
@@ -48,6 +51,7 @@ export class Blog {
 }
 
 class BlogEntity extends Entity<Blog, Primative> {
+  private _blogRepository: IBlogRepository<Blog, Primative> = new BlogMysqlRepository<Blog, Primative>(this);
 
   public id = new class extends Column<BlogId, Id> {
     constructor() { super("id") }
@@ -85,6 +89,10 @@ class BlogEntity extends Entity<Blog, Primative> {
       trace = new Trace(new Signture(new UserId(object.created_by), new Date(object.created_at)), new Signture(new UserId(object.updated_by), new Date(object.updated_at)))
 
     return new Blog(id, guid, data, trace);
+  }
+
+  public getUserBlogs(userId: UserId): DBIO<Blog[]> {
+    return this._blogRepository.getUserBlogs(userId);
   }
 
 }

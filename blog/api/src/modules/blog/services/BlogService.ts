@@ -1,16 +1,11 @@
 import { Blog, blogEntity, BlogUUID, BlogId, BlogData } from "../models/Blog"
 import { DBIO } from "../../../libs/IO"
 import { Maybe } from 'tsmonad'
-import { Trace } from './../../common/models'
-import { UserId } from "../../user/models/User"
+import { Trace, Id } from './../../common/models'
+import { UserId, UserUUID } from "../../user/models/User"
 import * as uuid from "uuid"
 
 export class BlogService {
-
-  // Get all blogs
-  findAll(): DBIO<Blog[]> {
-    return blogEntity.find()
-  }
 
   // Get blog by guid
   findByGuid(guid: string): DBIO<Maybe<Blog>> {
@@ -35,5 +30,10 @@ export class BlogService {
       ...blogEntity.data.columns(new BlogData(data.title, data.description)),
       ...blogEntity.trace.updated.columns(Trace.createTrace(userId).updated)
     )
+  }
+
+  // Get user blogs
+  getUserBlogs(userId: Id): DBIO<Blog[]> {
+    return blogEntity.getUserBlogs(new UserId(userId))
   }
 }
