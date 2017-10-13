@@ -1,6 +1,7 @@
+import { ErrorHandler } from './../../common/ErrorHandler';
 import { UserService } from "./../services/UserService";
 import { UserPassword } from "./../models/UserPassword"
-import { IRegistrationRequest } from "./../models/UserPassword";
+import { IRegistrationRequest, RegistrationError } from "./../models/UserPassword";
 import * as express from "express"
 import { connection } from '../../mysql/mysql'
 
@@ -14,9 +15,8 @@ userRouter.post("/register", (req, res) => {
       .execute(connection)
     )
     .then(_ => res.sendStatus(201))
-    .catch(err => {
-      res.sendStatus(500)
-      console.error(err)
+    .catch((err: ErrorHandler<RegistrationError>) => {
+      err.apply(res)
     })
 })
 
