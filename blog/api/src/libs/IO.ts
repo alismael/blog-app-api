@@ -28,8 +28,8 @@ export class DBIO<T> {
     return new IOSuccessful(a)
   }
 
-  static failed<A>(err: string): DBIO<A> {
-    return new IOFail<A>(err)
+  static failed<A, E>(err: E): DBIO<A> {
+    return new IOFail<A, E>(err)
   }
 
   execute(connection: IConnection, isTransaction: boolean = false): Promise<T> {
@@ -64,8 +64,8 @@ class IOFilter<A> extends DBIO<A> {
 
 }
 
-class IOFail<A> extends DBIO<A> {
-  constructor(public err: string) { super() }
+class IOFail<A, E> extends DBIO<A> {
+  constructor(public err: E) { super() }
 
   execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {
     throw this.err

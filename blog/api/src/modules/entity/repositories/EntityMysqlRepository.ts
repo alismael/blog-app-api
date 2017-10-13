@@ -25,7 +25,7 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // Find entity
-  protected find(columns?: string[]): SqlSelect {
+  protected find(): SqlSelect {
     return squel.select({ separator: "\n" })
       .from(this._table)
   }
