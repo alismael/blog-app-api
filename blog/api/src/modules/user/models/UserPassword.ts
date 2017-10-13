@@ -24,6 +24,10 @@ export interface IUserPasswordRecord extends ITraceRecord {
   password: string
 }
 
+export class RegistrationError {
+  constructor(public message: string){}
+}
+
 export class UserPassword {
 
   public static vaidateRegistrationRequest = (registrationRequest: IRegistrationRequest): Promise<UserPasswordData> => {

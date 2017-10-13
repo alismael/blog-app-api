@@ -19,10 +19,6 @@ export class BlogMysqlRepository<Blog, S extends Primative> extends EntityMysqlR
 			.toParam()
 
 		return new DBIO<Blog[]>(query.text, query.values)
-			.map(entities => {
-				return entities.map((entity) => {
-					return this._entity.map(entity)
-				})
-			})
+			.map(entities =>  entities.map((entity) => this._entity.map(entity)))
 	}
 }
