@@ -1,12 +1,15 @@
+import { Maybe } from 'tsmonad';
+import { ErrorHandler, Errors } from './../../common/ErrorHandler';
 import { ColumnValue } from './../../entity/models/Entity';
 import { Trace } from './../../common/models';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
 import { User, userEntity, UserUUID, UserId } from "../models/User"
 import * as uuid from "uuid"
-import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef } from "../models/UserPassword";
+import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef, RegistrationError } from "../models/UserPassword";
 import { Primative } from "../../entity/models/Entity";
 import { DBIO } from "../../../libs/IO";
+import { userPasswordRepository } from "../repositories/UserPasswordMysqlRepository";
 
 export class UserService {
 
@@ -28,10 +31,16 @@ export class UserService {
   }
 
   register(data: UserPasswordData): DBIO<number> {
-    let io = userPasswordEntity.findOne(userPasswordEntity.data.username.set(data.username))
+    let io = userPasswordRepository.findByEmailOrUserName(
+      userPasswordEntity.data.username.set(data.username),
+      userPasswordEntity.data.email.set(data.email)
+    )
       .flatMap(result => {
         return result.caseOf({
-          just: (_) => DBIO.failed("Dublicate user name"),
+          just: (_) => DBIO.failed(
+            new ErrorHandler(
+              Errors.BAD_REQUEST, 
+              Maybe.just(new RegistrationError("dublicate userName or email")))),
           nothing: () => DBIO.successful(true)
         })
       })

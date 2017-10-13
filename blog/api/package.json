@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./dest/main.js"
+    "start": "node ./dest/main.js",
+    "dev": "nodemon ./dest/main.js"
   },
   "author": "Ali Ismael",
   "license": "ISC",
