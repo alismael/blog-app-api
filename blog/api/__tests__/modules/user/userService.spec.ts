@@ -8,8 +8,6 @@ describe("user service tests", () => {
   test("create user", () => {
     let action = service.register(factory.userPasswordData) 
     db.run(action, (r) => {
-      console.log(r)
-      console.log("**************************************")
       expect(r).toBe(1)
     })
     // connection.beginTransaction(err => {
