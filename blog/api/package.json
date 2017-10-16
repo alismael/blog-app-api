@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./dest/main.js",
-    "dev": "nodemon ./dest/main.js"
+    "dev": "nodemon ./dest/main.js",
+    "test": "jest"
   },
   "author": "Ali Ismael",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.1",
+    "jest": "^21.2.1",
     "jsonwebtoken": "^7.4.3",
     "knex": "^0.13.0",
     "mongodb": "^2.2.31",
@@ -44,10 +46,12 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "@types/jest": "^21.1.2",
     "eslint": "^4.6.1",
     "gulp-changed-in-place": "^2.2.0",
     "gulp-tsfmt": "^1.0.2",
     "gulp-tslint": "^8.1.2",
+    "ts-jest": "^21.1.2",
     "tslint": "^5.7.0"
   }
 }
