@@ -47,11 +47,13 @@
   },
   "devDependencies": {
     "@types/jest": "^21.1.2",
+    "@types/winston": "^2.3.6",
     "eslint": "^4.6.1",
     "gulp-changed-in-place": "^2.2.0",
     "gulp-tsfmt": "^1.0.2",
     "gulp-tslint": "^8.1.2",
     "ts-jest": "^21.1.2",
-    "tslint": "^5.7.0"
+    "tslint": "^5.7.0",
+    "winston": "^2.4.0"
   }
 }

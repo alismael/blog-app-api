@@ -53,6 +53,6 @@ export class UserService {
       })
       .flatMap(id => this.insertPassword(new UserId(id), data))
 
-    return DBIO.ioTransaction(io)
+    return io
   }
 } 
