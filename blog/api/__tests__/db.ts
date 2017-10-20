@@ -1,26 +1,21 @@
 import { connection } from './../src/modules/mysql/mysql';
 import { DBIO } from './../src/libs/IO';
 import global from "./../src/global"
+let logger = require('./../../api/src/logger');
 
 global()
 
 class DBContext {
   public run<T>(dbIO: DBIO<T>, fn: (result: T) => void) {
-    connection.beginTransaction(err => {
-      if (err)
-        connection.rollback(() => {
-          return
-        })
-      else {
-        dbIO.execute(connection).then(r => {
-          fn(r)
-          return Promise.resolve(true)
-        }).then(_ => {
-          connection.rollback(() => {
-            return Promise.resolve(true)
-          })
-        })
-      }
+    let rollbackIO = dbIO.flatMap(result => {
+      fn(result)
+      return DBIO.failed("rollback")
+    })
+
+    DBIO.run(connection, rollbackIO)
+    .catch(err => {
+      logger.debug(err)
+      throw err
     })
   }
 }
