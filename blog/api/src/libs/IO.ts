@@ -16,10 +16,6 @@ export class DBIO<T> {
     return new IOFilter<T>(this, action)
   }
 
-  static ioTransaction<A>(io: DBIO<A>): DBIO<A> {
-    return new IOTransaction(io)
-  }
-
   static ioSequance<A>(ios: DBIO<A>[]): DBIO<A[]> {
     return new IOSequance(ios)
   }
@@ -32,97 +28,26 @@ export class DBIO<T> {
     return new IOFail<A, E>(err)
   }
 
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<T> {
+  execute(connection: IConnection): Promise<T> {
     return new Promise((resolve, reject) => {
       connection.query(this.query, this.params, (err, result, fields) => {
-        if (err) {
-          if (isTransaction)
-            connection.rollback(() => { reject(err) })
-          else
-            reject(err)
-        }
+        if (err)
+          reject(err)
         else
           resolve(result)
       })
     })
   }
-}
 
-class IOFilter<A> extends DBIO<A> {
-  constructor(public io: DBIO<A>, public action: (a: A) => boolean) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {
-    return this.io.execute(connection, isTransaction)
-      .then(result => {
-        if (this.action(result)) {
-          return result
-        } else {
-          throw "No such element";
-        }
-      })
-  }
-
-}
-
-class IOFail<A, E> extends DBIO<A> {
-  constructor(public err: E) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {
-    throw this.err
-  }
-}
-
-
-class IOSuccessful<A> extends DBIO<A> {
-  constructor(public val: A) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<A> {
-    return Promise.resolve(this.val)
-  }
-}
-
-class IOSequance<A> extends DBIO<A[]> {
-  constructor(public ios: DBIO<A>[]) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<A[]> {
-    return Promise.all(this.ios.map(io => io.execute(connection, isTransaction)))
-  }
-}
-
-class IOFlatMap<A, B> extends DBIO<B> {
-  constructor(public ioAction: DBIO<A>, public action: (a: A) => DBIO<B>) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<B> {
-    return this.ioAction.execute(connection, isTransaction)
-      .then(a => {
-        return this.action(a).execute(connection, isTransaction)
-      })
-  }
-}
-
-class IOMap<A, B> extends DBIO<B> {
-  constructor(public ioAction: DBIO<A>, public action: (a: A) => B) { super() }
-
-  execute(connection: IConnection, isTransaction: boolean = false): Promise<B> {
-    return this.ioAction.execute(connection, isTransaction)
-      .then(a => {
-        return this.action(a)
-      })
-  }
-}
-
-class IOTransaction<A> extends DBIO<A> {
-  constructor(public ioAction: DBIO<A>) { super() }
-
-  execute(connection: IConnection): Promise<A> {
-    return new Promise<A>((resolve, reject) => {
+  static run<T>(connection: IConnection, ioAction: DBIO<T>) {
+    return new Promise<T>((resolve, reject) => {
       connection.beginTransaction(err => {
         if (err)
           connection.rollback(() => {
             reject(err);
           })
         else {
-          let promise: Promise<A> = this.ioAction.execute(connection, true)
+          ioAction.execute(connection)
             .then(a => {
               connection.commit(err => {
                 if (err)
@@ -132,10 +57,74 @@ class IOTransaction<A> extends DBIO<A> {
               })
               return a
             })
-          resolve(promise)
+            .catch(catchErr => {
+              return connection.rollback(() => {
+                reject(catchErr);
+              })
+            })
         }
       })
     })
+  }
 
+}
+
+class IOFilter<A> extends DBIO<A> {
+  constructor(public io: DBIO<A>, public action: (a: A) => boolean) { super() }
+
+  execute(connection: IConnection): Promise<A> {
+    return this.io.execute(connection)
+      .then(result => {
+        if (this.action(result)) 
+          return result
+        else 
+          throw "No such element";
+      })
+  }
+}
+
+class IOFail<A, E> extends DBIO<A> {
+  constructor(public err: E) { super() }
+
+  execute(connection: IConnection): Promise<A> {
+    return Promise.reject(this.err)
+  }
+}
+
+class IOSuccessful<A> extends DBIO<A> {
+  constructor(public val: A) { super() }
+
+  execute(connection: IConnection): Promise<A> {
+    return Promise.resolve(this.val)
+  }
+}
+
+class IOSequance<A> extends DBIO<A[]> {
+  constructor(public ios: DBIO<A>[]) { super() }
+
+  execute(connection: IConnection): Promise<A[]> {
+    return Promise.all(this.ios.map(io => io.execute(connection)))
+  }
+}
+
+class IOFlatMap<A, B> extends DBIO<B> {
+  constructor(public ioAction: DBIO<A>, public action: (a: A) => DBIO<B>) { super() }
+
+  execute(connection: IConnection): Promise<B> {
+    return this.ioAction.execute(connection)
+      .then(a => {
+        return this.action(a).execute(connection)
+      })
+  }
+}
+
+class IOMap<A, B> extends DBIO<B> {
+  constructor(public ioAction: DBIO<A>, public action: (a: A) => B) { super() }
+
+  execute(connection: IConnection): Promise<B> {
+    return this.ioAction.execute(connection)
+      .then(a => {
+        return this.action(a)
+      })
   }
 }

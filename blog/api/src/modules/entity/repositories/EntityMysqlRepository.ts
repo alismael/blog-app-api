@@ -3,6 +3,7 @@ import { IEntityRepository } from './IEntityRepository'
 import { Entity, Column, ColumnValue, Primative } from './../models/Entity'
 import * as squel from "squel"
 import { DBIO } from "../../../libs/IO";
+import { Select } from "squel";
 
 interface IOkPacket {
   fieldCount: number,
@@ -25,7 +26,7 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // Find entity
-  protected find(): SqlSelect {
+  protected find(): Select {
     return squel.select({ separator: "\n" })
       .from(this._table)
   }

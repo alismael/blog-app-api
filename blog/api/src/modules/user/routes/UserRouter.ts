@@ -1,9 +1,10 @@
+import { connection } from './../../mysql/mysql';
 import { ErrorHandler } from './../../common/ErrorHandler';
 import { UserService } from "./../services/UserService";
 import { UserPassword } from "./../models/UserPassword"
 import { IRegistrationRequest, RegistrationError } from "./../models/UserPassword";
 import * as express from "express"
-import { connection } from '../../mysql/mysql'
+import { DBIO } from "../../../libs/IO";
 
 const userRouter = express.Router();
 const userService = new UserService()
@@ -11,8 +12,7 @@ const userService = new UserService()
 userRouter.post("/register", (req, res) => {
   UserPassword.vaidateRegistrationRequest(req.body)
     .then(userPassword => 
-      userService.register(userPassword)
-      .execute(connection)
+      DBIO.run(connection, userService.register(userPassword))
     )
     .then(_ => res.sendStatus(201))
     .catch((err: ErrorHandler<RegistrationError>) => {
