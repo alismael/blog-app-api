@@ -7,4 +7,5 @@ export class UserFactory {
 
 export class BlogFactory {
   public blogData = new BlogData("blog title", "blog description")
+  public blogDataUpdate = new BlogData("blog title (updated)", "blog description (updated)")
 }
