@@ -12,6 +12,11 @@ export class BlogService {
     return blogEntity.findOne(blogEntity.uuid.set(new BlogUUID(guid)))
   }
 
+  // Get blog by guid
+  findById(id: Id): DBIO<Maybe<Blog>> {
+    return blogEntity.findOne(blogEntity.id.set(new BlogId(id)))
+  }
+
   // Add new blog
   insert(data: BlogData): DBIO<number> {
     let userId = new UserId(1) // use test id=1
