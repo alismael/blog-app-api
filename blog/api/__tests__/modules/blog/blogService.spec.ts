@@ -1,37 +1,57 @@
-import { db } from './../../db';
-import { BlogFactory } from './../factory';
-import { BlogService } from './../../../src/modules/blog/services/BlogService';
-import { connection } from "../../../src/modules/mysql/mysql";
-import { DBIO } from '../../../src/libs/IO';
-import { Blog } from '../../../src/modules/blog/models/Blog';
-let log = require('./../../../src/logger');
+import { db } from './../../db'
+import { BlogFactory } from './../factory'
+import { BlogService } from './../../../src/modules/blog/services/BlogService'
+import { connection } from "../../../src/modules/mysql/mysql"
+import { DBIO } from '../../../src/libs/IO'
+import { Blog, IBlogRecord } from '../../../src/modules/blog/models/Blog'
+let logger = require('./../../../src/logger')
 
 describe("blog service tests", () => {
   let service = new BlogService
   let factory = new BlogFactory
 
   test("find by id", (done) => {
-    let action = service.findById(3)
-    db.run(action, (r) => {
-      expect(r).toBeInstanceOf(Blog)
-      done()
-    })
+    let action = service.insert(factory.blogData)
+      .flatMap(id => service.findById(id))
+
+    db.run(action)
+      .then(result => {
+        expect(typeof result).toBe('object')
+        done()
+      })
+      .catch(err => {
+        throw err
+      })
   })
 
   test("find by guid", (done) => {
-    let action = service.findByGuid("967f9290-8f53-11e7-8b34-cdd8c538c8a6")
-    db.run(action, (r) => {
-      expect(r).toBeInstanceOf(Blog)
-      done()
-    })
+    let action = service.insert(factory.blogData)
+      .flatMap(id => service.findById(id)
+        .flatMap(blog => blog.caseOf({
+          just: blog => service.findByGuid(blog.guid.value),
+          nothing: () => DBIO.failed("blog not found")
+        }))
+      )
+    db.run(action)
+      .then(result => {
+        expect(typeof result).toBe('object')
+        done()
+      })
+      .catch(err => {
+        throw err
+      })
   })
 
   test("create blog", (done) => {
     let action = service.insert(factory.blogData)
-    db.run(action, (r) => {
-      expect(r).toBeGreaterThan(0)
-      done()
-    })
+    db.run(action)
+      .then(result => {
+        expect(result).toBeGreaterThan(0)
+        done()
+      })
+      .catch(err => {
+        throw err
+      })
   })
 
   test("update blog", (done) => {
@@ -42,18 +62,26 @@ describe("blog service tests", () => {
           nothing: () => DBIO.failed("blog not found")
         }))
       )
-    db.run(action, (r) => {
-      expect(r).toBeGreaterThan(0)
-      done()
-    })
+    db.run(action)
+      .then(result => {
+        expect(result['affectedRows']).toBe(1)
+        done()
+      })
+      .catch(err => {
+        throw err
+      })
   })
 
   test("get user blogs", (done) => {
     let action = service.getUserBlogs(1)
-    db.run(action, (r) => {
-      expect(Array.isArray(r))
-      r.forEach(blog => expect(blog).toBeInstanceOf(Blog))
-      done()
-    })
+    db.run(action)
+      .then(result => {
+        expect(Array.isArray(result))
+        result.forEach(blog => expect(blog).toBeInstanceOf(Blog))
+        done()
+      })
+      .catch(err => {
+        throw err
+      })
   })
 })
