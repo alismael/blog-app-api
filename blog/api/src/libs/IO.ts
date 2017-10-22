@@ -55,7 +55,7 @@ export class DBIO<T> {
                     reject(err);
                   })
               })
-              return a
+              resolve(a)
             })
             .catch(catchErr => {
               return connection.rollback(() => {
