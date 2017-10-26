@@ -1,6 +1,8 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UserIdColumn, UUID, ITraceRecord } from "./../../common/models";
 import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
+export type JWT = string
+
 export class UserId {
   constructor(public value: Id) { }
 }

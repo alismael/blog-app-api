@@ -1,5 +1,5 @@
 import { connection } from './../../mysql/mysql';
-import { ErrorHandler } from './../../common/ErrorHandler';
+import { ErrorHandler, NoSuchElement } from './../../common/ErrorHandler';
 import { UserService } from "./../services/UserService";
 import { UserPassword } from "./../models/UserPassword"
 import { IRegistrationRequest, RegistrationError } from "./../models/UserPassword";
@@ -20,19 +20,17 @@ userRouter.post("/register", (req, res) => {
     })
 })
 
-// userRouter.post("/login", (req, res) => {
-//   console.log(req.cookies)
-//   userService.login(req.body.username, req.body.password)
-//     .then(result => {
-//       res.cookie("token", result)
-//       res.send({
-//         token: result
-//       })
-//     })
-//     .catch(err => {
-//       res.sendStatus(500)
-//       console.error(err)
-//     })
-// })
+userRouter.post("/login", (req, res) => {
+  DBIO.run(connection, userService.login(req.body.username, req.body.password))
+    .then(result => {
+      res.cookie("token", result)
+      res.send({
+        token: result
+      })
+    })
+    .catch((err: ErrorHandler<string>) => {
+      err.apply(res)
+    })
+})
 
 export default userRouter

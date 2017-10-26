@@ -1,4 +1,5 @@
 import { IConnection } from "mysql";
+import { NoSuchElement } from "../modules/common/ErrorHandler";
 
 export class DBIO<T> {
 
@@ -54,8 +55,9 @@ export class DBIO<T> {
                   return connection.rollback(() => {
                     reject(err);
                   })
+                else 
+                  resolve(a)
               })
-              resolve(a)
             })
             .catch(catchErr => {
               return connection.rollback(() => {
@@ -78,7 +80,7 @@ class IOFilter<A> extends DBIO<A> {
         if (this.action(result)) 
           return result
         else 
-          throw "No such element";
+          throw new NoSuchElement();
       })
   }
 }
@@ -112,9 +114,7 @@ class IOFlatMap<A, B> extends DBIO<B> {
 
   execute(connection: IConnection): Promise<B> {
     return this.ioAction.execute(connection)
-      .then(a => {
-        return this.action(a).execute(connection)
-      })
+      .then(a => this.action(a).execute(connection))
   }
 }
 
@@ -123,8 +123,6 @@ class IOMap<A, B> extends DBIO<B> {
 
   execute(connection: IConnection): Promise<B> {
     return this.ioAction.execute(connection)
-      .then(a => {
-        return this.action(a)
-      })
+      .then(a => this.action(a))
   }
 }
