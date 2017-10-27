@@ -3,7 +3,8 @@ import { Response } from "express"
 
 export enum Errors {
   NOT_FOUND = "not found",
-  BAD_REQUEST = "bad request"
+  BAD_REQUEST = "bad request",
+  UNAUTHERIZED = "unautherized"
 }
 
 export enum StatusCode {
@@ -11,6 +12,7 @@ export enum StatusCode {
   CREATED = 201,
   NOT_FOUND = 404,
   BAD_REQUEST = 400,
+  UNAUTHERIZED = 401,
   INTERNAL_SERVER_ERROR = 500
 }
 
@@ -36,5 +38,11 @@ export class NoSuchElement extends ErrorHandler<string> {
 export class InternalServerError<T> extends ErrorHandler<T> {
   constructor(public internalError: T) {
     super(StatusCode.INTERNAL_SERVER_ERROR, Maybe.nothing())
+  }
+}
+
+export class Unautherized extends ErrorHandler<string> {
+  constructor() {
+    super(StatusCode.UNAUTHERIZED, Maybe.just(Errors.UNAUTHERIZED))
   }
 }
