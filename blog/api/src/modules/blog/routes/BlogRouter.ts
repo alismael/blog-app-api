@@ -2,24 +2,33 @@ import * as express from 'express'
 import { BlogData } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
-import { Id } from '../../common/models';
+import { User } from '../../user/models/User'
+import { DBIO } from '../../../libs/IO'
+import { Maybe } from 'tsmonad/lib/src'
+import { Unautherized } from './../../common/ErrorHandler'
 
 export let blogRouter = express.Router();
 
 let blogService = new BlogService();
 
 // Get current user blogs
-blogRouter.get('/', (_, res) => {
-  let currentUserId: Id = 1 // Get blogs for user with id = 1
-  blogService.getUserBlogs(currentUserId)
-  .execute(connection)
-  .then(blogs => {
-    res.json(blogs)
+blogRouter.get('/', (req, res) => {
+  let userIO: DBIO<Maybe<User>> = req.body.user
+
+  let action = userIO.flatMap(user => {
+    return user.caseOf({
+      just: user => blogService.getUserBlogs(user),
+      nothing: () => { throw new Unautherized }
+    })
   })
-  .catch(err => {
-    res.sendStatus(500)
-    console.log(err)
-  })
+
+  DBIO.run(connection, action)
+    .then(result => {
+      res.json(result)
+    })
+    .catch((err: Unautherized) => {
+      err.apply(res)
+    })
 });
 
 // Get blog
