@@ -1,11 +1,12 @@
-import { IConnection } from "mysql";
+import { IConnection } from "mysql"
+import { NoSuchElement, InternalServerError } from "../modules/common/ErrorHandler"
 
 export class DBIO<T> {
 
   constructor(public query?: string, public params?: any[]) { }
 
   public flatMap<B>(action: (a: T) => DBIO<B>): DBIO<B> {
-    return new IOFlatMap(this, action);
+    return new IOFlatMap(this, action)
   }
 
   map<B>(action: (a: T) => B): DBIO<B> {
@@ -30,10 +31,10 @@ export class DBIO<T> {
 
   execute(connection: IConnection): Promise<T> {
     return new Promise((resolve, reject) => {
-      connection.query(this.query, this.params, (err, result, fields) => {
-        if (err)
-          reject(err)
-        else
+      connection.query(this.query, this.params, (err, result) => {
+        if (err) 
+          reject(new InternalServerError(err))
+        else 
           resolve(result)
       })
     })
@@ -42,24 +43,23 @@ export class DBIO<T> {
   static run<T>(connection: IConnection, ioAction: DBIO<T>) {
     return new Promise<T>((resolve, reject) => {
       connection.beginTransaction(err => {
-        if (err)
-          connection.rollback(() => {
-            reject(err);
-          })
+        if (err) 
+          reject(new InternalServerError(err))
         else {
           ioAction.execute(connection)
             .then(a => {
               connection.commit(err => {
                 if (err)
                   return connection.rollback(() => {
-                    reject(err);
+                    reject(new InternalServerError(err))
                   })
+                else 
+                  resolve(a)
               })
-              return a
             })
             .catch(catchErr => {
               return connection.rollback(() => {
-                reject(catchErr);
+                reject(catchErr)
               })
             })
         }
@@ -78,7 +78,7 @@ class IOFilter<A> extends DBIO<A> {
         if (this.action(result)) 
           return result
         else 
-          throw "No such element";
+          throw new NoSuchElement()
       })
   }
 }
@@ -86,7 +86,7 @@ class IOFilter<A> extends DBIO<A> {
 class IOFail<A, E> extends DBIO<A> {
   constructor(public err: E) { super() }
 
-  execute(connection: IConnection): Promise<A> {
+  execute(_: IConnection): Promise<A> {
     return Promise.reject(this.err)
   }
 }
@@ -94,7 +94,7 @@ class IOFail<A, E> extends DBIO<A> {
 class IOSuccessful<A> extends DBIO<A> {
   constructor(public val: A) { super() }
 
-  execute(connection: IConnection): Promise<A> {
+  execute(_: IConnection): Promise<A> {
     return Promise.resolve(this.val)
   }
 }
@@ -112,9 +112,7 @@ class IOFlatMap<A, B> extends DBIO<B> {
 
   execute(connection: IConnection): Promise<B> {
     return this.ioAction.execute(connection)
-      .then(a => {
-        return this.action(a).execute(connection)
-      })
+      .then(a => this.action(a).execute(connection))
   }
 }
 
@@ -123,8 +121,6 @@ class IOMap<A, B> extends DBIO<B> {
 
   execute(connection: IConnection): Promise<B> {
     return this.ioAction.execute(connection)
-      .then(a => {
-        return this.action(a)
-      })
+      .then(a => this.action(a))
   }
 }

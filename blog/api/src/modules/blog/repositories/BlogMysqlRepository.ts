@@ -1,24 +1,20 @@
-import { Maybe } from 'tsmonad'
-import { Entity, Column, ColumnValue, Primative } from '../../entity/models/Entity'
-import { Blog } from '../models/Blog'
+import { Entity, Primative } from '../../entity/models/Entity'
 import { UserId } from '../../user/models/User'
 import { DBIO } from "../../../libs/IO"
 import { EntityMysqlRepository } from '../../entity/repositories/EntityMysqlRepository'
-import * as squel from "squel"
 
+export class BlogMysqlRepository<Blog, S extends Primative> extends EntityMysqlRepository<Blog, S> {
+  constructor(entity: Entity<Blog, Primative>) {
+    super(entity)
+  }
 
-export class BlogMysqlRepository<Blog, S extends Primative> extends EntityMysqlRepository<Blog, Primative> {
-	constructor(entity: Entity<Blog, Primative>) {
-		super(entity)
-	}
+  // get entity
+  public getUserBlogs(userId: UserId): DBIO<Blog[]> {
+    let query = super.find()
+      .where(`created_by = ?`, [userId.value])
+      .toParam()
 
-	// get entity
-	public getUserBlogs(userId: UserId): DBIO<Blog[]> {
-		let query = super.find()
-			.where(`created_by = ?`, [userId.value])
-			.toParam()
-
-		return new DBIO<Blog[]>(query.text, query.values)
-			.map(entities =>  entities.map((entity) => this._entity.map(entity)))
-	}
+    return new DBIO<Blog[]>(query.text, query.values)
+      .map(entities => entities.map((entity) => this._entity.map(entity)))
+  }
 }

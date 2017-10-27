@@ -1,4 +1,3 @@
-import { Maybe } from 'tsmonad';
 import { config } from "./config/config"
 import global from "./global"
 // Import modules routes
@@ -22,7 +21,7 @@ app.use("/api", apiRoutes)
 app.use("/", webRoutes)
 
 // Handle error routes
-app.use((req, res) => {
+app.use((_, res) => {
   res.sendStatus(404)
 })
 

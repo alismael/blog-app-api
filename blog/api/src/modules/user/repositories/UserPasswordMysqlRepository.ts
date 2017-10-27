@@ -7,13 +7,13 @@ import { EntityMysqlRepository } from "../../entity/repositories/EntityMysqlRepo
 import { DBIO } from "../../../libs/IO";
 import { userPasswordEntity } from "../models/UserPassword";
 
-class UserPasswordMysqlRepository extends EntityMysqlRepository<UserPassword, Primative> implements IUserRepository<User, Primative> {
+class UserPasswordMysqlRepository extends EntityMysqlRepository<UserPassword, Primative> implements IUserRepository {
 
   constructor() {
     super(userPasswordEntity)
   }
 
-  findByEmailOrUserName(userName: ColumnValue<string, string>, email: ColumnValue<string, string>): DBIO<Maybe<User>> {
+  findByEmailOrUserName(userName: ColumnValue<string>, email: ColumnValue<string>): DBIO<Maybe<User>> {
     let query = this.find().where(`${userName.columnName} = ? or ${email.columnName} = ?`, ...[userName.value, email.value]).toParam()
     return new DBIO<IUserRecord[]>(query.text, query.values)
       .map(records => records.head().map(r => userEntity.map(r)))
