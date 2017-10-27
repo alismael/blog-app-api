@@ -4,6 +4,7 @@ import { UserId } from "../../user/models/User"
 import { DBIO } from "../../../libs/IO"
 import { IBlogRepository } from "../repositories/IBlogRepository"
 import { BlogMysqlRepository } from "../repositories/BlogMysqlRepository"
+import { BadRequest } from "../../common/ErrorHandler";
 
 export interface IInsertBlogRequest {
   title: string
@@ -36,8 +37,10 @@ export class BlogData {
           insertBlogRequest.description
         )
         resolve(blogData)
-      } else
-        reject("Invalid request")
+      } else {
+        reject(new BadRequest)
+      }
+
     })
   }
 }
