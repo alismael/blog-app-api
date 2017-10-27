@@ -1,6 +1,6 @@
 import * as express from 'express'
-// import * as cors from 'cors'
 import * as cookieParser from "cookie-parser"
+import * as auth from "./libs/Authentication"
 
 // Import modules api routes
 import { blogRouter } from './modules/blog/routes/BlogRouter';
@@ -12,8 +12,8 @@ export let apiRoutes = express.Router();
 // cookie parser
 apiRoutes.use(cookieParser())
 
-// use cors to allow host
-// apiRoutes.use(cors())
+// Authentication middleware
+apiRoutes.use(auth.isAuthenticated)
 
 // use blog routes under /api/blog
 apiRoutes.use('/blog', blogRouter);
