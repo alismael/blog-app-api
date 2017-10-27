@@ -94,4 +94,8 @@ export class UserService {
 
     return io
   }
+
+  getUser(guid: string) {
+    return userEntity.findOne(userEntity.uuid.set(new UserUUID(guid)))
+  }
 } 
