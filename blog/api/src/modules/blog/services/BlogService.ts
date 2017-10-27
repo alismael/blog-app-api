@@ -2,7 +2,7 @@ import { Blog, blogEntity, BlogUUID, BlogId, BlogData } from "../models/Blog"
 import { DBIO } from "../../../libs/IO"
 import { Maybe } from 'tsmonad'
 import { Trace, Id } from './../../common/models'
-import { UserId } from "../../user/models/User"
+import { UserId, User } from "../../user/models/User"
 import * as uuid from "uuid"
 
 export class BlogService {
@@ -38,7 +38,7 @@ export class BlogService {
   }
 
   // Get user blogs
-  getUserBlogs(userId: Id): DBIO<Blog[]> {
-    return blogEntity.getUserBlogs(new UserId(userId))
+  getUserBlogs(user: User): DBIO<Blog[]> {
+    return blogEntity.getUserBlogs(user.id)
   }
 }
