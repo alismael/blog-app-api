@@ -1,9 +1,7 @@
-import { Maybe } from 'tsmonad';
-import { ColumnValue, Primative } from '../../entity/models/Entity'
-import { Blog } from './../models/Blog'
 import { DBIO } from "../../../libs/IO"
 import { UserId } from '../../user/models/User'
+import { Blog } from "../models/Blog";
 
-export interface IBlogRepository<Blog, S extends Primative> {
+export interface IBlogRepository {
   getUserBlogs(userId: UserId): DBIO<Blog[]>
 }

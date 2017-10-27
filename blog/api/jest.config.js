@@ -3,6 +3,7 @@ module.exports = {
     transform: {
       '.(ts|tsx)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
     },
+    verbose: true,
     moduleFileExtensions: [
       'ts',
       'tsx',

@@ -1,5 +1,5 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UserIdColumn, UUID, ITraceRecord } from "./../../common/models";
-import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
+import { Entity, Column, Composite, Primative } from "../../entity/models/Entity";
 
 export type JWT = string
 
