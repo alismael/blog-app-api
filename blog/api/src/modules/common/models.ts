@@ -1,5 +1,5 @@
 import { UserId } from "./../user/models/User";
-import { Composite, Column, ColumnValue } from "../entity/models/Entity";
+import { Composite, Column } from "../entity/models/Entity";
 
 export type Id = number
 export type UUID = string

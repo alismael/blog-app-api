@@ -1,13 +1,11 @@
 import { Maybe } from 'tsmonad';
-import { ErrorHandler, Errors, StatusCode, NoSuchElement } from './../../common/ErrorHandler';
-import { ColumnValue } from './../../entity/models/Entity';
+import { ErrorHandler, StatusCode, NoSuchElement } from './../../common/ErrorHandler';
 import { Trace } from './../../common/models';
 import { config } from './../../../config/config'
 import * as bcrypt from 'bcrypt'
-import { User, userEntity, UserUUID, UserId, JWT } from "../models/User"
+import { userEntity, UserUUID, UserId, JWT } from "../models/User"
 import * as uuid from "uuid"
 import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef, RegistrationError } from "../models/UserPassword";
-import { Primative } from "../../entity/models/Entity";
 import { DBIO } from "../../../libs/IO";
 import { userPasswordRepository } from "../repositories/UserPasswordMysqlRepository";
 import * as jsonWebToken from 'jsonwebtoken'
@@ -70,9 +68,7 @@ export class UserService {
   }
 
   login(username: string, plainPassword: string): DBIO<JWT> {
-
     const verifyPassword = (userPassword: UserPassword): DBIO<JWT> => {
-      console.log(userPassword)
       if (this.comparePasswords(plainPassword, userPassword.data.password))
         return userEntity.findOne(userEntity.id.set(userPassword.ref.userId))
           .flatMap(record => {
@@ -83,7 +79,7 @@ export class UserService {
           })
       else
         return DBIO.failed(
-          new ErrorHandler(StatusCode.BAD_REQUEST, Maybe.just(Errors.BAD_REQUEST))
+          new ErrorHandler(StatusCode.BAD_REQUEST, Maybe.just("your username or password maybe wrong"))
         )
     }
 

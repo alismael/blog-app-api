@@ -10,7 +10,8 @@ export enum StatusCode {
   OK = 200,
   CREATED = 201,
   NOT_FOUND = 404,
-  BAD_REQUEST = 400
+  BAD_REQUEST = 400,
+  INTERNAL_SERVER_ERROR = 500
 }
 
 export class ErrorHandler<T> {
@@ -29,5 +30,11 @@ export class ErrorHandler<T> {
 export class NoSuchElement extends ErrorHandler<string> {
   constructor() {
     super(StatusCode.NOT_FOUND, Maybe.just("No such element"))
+  }
+}
+
+export class InternalServerError<T> extends ErrorHandler<T> {
+  constructor(public internalError: T) {
+    super(StatusCode.INTERNAL_SERVER_ERROR, Maybe.nothing())
   }
 }

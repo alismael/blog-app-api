@@ -1,6 +1,6 @@
 import { UserId } from "./User";
 import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn, ITraceRecord, Signture } from "./../../common/models";
-import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
+import { Entity, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
 export interface IRegistrationRequest {
   username: string
@@ -67,7 +67,7 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
     public username = stringColumn("username")
     public password = stringColumn("password")
 
-    public columns = (composite: UserPasswordData): ColumnValue<UserPasswordData, string>[] => {
+    public columns = (composite: UserPasswordData): ColumnValue<string>[] => {
       return [
         this.email.set(composite.email), 
         this.username.set(composite.username),
