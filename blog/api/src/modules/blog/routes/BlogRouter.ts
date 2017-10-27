@@ -5,7 +5,7 @@ import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
-import { IErrorHandler, Unautherized } from './../../common/ErrorHandler'
+import { IErrorHandler, Unautherized, NoSuchElement } from './../../common/ErrorHandler'
 
 export let blogRouter = express.Router();
 
@@ -26,7 +26,7 @@ blogRouter.get('/', (req, res) => {
     .then(result => {
       res.json(result)
     })
-    .catch((err: Unautherized) => {
+    .catch((err: IErrorHandler) => {
       err.apply(res)
     })
 });
@@ -38,12 +38,11 @@ blogRouter.get('/:guid', (req, res) => {
     .then(blog => {
       blog.caseOf({
         just: blog => res.send(blog),
-        nothing: () => res.sendStatus(404)
+        nothing: () => { throw new NoSuchElement }
       })
     })
-    .catch(err => {
-      res.sendStatus(500)
-      console.log(err)
+    .catch((err: IErrorHandler) => {
+      err.apply(res)
     })
 });
 
