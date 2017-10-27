@@ -5,7 +5,7 @@ import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
-import { Unautherized } from './../../common/ErrorHandler'
+import { IErrorHandler, Unautherized } from './../../common/ErrorHandler'
 
 export let blogRouter = express.Router();
 
@@ -49,36 +49,42 @@ blogRouter.get('/:guid', (req, res) => {
 
 // Insert new blog
 blogRouter.post('/', (req, res) => {
+  let userIO: DBIO<Maybe<User>> = req.body.user
+
   BlogData.vaidateInsertBlogRequest(req.body)
     .then(blogData => {
-      blogService.insert(blogData)
-        .execute(connection)
-        .then(_ => res.sendStatus(200))
-        .catch(err => {
-          res.sendStatus(500)
-          console.log(err)
+      let action = userIO.flatMap(user => {
+        return user.caseOf({
+          just: user => blogService.insert(blogData, user),
+          nothing: () => { throw new Unautherized }
+        })
+      })
+      DBIO.run(connection, action)
+        .then(_ => res.sendStatus(201))
+        .catch((err: IErrorHandler) => {
+          err.apply(res)
         })
     })
-    .catch(err => {
-      res.sendStatus(500)
-      console.log(err)
-    })
+    .catch(err => err.apply(res))
 });
 
 // Update blog
 blogRouter.put('/:guid', (req, res) => {
+  let userIO: DBIO<Maybe<User>> = req.body.user
+
   BlogData.vaidateInsertBlogRequest(req.body)
     .then(blogData => {
-      blogService.update(req.params.guid, blogData)
-        .execute(connection)
+      let action = userIO.flatMap(user => {
+        return user.caseOf({
+          just: user => blogService.update(req.params.guid, blogData, user),
+          nothing: () => { throw new Unautherized }
+        })
+      })
+      DBIO.run(connection, action)
         .then(_ => res.sendStatus(200))
-        .catch(err => {
-          res.sendStatus(500)
-          console.log(err)
+        .catch((err: IErrorHandler) => {
+          err.apply(res)
         })
     })
-    .catch(err => {
-      res.sendStatus(500)
-      console.log(err)
-    })
+    .catch(err => err.apply(res))
 });
