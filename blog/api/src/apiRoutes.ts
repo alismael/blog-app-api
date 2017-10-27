@@ -1,5 +1,5 @@
 import * as express from 'express'
-import * as cors from 'cors'
+// import * as cors from 'cors'
 import * as cookieParser from "cookie-parser"
 
 // Import modules api routes
@@ -13,7 +13,7 @@ export let apiRoutes = express.Router();
 apiRoutes.use(cookieParser())
 
 // use cors to allow host
-apiRoutes.use(cors())
+// apiRoutes.use(cors())
 
 // use blog routes under /api/blog
 apiRoutes.use('/blog', blogRouter);

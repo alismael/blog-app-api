@@ -1,6 +1,5 @@
-'use strict';
+import { Logger, transports } from "winston";
 
-const winston = require('winston');
 
 const customColors = {
   trace: 'white',
@@ -23,20 +22,14 @@ let config = {
     error: 5
   },
   transports: [
+    new transports.Console({
+      name: 'consoleLogger',
+      level: 'error',
+      colorize: true,
+      timestamp: true
+    })
   ]
-};
+}
 
-config.transports.push(
-  new(winston.transports.Console)({
-    name: 'consoleLogger',
-    level: 'error',
-    colorize: true,
-    timestamp: true,
-    json: true
-  })
-);
 
-const logger = new (winston.Logger)(config);
-winston.addColors(customColors);
-
-module.exports = logger;
+export const logger = new Logger(config);

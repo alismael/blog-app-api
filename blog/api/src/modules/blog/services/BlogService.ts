@@ -2,7 +2,7 @@ import { Blog, blogEntity, BlogUUID, BlogId, BlogData } from "../models/Blog"
 import { DBIO } from "../../../libs/IO"
 import { Maybe } from 'tsmonad'
 import { Trace, Id } from './../../common/models'
-import { UserId, UserUUID } from "../../user/models/User"
+import { UserId } from "../../user/models/User"
 import * as uuid from "uuid"
 
 export class BlogService {

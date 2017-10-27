@@ -1,8 +1,7 @@
 import * as express from 'express'
-import { Blog, BlogData } from '../models/Blog'
+import { BlogData } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
-import * as uuid from 'uuid'
 import { Id } from '../../common/models';
 
 export let blogRouter = express.Router();
@@ -10,7 +9,7 @@ export let blogRouter = express.Router();
 let blogService = new BlogService();
 
 // Get current user blogs
-blogRouter.get('/', (req, res, next) => {
+blogRouter.get('/', (_, res) => {
   let currentUserId: Id = 1 // Get blogs for user with id = 1
   blogService.getUserBlogs(currentUserId)
   .execute(connection)
@@ -24,7 +23,7 @@ blogRouter.get('/', (req, res, next) => {
 });
 
 // Get blog
-blogRouter.get('/:guid', (req, res, next) => {
+blogRouter.get('/:guid', (req, res) => {
   blogService.findByGuid(req.params.guid)
     .execute(connection)
     .then(blog => {
@@ -40,7 +39,7 @@ blogRouter.get('/:guid', (req, res, next) => {
 });
 
 // Insert new blog
-blogRouter.post('/', (req, res, next) => {
+blogRouter.post('/', (req, res) => {
   BlogData.vaidateInsertBlogRequest(req.body)
     .then(blogData => {
       blogService.insert(blogData)
@@ -58,7 +57,7 @@ blogRouter.post('/', (req, res, next) => {
 });
 
 // Update blog
-blogRouter.put('/:guid', (req, res, next) => {
+blogRouter.put('/:guid', (req, res) => {
   BlogData.vaidateInsertBlogRequest(req.body)
     .then(blogData => {
       blogService.update(req.params.guid, blogData)

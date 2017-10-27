@@ -1,6 +1,6 @@
 import { UserId } from "./User";
 import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn, ITraceRecord, Signture } from "./../../common/models";
-import { Entity, Column, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
+import { Entity, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 
 export interface IRegistrationRequest {
   username: string
@@ -18,7 +18,7 @@ export class UserPasswordRef {
 }
 
 export interface IUserPasswordRecord extends ITraceRecord {
-  userId: Id
+  user_id: Id
   username: string
   email: string
   password: string
@@ -67,7 +67,7 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
     public username = stringColumn("username")
     public password = stringColumn("password")
 
-    public columns = (composite: UserPasswordData): ColumnValue<UserPasswordData, string>[] => {
+    public columns = (composite: UserPasswordData): ColumnValue<string>[] => {
       return [
         this.email.set(composite.email), 
         this.username.set(composite.username),
@@ -89,7 +89,7 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
   public trace = CompositeTrace  
 
   public map(object: IUserPasswordRecord): UserPassword {
-    const ref = new UserPasswordRef(new UserId(object.userId)),
+    const ref = new UserPasswordRef(new UserId(object.user_id)),
       data = new UserPasswordData(object.username, object.email, object.password),
       trace = new Trace(new Signture(new UserId(object.created_by), new Date(object.created_at)), new Signture(new UserId(object.updated_by), new Date(object.updated_at)))
 

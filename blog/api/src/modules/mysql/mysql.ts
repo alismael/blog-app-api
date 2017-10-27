@@ -1,4 +1,3 @@
-import { DBIO } from './../../libs/IO';
 import { config } from "../../config/config"
 import * as mysql from "mysql";
 
