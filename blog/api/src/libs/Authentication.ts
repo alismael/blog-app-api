@@ -10,7 +10,7 @@ export function isAuthenticated(req: express.Request, _: express.Response, next:
 	let service = new UserService
 
 	// If token exist set user in request
-	if (token)
+	if (token) {
 		// verifies secret and checks exp
 		jwt.verify(token,
 			new Buffer(config.jwt.key, 'base64'),
@@ -26,5 +26,10 @@ export function isAuthenticated(req: express.Request, _: express.Response, next:
 				}
 
 			});
+	} else {
+		req.body.user = DBIO.successful(Maybe.nothing())
+		next()
+	}
+		
 
 }
