@@ -1,7 +1,10 @@
 export const config = {
   port: 3000,
   host: '0.0.0.0',
-  mysql: { database: 'blog', username: 'root', password: 'blog' },
+  mysql: { 
+    database: process.env.DATABASE || 'blog', 
+    username: process.env.DATABASE_USERNAME || 'root', 
+    password: process.env.DATABASE_PASSWORD || 'abdo' },
   hash: {
     saltRounds: 10
   },

@@ -1,0 +1,24 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "database": "blog",
+    "user": "root",
+    "password": "abdo",
+    "multipleStatements": true    
+  },
+  "test": {
+    "driver": "mysql",
+    "database": "blog_test",
+    "user": "root",
+    "password": "abdo",
+    "multipleStatements": true    
+  },
+  "prod": {
+    "driver": "mysql",
+    "database": "blog",
+    "user": "root",
+    "password": "root",
+    "multipleStatements": true    
+  }
+}
+
