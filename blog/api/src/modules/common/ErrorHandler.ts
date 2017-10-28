@@ -16,14 +16,20 @@ export enum StatusCode {
   INTERNAL_SERVER_ERROR = 500
 }
 
-export class ErrorHandler<T> {
+
+
+export interface IErrorHandler {
+  apply(res: Response): Response
+}
+
+export class ErrorHandler<T> implements IErrorHandler {
   constructor(public status: number, public payload: Maybe<T>) { }
 
   apply(res: Response) {
     return this.payload.caseOf(
       {
         just: (p) => res.status(this.status).send(p),
-        nothing: () => res.sendStatus(this.status) 
+        nothing: () => res.sendStatus(this.status)
       }
     )
   }
@@ -44,5 +50,11 @@ export class InternalServerError<T> extends ErrorHandler<T> {
 export class Unautherized extends ErrorHandler<string> {
   constructor() {
     super(StatusCode.UNAUTHERIZED, Maybe.just(Errors.UNAUTHERIZED))
+  }
+}
+
+export class BadRequest extends ErrorHandler<string> {
+  constructor() {
+    super(StatusCode.BAD_REQUEST, Maybe.just(Errors.BAD_REQUEST))
   }
 }
