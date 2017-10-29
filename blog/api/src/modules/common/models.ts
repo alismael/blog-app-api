@@ -1,5 +1,6 @@
 import { UserId } from "./../user/models/User";
 import { Composite, Column } from "../entity/models/Entity";
+import * as moment from "moment"
 
 export type Id = number
 export type UUID = string
@@ -33,9 +34,7 @@ export const UserIdColumn = (columnName: string) => new class extends Column<Use
 export const DateColumn = (columnName: string) => new class extends Column<Date, string> {
   constructor() { super(columnName) }
   public getValue(value: Date): string {
-    return value.toISOString()
-      .replace(/T/, ' ')
-      .replace(/\..+/, '')
+    return moment(value, moment.ISO_8601).format("YYYY-MM-DD hh:mm:ss")
   }
 }()
 
