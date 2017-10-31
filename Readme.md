@@ -34,15 +34,8 @@ docker exec -it mysql mysql -uroot -pblog
  Then run the next two commands
  ```sql
  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'blog';
- CREATE DATABASE blog;
- ```
-
- - Migrations
-
-Change directory to migrations folder and run migrations
- ```sh
-cd /vagrant/blog/api/src/migrations/
-knex migrate:latest
+ CREATE DATABASE blog character set utf8 collate utf8_bin;;
+ CREATE DATABASE blog_test character set utf8 collate utf8_bin;;
  ```
 
 ## Install packages
@@ -58,6 +51,13 @@ Front-end packages
 cd /vagrant/blog/web/src/
 npm install
 ```
+
+## Migration
+
+```sh
+cd /vagrant/blog/api/
+npm run dev-migration
+ ```
 
 ## Start API
 

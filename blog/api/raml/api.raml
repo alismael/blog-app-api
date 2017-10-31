@@ -1,0 +1,33 @@
+#%RAML 1.0
+title: Blog-app API
+baseUri: /api
+mediaType:  application/json
+
+uses: 
+  Types: types.raml
+
+/user:
+  /register:
+    post:
+      description: Create new account
+      body:
+        application/json:
+          type: Types.RegisterationRequest
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: created
+  /login:
+    post:
+      description: login in to blog app
+      body:
+        application/json:
+          type: Types.LoginRequest
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: Types.JwtTokenResponse
+              
+      
