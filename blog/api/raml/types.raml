@@ -26,4 +26,40 @@ types:
     type: object
     properties: 
       token: string
-      
+
+  Blog:
+    type: object
+    properties: 
+      id: string
+      guid: string
+      data: BlogData
+      trace: trace
+  BlogData:
+    type: object
+    properties: 
+      title: string
+      decription: string
+  InsertBlogRequest:
+    type: object
+    properties: 
+      title: string
+      decription: string
+  UpdateBlogRequest:
+    type: object
+    properties: 
+      title: string
+      decription: string
+  
+  Trace:
+    type: object
+    properties:
+      created: Signature
+      updated: Signature
+  Signature:
+    type: object
+    properties:
+      at:
+        description: the datetime format will be in "YYYY-MM-DD HH:MM:SS"
+        type: string
+        example: "2017-10-31 00:00:00+00:00"
+      by: string

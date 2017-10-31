@@ -29,5 +29,49 @@ uses:
           body: 
             application/json:
               type: Types.JwtTokenResponse
-              
-      
+
+/blog:
+  /:
+    get:
+      description: Get current user blogs
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: Types.Blog[]
+  /{guid}:
+    uriParameters:
+      guid:
+        type: string
+    get:
+      description: Get blog info specified by guid
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: Types.Blog
+  /:
+    post:
+      description: Insert new blog
+      body:
+        application/json:
+          type: Types.InsertBlogRequest
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: created
+  /{guid}:
+    uriParameters:
+      guid:
+        type: string
+    post:
+      description: Update blog info specified by guid
+      body:
+        application/json:
+          type: Types.UpdateBlogRequest
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: Types.Blog
