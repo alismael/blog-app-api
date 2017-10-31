@@ -1,0 +1,29 @@
+#%RAML 1.0
+title: Blog-app types
+mediaType: application/json
+
+
+types: 
+  RegisterationRequest:
+    type: object
+    properties: 
+      email: string
+      username: string
+      password: string
+      repeatedPassword: string
+  LoginRequest:
+    type: object
+    properties: 
+      username: string
+      password: string
+    example:
+      {
+        username: "test",
+        password: "test"
+      }
+    
+  JwtTokenResponse:
+    type: object
+    properties: 
+      token: string
+      
