@@ -1,11 +1,12 @@
 import * as express from 'express'
-import { BlogData } from '../models/Blog'
+import { BlogData, Blog } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
 import { IErrorHandler, Unautherized, NoSuchElement } from './../../common/ErrorHandler'
+import _ = require('lodash');
 
 export let blogRouter = express.Router();
 
@@ -24,7 +25,8 @@ blogRouter.get('/', (req, res) => {
 
   DBIO.run(connection, action)
     .then(result => {
-      res.json(result)
+      let blogs = _(result).map(blog => blog.toDto()).value();
+      res.json(blogs)
     })
     .catch((err: IErrorHandler) => {
       err.apply(res)
@@ -37,7 +39,9 @@ blogRouter.get('/:guid', (req, res) => {
     .execute(connection)
     .then(blog => {
       blog.caseOf({
-        just: blog => res.send(blog),
+        just: blog => { 
+          res.send(blog.toDto()) 
+        },
         nothing: () => { throw new NoSuchElement }
       })
     })
