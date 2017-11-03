@@ -7,6 +7,7 @@ import * as supertest from "supertest"
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import { JWT } from "../../../src/modules/user/models/User";
+import {} from "jest";
 
 describe("user route tests", () => {
   let factory = new UserFactory
@@ -45,7 +46,8 @@ describe("user route tests", () => {
       .expect(200)
       .end((err, res) => {
         if(err) throw err
-        done()
+          expect(res.body).toMatchObject({token: '123'})
+          done()
       })
   })
 })
