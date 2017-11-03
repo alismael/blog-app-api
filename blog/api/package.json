@@ -18,7 +18,6 @@
     "@types/cookie-parser": "^1.4.1",
     "@types/express": "^4.0.37",
     "@types/jsonwebtoken": "^7.2.3",
-    "@types/knex": "0.0.58",
     "@types/mysql": "0.0.34",
     "@types/node": "^8.0.24",
     "@types/uuid": "^3.4.1",
@@ -45,13 +44,14 @@
   },
   "devDependencies": {
     "@types/jest": "^21.1.2",
-    "@types/winston": "^2.3.6",
+    "@types/supertest": "^2.0.3",
     "eslint": "^4.6.1",
     "gulp-changed-in-place": "^2.2.0",
     "gulp-tsfmt": "^1.0.2",
     "gulp-tslint": "^8.1.2",
+    "supertest": "^3.0.0",
     "ts-jest": "^21.1.2",
     "tslint": "^5.7.0",
-    "winston": "^2.4.0"
+    "winston": "^3.0.0-rc1"
   }
 }
