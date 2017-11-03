@@ -5,7 +5,7 @@ import * as auth from "./libs/Authentication"
 // Import modules api routes
 import { blogRouter } from './modules/blog/routes/BlogRouter';
 // import { fileRouter } from './modules/file/routes/FileRouter';
-import userRouter from "./modules/user/routes/UserRouter"
+import {UserRouter} from "./modules/user/routes/UserRouter"
 
 export let apiRoutes = express.Router();
 
@@ -22,4 +22,4 @@ apiRoutes.use('/blog', blogRouter);
 // apiRoutes.use('/file', fileRouter);
 
 // use file routes under /api/file
-apiRoutes.use('/user', userRouter);
+apiRoutes.use('/user', new UserRouter().route());
