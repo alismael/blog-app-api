@@ -1,21 +1,21 @@
 import { userPasswordEntity, UserPasswordRef, UserPassword } from './../../src/modules/user/models/UserPassword';
-import { UserFactory } from './factory';
 import { userEntity } from './../../src/modules/user/models/User';
 import { User, UserId } from "../../src/modules/user/models/User";
 import { DBIO } from "../../src/libs/IO";
 import * as bcrypt from 'bcrypt'
 import { config } from "../../src/config/config";
 import { Trace } from "../../src/modules/common/models";
+import { UserFactory } from "../factories/UserFactory";
 
 export class DBIOFactory {
   userFactory = new UserFactory
   user(): DBIO<UserPassword> {
     let e = userEntity
     let pe = userPasswordEntity
-    return e.insert(...e.data.columns(this.userFactory.userData))
+    return e.insert(...e.data.columns(this.userFactory.userData()[0].data))
     .flatMap((id: number) => {
       const userId = new UserId(id) 
-      let data = this.userFactory.userPasswordData
+      let data = this.userFactory.data.userPasswordData
       const hashed = bcrypt.hashSync(data.password, config.hash.saltRounds)
       const userPasswordData = Object.assign({}, data, {
         password: hashed

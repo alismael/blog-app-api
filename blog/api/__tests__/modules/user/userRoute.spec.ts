@@ -1,6 +1,5 @@
 import { UserRouter } from './../../../src/modules/user/routes/UserRouter';
 import { UserService } from "../../../src/modules/user/services/UserService";
-import { UserFactory } from "../factory";
 import { UserPasswordData } from "../../../src/modules/user/models/UserPassword";
 import { DBIO } from "../../../src/libs/IO";
 import * as supertest from "supertest"
@@ -8,6 +7,7 @@ import * as express from "express"
 import * as bodyParser from "body-parser"
 import { JWT } from "../../../src/modules/user/models/User";
 import {} from "jest";
+import { UserFactory } from "../../factories/UserFactory";
 
 describe("user route tests", () => {
   let factory = new UserFactory
@@ -31,7 +31,7 @@ describe("user route tests", () => {
   test("register route", (done) => {
     supertest(app)
       .post('/register')
-      .send(factory.registrationRequest)
+      .send(factory.data.registrationRequest)
       .set('Accept', "application/json")
       .expect(201)
       .end((err, res) => done())
@@ -40,7 +40,7 @@ describe("user route tests", () => {
   test("login route", (done) => {
     supertest(app)
       .post('/login')
-      .send(factory.loginRequest)
+      .send(factory.data.loginRequest)
       .set('Accept', "application/json")
       .expect('Content-Type', /json/)
       .expect(200)

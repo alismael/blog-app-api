@@ -74,6 +74,21 @@ export class UserFactory {
 		]
 	}
 
+	data =  {
+		registrationRequest: {
+			username: "user1",
+			email: "test@test.com",
+			password: "string",
+			repeatedPassword: "string"
+		},
+		loginRequest: {
+			username: "test",
+			password: "test"
+		},
+		userPasswordData: new UserPasswordData("Admin", "admin@test.com", "123456"),
+		userRecord: (this.userData()[0], this.userPasswordData()[0])
+		
+	}
 }
 
 class UserRecord {
