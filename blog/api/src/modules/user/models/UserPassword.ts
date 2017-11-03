@@ -1,6 +1,7 @@
 import { UserId } from "./User";
 import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn, ITraceRecord, Signture } from "./../../common/models";
 import { Entity, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
+import { BadRequest } from "../../common/ErrorHandler";
 
 export interface IRegistrationRequest {
   username: string
@@ -42,9 +43,9 @@ export class UserPassword {
           && (registrationRequest.password === registrationRequest.repeatedPassword))
           resolve(userPassword)
         else
-          reject("Invalid request")
+          reject(new BadRequest)
       } else
-        reject("Invalid request")
+        reject(new BadRequest)
     })
   }
 
