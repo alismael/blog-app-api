@@ -74,7 +74,7 @@ describe("blog service tests", () => {
 
     let action = userIO.flatMap(userRecord => {
       return blogFactory.createBlog(testBlog)
-        .flatMap(blog => service.update(blog.guid.value, updatedBlog.data, testUser.user)
+        .flatMap(blog => service.update(blog.guid.value, updatedBlog.data, testUser.user))
     })
 
     db.run(action)
