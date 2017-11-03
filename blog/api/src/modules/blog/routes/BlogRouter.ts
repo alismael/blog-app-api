@@ -1,12 +1,12 @@
 import * as express from 'express'
-import { BlogData, Blog } from '../models/Blog'
+import { BlogData } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
 import { IErrorHandler, Unautherized, NoSuchElement } from './../../common/ErrorHandler'
-import _ = require('lodash');
+import * as _ from "lodash";
 
 export let blogRouter = express.Router();
 
