@@ -1,8 +1,8 @@
-import { createLogger, transports } from "winston";
+import * as winston from "winston";
 
-export const logger = createLogger({
+export const logger = new winston.Logger({
   transports: [
-    new transports.Console({
+    new winston.transports.Console({
       level: "info",
       handleExceptions: true,
       json: false,
