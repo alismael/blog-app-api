@@ -32,7 +32,7 @@ export class UserPassword {
 
   public static vaidateRegistrationRequest = (registrationRequest: IRegistrationRequest): Promise<UserPasswordData> => {
     return new Promise((resolve, reject) => {
-      if (registrationRequest.email && registrationRequest.password && registrationRequest.username) {
+      if (registrationRequest && registrationRequest.email && registrationRequest.password && registrationRequest.username) {
         const userPassword = new UserPasswordData(
           registrationRequest.username,
           registrationRequest.email,
