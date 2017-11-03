@@ -1,3 +1,4 @@
+import { IErrorHandler } from './ErrorHandler';
 import { Maybe } from 'tsmonad';
 import { Response } from "express"
 
@@ -5,6 +6,15 @@ export enum Errors {
   NOT_FOUND = "not found",
   BAD_REQUEST = "bad request",
   UNAUTHERIZED = "unautherized"
+}
+
+export function errorHandler(res: Response): (err: IErrorHandler) => Response {
+  return (err: IErrorHandler) => {
+    if(err.apply)
+      return err.apply(res)
+    else 
+      return res.send(err)
+  }
 }
 
 export enum StatusCode {
@@ -15,8 +25,6 @@ export enum StatusCode {
   UNAUTHERIZED = 401,
   INTERNAL_SERVER_ERROR = 500
 }
-
-
 
 export interface IErrorHandler {
   apply(res: Response): Response

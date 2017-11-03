@@ -1,5 +1,5 @@
 import { connection } from './../../mysql/mysql'
-import { IErrorHandler } from './../../common/ErrorHandler'
+import { errorHandler } from './../../common/ErrorHandler'
 import { UserService } from "./../services/UserService"
 import { UserPassword } from "./../models/UserPassword"
 import * as express from "express"
@@ -14,12 +14,7 @@ export class UserRouter {
       DBIO.run(connection, this.userService.register(userPassword))
     )
     .then(_ => res.sendStatus(201))
-    .catch((err: IErrorHandler) => {
-      if(err.apply)
-        err.apply(res)
-      else 
-        res.send(err)
-    })
+    .catch(errorHandler(res))
   }
 
   login(req: express.Request, res: express.Response) {
@@ -30,12 +25,7 @@ export class UserRouter {
         token: result
       })
     })
-    .catch((err: IErrorHandler) => {
-      if(err.apply)
-        err.apply(res)
-      else 
-        res.send(err)
-    })
+    .catch(errorHandler(res))
   }
   route(): express.Router {
     let userRoute = express.Router()
