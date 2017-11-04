@@ -78,7 +78,7 @@ export class UserFactory {
 
 	userPasswordData: UserPasswordData = new UserPasswordData("Admin", "admin@test.com", "123456")	
 	userData: UserData = new UserData("manager")
-	userModel = new User(new UserId(111), new UserUUID("test-user-4162-9556-3dec13baee44"), this.userData, Trace.createTrace(new UserId(111))),
+	userModel = new User(new UserId(111), new UserUUID("test-user-4162-9556-3dec13baee44"), this.userData, Trace.createTrace(new UserId(111)))
 	
 	userWithPermission(user: USER): UserRecord {
 		switch (user) {
