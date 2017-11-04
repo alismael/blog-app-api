@@ -10,7 +10,8 @@ import {} from "jest";
 import { UserFactory } from "../../factories/UserFactory";
 
 describe("user route tests", () => {
-  let factory = new UserFactory
+  const factory = new UserFactory
+  const token = "123"
 
   let userRoute = new class extends UserRouter {
     userService = new class extends UserService {
@@ -19,7 +20,7 @@ describe("user route tests", () => {
       }
       
       login(username: string, plainPassword: string): DBIO<JWT> {
-        return DBIO.successful("123")
+        return DBIO.successful(token)
       }
     }()
   }()
@@ -46,7 +47,7 @@ describe("user route tests", () => {
       .expect(200)
       .end((err, res) => {
         if(err) throw err
-          expect(res.body).toMatchObject({token: '123'})
+          expect(res.body).toMatchObject({token: token})
           done()
       })
   })
