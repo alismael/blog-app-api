@@ -31,7 +31,7 @@ describe("user route tests", () => {
   test("register route", (done) => {
     supertest(app)
       .post('/register')
-      .send(factory.data.registrationRequest)
+      .send(factory.registrationRequest)
       .set('Accept', "application/json")
       .expect(201)
       .end((err, res) => done())
@@ -40,7 +40,7 @@ describe("user route tests", () => {
   test("login route", (done) => {
     supertest(app)
       .post('/login')
-      .send(factory.data.loginRequest)
+      .send(factory.loginRequest)
       .set('Accept', "application/json")
       .expect('Content-Type', /json/)
       .expect(200)
