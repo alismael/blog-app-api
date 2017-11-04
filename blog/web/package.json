@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js "
+    "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "material-ui": "^0.19.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-router": "^2.8.1",
-    "redux": "^3.7.2",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
+    "react-router": "3.2.0",
+    "redux": "3.7.2",
     "semantic-ui-react": "^0.71.5"
   },
   "devDependencies": {
