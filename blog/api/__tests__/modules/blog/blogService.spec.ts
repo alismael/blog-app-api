@@ -13,7 +13,7 @@ describe("blog service tests", () => {
   let userFactory = new UserFactory
 
   test("find by id", (done) => {
-    let testUser = userFactory.user(USER.ADMIN)
+    let testUser = userFactory.userWithPermission(USER.ADMIN)
     let userIO = userFactory.createUser(testUser)
     let testBlog = BlogFactory.blogs(testUser.user)[0]
 
@@ -40,7 +40,7 @@ describe("blog service tests", () => {
   })
 
   test("find by guid", (done) => {
-    let testUser = userFactory.user(USER.ADMIN)
+    let testUser = userFactory.userWithPermission(USER.ADMIN)
     let userIO = userFactory.createUser(testUser)
     let testBlog = BlogFactory.blogs(testUser.user)[0]
 
@@ -67,7 +67,7 @@ describe("blog service tests", () => {
   })
 
   test("update blog", (done) => {
-    let testUser = userFactory.user(USER.ADMIN)
+    let testUser = userFactory.userWithPermission(USER.ADMIN)
     let userIO = userFactory.createUser(testUser)
     let testBlog = BlogFactory.blogs(testUser.user)[0]
     let updatedBlog = BlogFactory.blogs(testUser.user)[1]
@@ -88,7 +88,7 @@ describe("blog service tests", () => {
   })
 
   test("get user blogs", (done) => {
-    let testUser = userFactory.user(USER.ADMIN)
+    let testUser = userFactory.userWithPermission(USER.ADMIN)
     let userIO = userFactory.createUser(testUser)
     let testBlog = BlogFactory.blogs(testUser.user)[0]
 

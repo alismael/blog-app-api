@@ -5,7 +5,8 @@ import { Response } from "express"
 export enum Errors {
   NOT_FOUND = "not found",
   BAD_REQUEST = "bad request",
-  UNAUTHERIZED = "unautherized"
+  UNAUTHERIZED = "unautherized",
+  INVALID_STATE = "invalidState"
 }
 
 export function errorHandler(res: Response): (err: IErrorHandler) => Response {
@@ -64,5 +65,11 @@ export class Unautherized extends ErrorHandler<string> {
 export class BadRequest extends ErrorHandler<string> {
   constructor() {
     super(StatusCode.BAD_REQUEST, Maybe.just(Errors.BAD_REQUEST))
+  }
+}
+
+export class InvalidState extends ErrorHandler<string> {
+  constructor() {
+    super(StatusCode.BAD_REQUEST, Maybe.just(Errors.INVALID_STATE))
   }
 }

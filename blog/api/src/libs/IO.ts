@@ -1,5 +1,5 @@
 import { IConnection } from "mysql"
-import { NoSuchElement, InternalServerError } from "../modules/common/ErrorHandler"
+import { NoSuchElement, InternalServerError, InvalidState } from "../modules/common/ErrorHandler"
 
 export class DBIO<T> {
 
@@ -31,12 +31,16 @@ export class DBIO<T> {
 
   execute(connection: IConnection): Promise<T> {
     return new Promise((resolve, reject) => {
-      connection.query(this.query, this.params, (err, result) => {
-        if (err) 
-          reject(new InternalServerError(err))
-        else 
-          resolve(result)
-      })
+      if(this.query && this.params) {
+        connection.query(this.query, this.params, (err, result) => {
+          if (err) 
+            reject(new InternalServerError(err))
+          else 
+            resolve(result)
+        })
+      } else {
+        reject(new InvalidState)
+      }
     })
   }
 

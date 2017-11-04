@@ -1,5 +1,5 @@
 import * as express from 'express'
-import { BlogData } from '../models/Blog'
+import { BlogData, Blog } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
@@ -25,7 +25,7 @@ blogRouter.get('/', (req, res) => {
 
   DBIO.run(connection, action)
     .then(result => {
-      let blogs = _(result).map(blog => blog.toDto()).value();
+      let blogs = _.map(result, (blog: Blog) => blog.toDto());
       res.json(blogs)
     })
     .catch((err: IErrorHandler) => {

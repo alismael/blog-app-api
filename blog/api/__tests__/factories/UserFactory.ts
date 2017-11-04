@@ -13,6 +13,29 @@ export enum USER {
 
 export class UserFactory {
 
+	user(): DBIO<UserPassword> {
+    const e = userEntity
+    const pe = userPasswordEntity
+    return e.insert(...e.data.columns(this.userData))
+    .flatMap((id: number) => {
+      const userId = new UserId(id) 
+      let data = this.userPasswordData
+      const hashed = bcrypt.hashSync(data.password, config.hash.saltRounds)
+      const userPasswordData = Object.assign({}, data, {
+        password: hashed
+      })
+      const trace = Trace.createTrace(userId)
+      const ref = new UserPasswordRef(userId)
+      return pe.insert(
+        ...pe.ref.columns(ref),
+        ...pe.data.columns(userPasswordData),
+        ...pe.trace.columns(trace)
+      ).map(id => {
+        return new UserPassword(ref, userPasswordData, trace)
+      })
+    })
+	}
+	
 	createUser(userRecord: UserRecord): DBIO<UserRecord> {
 		let e = userEntity
 		let pe = userPasswordEntity
@@ -41,56 +64,39 @@ export class UserFactory {
 			})
 	}
 
-	user(user: USER): UserRecord {
+	registrationRequest = {
+		username: "user1",
+		email: "test@test.com",
+		password: "string",
+		repeatedPassword: "string"
+	}
+
+	loginRequest = {
+		username: "test",
+		password: "test"
+	}
+
+	userPasswordData: UserPasswordData = new UserPasswordData("Admin", "admin@test.com", "123456")	
+	userData: UserData = new UserData("manager")
+	userModel = new User(new UserId(111), new UserUUID("test-user-4162-9556-3dec13baee44"), this.userData, Trace.createTrace(new UserId(111))),
+	
+	userWithPermission(user: USER): UserRecord {
 		switch (user) {
 			case USER.ADMIN:
-				return new UserRecord(this.userData()[0], this.userPasswordData()[0])
+				return new UserRecord(this.userModel, this.userPasswordData)
 
 			case USER.USER1:
-				return new UserRecord(this.userData()[1], this.userPasswordData()[1])
+				return new UserRecord(this.userModel, this.userPasswordData)
 
 			case USER.USER2:
-				return new UserRecord(this.userData()[2], this.userPasswordData()[2])
+				return new UserRecord(this.userModel, this.userPasswordData)
 
 			default:
 				
 				break
 		}
 	}
-
-	userData(): User[] {
-		return [
-			new User(new UserId(111), new UserUUID("test-user-4162-9556-3dec13baee44"), new UserData("IT Manager"), Trace.createTrace(new UserId(111))),
-			new User(new UserId(112), new UserUUID("test-user-4162-9556-3dec13baee45"), new UserData("Software Engineer"), Trace.createTrace(new UserId(111))), ,
-			new User(new UserId(113), new UserUUID("test-user-4162-9556-3dec13baee46"), new UserData("Project Manager"), Trace.createTrace(new UserId(111))),
-		]
-	}
-
-	userPasswordData(): UserPasswordData[] {
-		return [
-			new UserPasswordData("Admin", "admin@test.com", "123456"),
-			new UserPasswordData("User1", "user1@test.com", "123456"),
-			new UserPasswordData("User2", "user2@test.com", "123456")
-		]
-	}
-
-	data =  {
-		registrationRequest: {
-			username: "user1",
-			email: "test@test.com",
-			password: "string",
-			repeatedPassword: "string"
-		},
-		loginRequest: {
-			username: "test",
-			password: "test"
-		},
-		userPasswordData: new UserPasswordData("Admin", "admin@test.com", "123456"),
-		userRecord: (this.userData()[0], this.userPasswordData()[0])
-		
-	}
 }
-
 class UserRecord {
 	constructor(public user: User, public userPasswordData: UserPasswordData) { }
 }
