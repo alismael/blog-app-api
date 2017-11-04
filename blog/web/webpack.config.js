@@ -26,6 +26,7 @@ var config = {
     },
     devServer: {
         inline: true,
+        host: '0.0.0.0',
         port: 8001,
         historyApiFallback: {
             index: 'index.html'
