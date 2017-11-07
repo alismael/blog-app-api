@@ -19,7 +19,7 @@ class DashboardPage extends React.Component {
     }
 
     getBlogs(){
-      return $.getJSON('http://localhost:3000/api/blog')
+      return $.getJSON('http://localhost:8080/api/blog')
       .then((data) => {
         if ( !data.error )
           this.setState({ blogs: data });
