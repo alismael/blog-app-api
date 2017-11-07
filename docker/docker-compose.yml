@@ -7,3 +7,14 @@ mysql:
     - /var/lib/mysql:/var/lib/mysql
   environment:
     - MYSQL_ROOT_PASSWORD=blog
+
+haproxy:
+  env_file: local.env
+  image: haproxy
+  container_name: haproxy-api
+  volumes:
+    - "/vagrant/etc/haproxy:/usr/local/etc/haproxy"
+  expose:
+    - 80
+  ports:
+    - "9090:80"
