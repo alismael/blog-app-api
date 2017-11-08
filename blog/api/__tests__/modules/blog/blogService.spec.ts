@@ -1,12 +1,13 @@
 import { db } from './../../db'
 import { BlogService } from './../../../src/modules/blog/services/BlogService'
-import { connection } from "../../../src/modules/mysql/mysql"
+import { connection } from '../../../src/modules/mysql/mysql'
 import { DBIO } from '../../../src/libs/IO'
 import { Blog, IBlogRecord, BlogData } from '../../../src/modules/blog/models/Blog'
 import { USER, UserFactory } from '../../factories/UserFactory'
 import { BlogFactory } from '../../factories/BlogFactory'
 import { Maybe } from 'tsmonad';
-let logger = require('./../../../src/logger')
+import logger from './../../../src/logger'
+import {  } from "jest";
 
 describe("blog service tests", () => {
   const service = new BlogService
