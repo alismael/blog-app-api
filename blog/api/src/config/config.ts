@@ -4,7 +4,7 @@ export const config = {
   mysql: { 
     database: process.env.DATABASE || 'blog', 
     username: process.env.DATABASE_USERNAME || 'root', 
-    password: process.env.DATABASE_PASSWORD || 'blog' },
+    password: process.env.DATABASE_PASSWORD || 'abdo' },
   hash: {
     saltRounds: 10
   },

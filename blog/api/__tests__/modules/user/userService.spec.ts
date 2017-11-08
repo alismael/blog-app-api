@@ -27,8 +27,8 @@ describe("user service tests", () => {
   })
 
   test("user login successfully", (done) => {
-    let userPasswordIO: DBIO<UserPassword> = dbioFactory.user()
-    let action = userPasswordIO.flatMap((userPassword: UserPassword) => {
+    let userPasswordIO = dbioFactory.user()
+    let action = userPasswordIO.flatMap(userRecord => {
       return service.login(factory.userPasswordData.username, factory.userPasswordData.password)
     })
 
@@ -43,8 +43,8 @@ describe("user service tests", () => {
   })
 
   test("user can't login with wrong password", (done) => {
-    let userPasswordIO: DBIO<UserPassword> = dbioFactory.user()
-    let action = userPasswordIO.flatMap((userPassword: UserPassword) => {
+    let userPasswordIO = dbioFactory.user()
+    let action = userPasswordIO.flatMap(userPassword => {
       return service.login(factory.userPasswordData.username, "wrong password")
     })
 
