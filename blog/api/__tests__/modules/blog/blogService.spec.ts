@@ -2,23 +2,22 @@ import { db } from './../../db'
 import { BlogService } from './../../../src/modules/blog/services/BlogService'
 import { connection } from "../../../src/modules/mysql/mysql"
 import { DBIO } from '../../../src/libs/IO'
-import { Blog, IBlogRecord } from '../../../src/modules/blog/models/Blog'
+import { Blog, IBlogRecord, BlogData } from '../../../src/modules/blog/models/Blog'
 import { USER, UserFactory } from '../../factories/UserFactory'
 import { BlogFactory } from '../../factories/BlogFactory'
+import { Maybe } from 'tsmonad';
 let logger = require('./../../../src/logger')
 
 describe("blog service tests", () => {
-  let service = new BlogService
-  let blogFactory = new BlogFactory
-  let userFactory = new UserFactory
+  const service = new BlogService
+  const blogFactory = new BlogFactory
+  const userFactory = new UserFactory
 
   test("find by id", (done) => {
-    let testUser = userFactory.userWithPermission(USER.ADMIN)
-    let userIO = userFactory.createUser(testUser)
-    let testBlog = BlogFactory.blogs(testUser.user)[0]
+    const userIO = userFactory.user()
 
-    let action = userIO.flatMap(userRecord => {
-      return blogFactory.createBlog(testBlog)
+    let action: DBIO<Maybe<Blog>> = userIO.flatMap(userRecord => {
+      return blogFactory.createBlog(userRecord.userPassword.trace)
         .flatMap(blog => service.findById(blog.id.value))
     })
 
@@ -26,9 +25,8 @@ describe("blog service tests", () => {
       .then(result => {
         result.caseOf({
           just: blog => {
-            expect(blog.guid.value).toBe(testBlog.guid.value)
-            expect(blog.data.title).toBe(testBlog.data.title)
-            expect(blog.data.description).toBe(testBlog.data.description)
+            expect(blog.data.title).toBe(blogFactory.blogData.title)
+            expect(blog.data.description).toBe(blogFactory.blogData.description)
             done()
           },
           nothing: () => { throw Error("Error: blog not found") }
@@ -40,12 +38,10 @@ describe("blog service tests", () => {
   })
 
   test("find by guid", (done) => {
-    let testUser = userFactory.userWithPermission(USER.ADMIN)
-    let userIO = userFactory.createUser(testUser)
-    let testBlog = BlogFactory.blogs(testUser.user)[0]
+    let userIO = userFactory.user()
 
-    let action = userIO.flatMap(userRecord => {
-      return blogFactory.createBlog(testBlog)
+    let action: DBIO<Maybe<Blog>> = userIO.flatMap(userRecord => {
+      return blogFactory.createBlog(userRecord.userPassword.trace)
         .flatMap(blog => service.findByGuid(blog.guid.value))
     })
 
@@ -53,9 +49,8 @@ describe("blog service tests", () => {
       .then(result => {
         result.caseOf({
           just: blog => {
-            expect(blog.guid.value).toBe(testBlog.guid.value)
-            expect(blog.data.title).toBe(testBlog.data.title)
-            expect(blog.data.description).toBe(testBlog.data.description)
+            expect(blog.data.title).toBe(blogFactory.blogData.title)
+            expect(blog.data.description).toBe(blogFactory.blogData.description)
             done()
           },
           nothing: () => { throw Error("Error: blog not found") }
@@ -67,14 +62,15 @@ describe("blog service tests", () => {
   })
 
   test("update blog", (done) => {
-    let testUser = userFactory.userWithPermission(USER.ADMIN)
-    let userIO = userFactory.createUser(testUser)
-    let testBlog = BlogFactory.blogs(testUser.user)[0]
-    let updatedBlog = BlogFactory.blogs(testUser.user)[1]
+    const userIO = userFactory.user()
+    const blog = blogFactory.blogData
+    const updatedBlog: BlogData = Object.assign({}, blogFactory.blogData, {
+      title: "updated title"
+    })
 
     let action = userIO.flatMap(userRecord => {
-      return blogFactory.createBlog(testBlog)
-        .flatMap(blog => service.update(blog.guid.value, updatedBlog.data, testUser.user))
+      return blogFactory.createBlog(userRecord.userPassword.trace)
+        .flatMap(blog => service.update(blog.guid.value, updatedBlog, userRecord.user))
     })
 
     db.run(action)
@@ -88,12 +84,10 @@ describe("blog service tests", () => {
   })
 
   test("get user blogs", (done) => {
-    let testUser = userFactory.userWithPermission(USER.ADMIN)
-    let userIO = userFactory.createUser(testUser)
-    let testBlog = BlogFactory.blogs(testUser.user)[0]
+    let userIO = userFactory.user()
 
     let action = userIO.flatMap(userRecord => {
-      return blogFactory.createBlog(testBlog)
+      return blogFactory.createBlog(userRecord.userPassword.trace)
         .flatMap(blog => service.getUserBlogs(userRecord.user))
     })
 
