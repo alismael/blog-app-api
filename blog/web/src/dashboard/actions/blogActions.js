@@ -24,7 +24,7 @@ export function addBlog(id, text) {
   }
 }
 
-export function updateTweet(id, text) {
+export function updateBlog(id, text) {
   return {
     type: 'UPDATE_BLOG',
     payload: {
@@ -34,6 +34,6 @@ export function updateTweet(id, text) {
   }
 }
 
-export function deleteTweet(id) {
+export function deleteBlog(id) {
   return { type: 'DELETE_BLOG', payload: id}
 }

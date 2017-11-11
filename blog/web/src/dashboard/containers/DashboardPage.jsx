@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 
-import { fetchBlogs } from "../../actions/blogActions"
+import { fetchBlogs } from "../actions/blogActions"
 
 @connect((store) => {
   return {
