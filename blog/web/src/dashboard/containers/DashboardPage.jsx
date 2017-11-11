@@ -1,42 +1,25 @@
-import React from 'react'
-import Dashboard from '../components/Dashboard'
+import React from "react"
+import { connect } from "react-redux"
 
+import { fetchBlogs } from "../../actions/blogActions"
 
-class DashboardPage extends React.Component {
+@connect((store) => {
+  return {
+    blogs: store.blogs.blogs,
+  };
+})
+export default class DashboardPage extends React.Component {
+  componentWillMount() {
+    this.props.dispatch(fetchBlogs())
+  }
 
-    /**
-     * Class constructor.
-     */
-    constructor(props) {
-        super(props);
+  render() {
+    const { blogs } = this.props;
 
-        // set the initial component state
-        this.state = { blogs: [] };
-    }
+    const mappedBlogs = blogs.map(blog => <li key={blog.id}>{blog.data.title}</li>)
 
-    componentDidMount() {
-      this.getBlogs();
-    }
-
-    getBlogs(){
-      return $.getJSON('http://localhost:8080/api/blog')
-      .then((data) => {
-        if ( !data.error )
-          this.setState({ blogs: data });
-      });
-    }
-
-    /**
-     * Render the component.
-     */
-    render() {
-        return (
-            <Dashboard
-                blogs={this.state.blogs}
-            />
-        );
-    }
-
+    return <div>
+      {<ul>{mappedBlogs}</ul>}
+    </div>
+  }
 }
-
-export default DashboardPage;
