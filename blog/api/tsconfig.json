@@ -7,7 +7,9 @@
         "noImplicitThis": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "pretty": true
+        "pretty": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true
     },
     "include": [
         "./src/**/*.ts"

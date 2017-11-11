@@ -1,5 +1,6 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UserIdColumn, UUID, ITraceRecord } from "./../../common/models";
 import { Entity, Column, Composite, Primative } from "../../entity/models/Entity";
+import { UserPassword } from "./UserPassword";
 
 export type JWT = string
 
@@ -21,6 +22,10 @@ export class User {
     public guid: UserUUID,
     public data: UserData,
     public trace: Trace) { }
+}
+
+export class UserAggregate {
+	constructor(public user: User, public userPassword: UserPassword) { }
 }
 
 export interface IUserRecord extends ITraceRecord {

@@ -6,7 +6,7 @@ import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
 import { IErrorHandler, Unautherized, NoSuchElement } from './../../common/ErrorHandler'
-import _ = require('lodash');
+import * as _ from "lodash";
 
 export let blogRouter = express.Router();
 
@@ -25,7 +25,7 @@ blogRouter.get('/', (req, res) => {
 
   DBIO.run(connection, action)
     .then(result => {
-      let blogs = _(result).map(blog => blog.toDto()).value();
+      let blogs = _.map(result, (blog: Blog) => blog.toDto());
       res.json(blogs)
     })
     .catch((err: IErrorHandler) => {
