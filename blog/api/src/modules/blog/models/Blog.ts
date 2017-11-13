@@ -61,7 +61,7 @@ export class BlogData {
   }
 
   toDto() {
-    return new BlogDataDto(this.title, this.description)
+    return { title: this.title, description: this.description }
   }
 }
 
@@ -73,12 +73,12 @@ export class Blog {
     public trace: Trace) { }
 
   toDto() {
-    return new BlogDto(
-      this.id.value,
-      this.guid.value,
-      this.data.toDto(),
-      this.trace.toDto()
-    )
+    return {
+      id: this.id.value,
+      guid: this.guid.value,
+      data: this.data.toDto(),
+      trace: this.trace.toDto()
+    }
   }
 }
 
