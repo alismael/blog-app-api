@@ -26,12 +26,12 @@ export class Trace {
   constructor(public created: Signture, public updated: Signture) { }
 
   toDto() {
-    return new TraceDto(
-      this.created.by.value,
-      this.created.at,
-      this.updated.by.value,
-      this.updated.at      
-    )
+    return {
+      createdBy: this.created.by.value,
+      createdAt: this.created.at.toString(),
+      updatedBy: this.updated.by.value,
+      updatedAt: this.updated.at.toString()
+    }
   }
 }
 

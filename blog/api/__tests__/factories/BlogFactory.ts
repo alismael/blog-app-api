@@ -1,3 +1,4 @@
+import { UserId } from './../../src/modules/user/models/User';
 import { Trace } from './../../src/modules/common/models';
 import { Blog, BlogId, BlogUUID, BlogData, blogEntity } from "../../src/modules/blog/models/Blog";
 import { User } from "../../src/modules/user/models/User";
@@ -7,7 +8,8 @@ import * as uuid from "uuid"
 export class BlogFactory {
 
 	blogData = new BlogData("Blog title 1", "Blog description 1") 
-	
+	blog = new Blog(new BlogId(1), new BlogUUID(uuid.v4()), this.blogData, Trace.createTrace(new UserId(1)))
+
 	createBlog(trace: Trace): DBIO<Blog> {
 		const e = blogEntity
 		const blogUUID = new BlogUUID(uuid.v4())
