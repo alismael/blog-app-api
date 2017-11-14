@@ -51,6 +51,7 @@ describe("blog route tests", () => {
 
   const app = express()
   app.use(bodyParser.json())
+  // middleware mockups
   app.use((req, _, next) => {
     req.body.user = DBIO.successful(Maybe.just(userFactory.userModel))
     next()
