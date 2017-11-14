@@ -18,6 +18,7 @@ import { BlogService } from '../../../src/modules/blog/services/BlogService';
 
 describe("blog route tests", () => {
   const factory = new BlogFactory
+  const userFactory = new UserFactory
 
   let blogRoute = new class extends BlogRouter {
     blogService = new class extends BlogService {
@@ -50,9 +51,13 @@ describe("blog route tests", () => {
 
   const app = express()
   app.use(bodyParser.json())
+  app.use((req, _, next) => {
+    req.body.user = DBIO.successful(Maybe.just(userFactory.userModel))
+    next()
+  })
   app.use(blogRoute.route())
 
-  test("find blog by uuid", (done) => {
+  test("find blog by uuid", done => {
     supertest(app)
       .get(`/${factory.blog.guid.value}`)
       .set('Accept', "application/json")
@@ -65,17 +70,16 @@ describe("blog route tests", () => {
       })
   })
 
-  // test("login route", (done) => {
-  //   supertest(app)
-  //     .post('/login')
-  //     .send(factory.loginRequest)
-  //     .set('Accept', "application/json")
-  //     .expect('Content-Type', /json/)
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       if(err) throw err
-  //       expect(res.body).toMatchObject({token: token})
-  //       done()
-  //     })
-  // })
+  test("find user blogs", done => {
+    supertest(app)
+      .get('/')
+      .set('Accept', "application/json")
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) throw err
+        expect(res.body).toMatchObject([factory.blog.toDto()])
+        done()
+      })
+  })
 })
