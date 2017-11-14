@@ -5,89 +5,85 @@ import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
 import { DBIO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
-import { IErrorHandler, Unautherized, NoSuchElement } from './../../common/ErrorHandler'
+import { Unautherized, NoSuchElement, errorHandler } from './../../common/ErrorHandler'
 import * as _ from "lodash";
+import { Response, Request } from "express"
 
-export let blogRouter = express.Router();
+export class BlogRouter {
 
-let blogService = new BlogService();
+  blogService = new BlogService  
 
-// Get current user blogs
-blogRouter.get('/', (req, res) => {
-  let userIO: DBIO<Maybe<User>> = req.body.user
-
-  let action = userIO.flatMap(user => {
-    return user.caseOf({
-      just: user => blogService.getUserBlogs(user),
-      nothing: () => { throw new Unautherized }
-    })
-  })
-
-  DBIO.run(connection, action)
-    .then(result => {
-      let blogs = _.map(result, (blog: Blog) => blog.toDto());
-      res.json(blogs)
-    })
-    .catch((err: IErrorHandler) => {
-      err.apply(res)
-    })
-});
-
-// Get blog
-blogRouter.get('/:guid', (req, res) => {
-  blogService.findByGuid(req.params.guid)
-    .execute(connection)
-    .then(blog => {
-      blog.caseOf({
-        just: blog => { 
-          res.send(blog.toDto()) 
-        },
-        nothing: () => { throw new NoSuchElement }
+  getUserBlogs(req: Request, res: Response): Promise<Response> {
+    const userIO: DBIO<Maybe<User>> = req.body.user
+    const action = userIO.flatMap(user => {
+      return user.caseOf({
+        just: user => this.blogService.getUserBlogs(user),
+        nothing: () => { throw new Unautherized }
       })
     })
-    .catch((err: IErrorHandler) => {
-      err.apply(res)
-    })
-});
 
-// Insert new blog
-blogRouter.post('/', (req, res) => {
-  let userIO: DBIO<Maybe<User>> = req.body.user
+    return DBIO.run(connection, action)
+      .then<Response>(result => {
+        const blogs = _.map(result, (blog: Blog) => blog.toDto());
+        return res.status(200).json(blogs)
+      })
+      .catch<Response>(errorHandler(res))
+  }
 
-  BlogData.vaidateInsertBlogRequest(req.body)
-    .then(blogData => {
-      let action = userIO.flatMap(user => {
-        return user.caseOf({
-          just: user => blogService.insert(blogData, user),
-          nothing: () => { throw new Unautherized }
+  getBlog(req: Request, res: Response): Promise<Response> {
+    return this.blogService.findByGuid(req.params.guid)
+      .execute(connection)
+      .then<Response>(blog => {
+        return blog.caseOf({
+          just: blog => res.status(200).send(blog.toDto()),
+          nothing: () => { throw new NoSuchElement }
         })
       })
-      DBIO.run(connection, action)
-        .then(_ => res.sendStatus(201))
-        .catch((err: IErrorHandler) => {
-          err.apply(res)
-        })
-    })
-    .catch(err => err.apply(res))
-});
+      .catch<Response>(errorHandler(res))
+  }
 
-// Update blog
-blogRouter.put('/:guid', (req, res) => {
-  let userIO: DBIO<Maybe<User>> = req.body.user
+  createBlog(req: Request, res: Response): Promise<Response> {
+    const userIO: DBIO<Maybe<User>> = req.body.user
 
-  BlogData.vaidateInsertBlogRequest(req.body)
-    .then(blogData => {
-      let action = userIO.flatMap(user => {
-        return user.caseOf({
-          just: user => blogService.update(req.params.guid, blogData, user),
-          nothing: () => { throw new Unautherized }
+    return BlogData.vaidateInsertBlogRequest(req.body)
+      .then(blogData => {
+        const action = userIO.flatMap(user => {
+          return user.caseOf({
+            just: user => this.blogService.insert(blogData, user),
+            nothing: () => { throw new Unautherized }
+          })
         })
+        return DBIO.run(connection, action)
+          .then<Response>(_ => res.sendStatus(201))
+          .catch<Response>(errorHandler(res))
       })
-      DBIO.run(connection, action)
-        .then(_ => res.sendStatus(200))
-        .catch((err: IErrorHandler) => {
-          err.apply(res)
+      .catch(errorHandler(res))
+  }
+
+  updateBlog(req: Request, res: Response): Promise<Response> {
+    const userIO: DBIO<Maybe<User>> = req.body.user
+
+    return BlogData.vaidateInsertBlogRequest(req.body)
+      .then(blogData => {
+        const action = userIO.flatMap(user => {
+          return user.caseOf({
+            just: user => this.blogService.update(req.params.guid, blogData, user),
+            nothing: () => { throw new Unautherized }
+          })
         })
-    })
-    .catch(err => err.apply(res))
-});
+        return DBIO.run(connection, action)
+          .then(_ => res.sendStatus(200))
+          .catch(errorHandler(res))
+      })
+      .catch(errorHandler(res))
+  }
+
+  route(): express.Router {
+    let blogRoute = express.Router()
+    blogRoute.get("/:guid", (req, res) => this.getBlog(req, res))
+    blogRoute.get("/", (req, res) => this.getUserBlogs(req, res))
+    blogRoute.post("/", (req, res) => this.createBlog(req, res))
+    blogRoute.put("/:guid", (req, res) => this.updateBlog(req, res))
+    return blogRoute
+  }
+}

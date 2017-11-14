@@ -9,15 +9,6 @@ export class Signture {
   constructor(public by: UserId, public at: Date) { }
 }
 
-export class TraceDto {
-  constructor(
-    public createdBy: Id,
-    public createdAt: Date,
-    public updatedBy: Id,
-    public updatedAt: Date
-  ) { }
-}
-
 export class Trace {
   public static createTrace(userId: UserId): Trace {
     return new Trace(new Signture(userId, new Date()), new Signture(userId, new Date()))
@@ -26,12 +17,12 @@ export class Trace {
   constructor(public created: Signture, public updated: Signture) { }
 
   toDto() {
-    return new TraceDto(
-      this.created.by.value,
-      this.created.at,
-      this.updated.by.value,
-      this.updated.at      
-    )
+    return {
+      createdBy: this.created.by.value,
+      createdAt: this.created.at.toString(),
+      updatedBy: this.updated.by.value,
+      updatedAt: this.updated.at.toString()
+    }
   }
 }
 

@@ -15,8 +15,8 @@ export enum USER {
 export class UserFactory {
 
 	userPasswordData: UserPasswordData = new UserPasswordData("Admin", "admin@test.com", "123456")	
-	userData: UserData = new UserData("manager")
-	registrationRequest = {
+  userData: UserData = new UserData("manager")
+  registrationRequest = {
 		username: "user1",
 		email: "test@test.com",
 		password: "string",

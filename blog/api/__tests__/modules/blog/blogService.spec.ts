@@ -4,14 +4,13 @@ import { connection } from '../../../src/modules/mysql/mysql'
 import { DBIO } from '../../../src/libs/IO'
 import { Blog, IBlogRecord, BlogData } from '../../../src/modules/blog/models/Blog'
 import { USER, UserFactory } from '../../factories/UserFactory'
-import { BlogFactory } from '../../factories/BlogFactory'
+import blogFactory from '../../factories/BlogFactory'
 import { Maybe } from 'tsmonad';
 import logger from './../../../src/logger'
 import {  } from "jest";
 
 describe("blog service tests", () => {
   const service = new BlogService
-  const blogFactory = new BlogFactory
   const userFactory = new UserFactory
 
   test("find by id", (done) => {
