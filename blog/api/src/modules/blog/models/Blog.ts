@@ -1,4 +1,4 @@
-import { Trace, TraceDto, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models"
+import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models"
 import { Entity, Column, Composite, Primative } from "../../entity/models/Entity"
 import { UserId } from "../../user/models/User"
 import { DBIO } from "../../../libs/IO"
@@ -16,22 +16,6 @@ export interface IBlogRecord extends ITraceRecord {
   guid: string
   title: string
   description: string
-}
-
-export class BlogDto {
-  constructor(
-    public id: Id,
-    public guid: string,
-    public data: BlogDataDto,
-    public trace: TraceDto,
-  ) { }
-}
-
-export class BlogDataDto {
-  constructor(
-    public title: string,
-    public description: string
-  ) { }
 }
 
 export class BlogId {

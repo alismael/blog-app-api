@@ -16,9 +16,7 @@ export class UserFactory {
 
 	userPasswordData: UserPasswordData = new UserPasswordData("Admin", "admin@test.com", "123456")	
   userData: UserData = new UserData("manager")
-  userId: UserId = new UserId(1)
-  userModel: User = new User(this.userId, new UserUUID("test"), this.userData, Trace.createTrace(this.userId))
-	registrationRequest = {
+  registrationRequest = {
 		username: "user1",
 		email: "test@test.com",
 		password: "string",

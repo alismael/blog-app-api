@@ -5,7 +5,7 @@ import { User } from "../../src/modules/user/models/User";
 import { DBIO } from "../../src/libs/IO";
 import * as uuid from "uuid"
 
-export class BlogFactory {
+class BlogFactory {
 
 	blogData = new BlogData("Blog title 1", "Blog description 1") 
 	blog = new Blog(new BlogId(1), new BlogUUID(uuid.v4()), this.blogData, Trace.createTrace(new UserId(1)))
@@ -19,7 +19,6 @@ export class BlogFactory {
 			...e.trace.columns(trace),
 		).map(id => new Blog(new BlogId(id), blogUUID, this.blogData, trace))
 	}
-
-
-
 }
+
+export default new BlogFactory
