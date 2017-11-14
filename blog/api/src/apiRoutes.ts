@@ -3,7 +3,7 @@ import * as cookieParser from "cookie-parser"
 import * as auth from "./libs/Authentication"
 
 // Import modules api routes
-import { blogRouter } from './modules/blog/routes/BlogRouter';
+import { BlogRouter } from './modules/blog/routes/BlogRouter';
 // import { fileRouter } from './modules/file/routes/FileRouter';
 import {UserRouter} from "./modules/user/routes/UserRouter"
 
@@ -16,7 +16,7 @@ apiRoutes.use(cookieParser())
 apiRoutes.use(auth.isAuthenticated)
 
 // use blog routes under /api/blog
-apiRoutes.use('/blog', blogRouter);
+apiRoutes.use('/blog', new BlogRouter().route());
 
 // use file routes under /api/file
 // apiRoutes.use('/file', fileRouter);
