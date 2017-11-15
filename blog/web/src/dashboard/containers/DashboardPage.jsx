@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-
+import Dashboard from "../components/Dashboard"
 import { fetchBlogs } from "../actions/blogActions"
 
 @connect((store) => {
@@ -16,10 +16,10 @@ export default class DashboardPage extends React.Component {
   render() {
     const { blogs } = this.props;
 
-    const mappedBlogs = blogs.map(blog => <li key={blog.id}>{blog.data.title}</li>)
-
-    return <div>
-      {<ul>{mappedBlogs}</ul>}
-    </div>
+    return (
+      <Dashboard 
+        blogs={blogs} 
+      />
+    );
   }
 }
