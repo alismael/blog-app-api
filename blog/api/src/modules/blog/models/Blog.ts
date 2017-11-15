@@ -61,6 +61,7 @@ export class Blog {
       id: this.id.value,
       guid: this.guid.value,
       data: this.data.toDto(),
+      img: '/api/public/img/blog_default.png',
       trace: this.trace.toDto()
     }
   }
