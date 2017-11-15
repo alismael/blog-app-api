@@ -9,8 +9,8 @@ export default class BlogCard extends Component {
     return (
       <GridTile
           key={this.props.blog.img}
-          title={this.props.blog.title}
-          subtitle={<span>by <b>{this.props.blog.author}</b></span>}
+          title={this.props.blog.data.title}
+          subtitle={<span>by <b>{this.props.blog.trace.createdBy}</b></span>}
           actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
       >
         <img src={this.props.blog.img} />
