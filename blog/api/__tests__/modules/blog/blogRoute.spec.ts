@@ -12,7 +12,7 @@ import * as supertest from "supertest"
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import { JWT, UserUUID, UserId } from "../../../src/modules/user/models/User";
-import {} from "jest";
+import { } from "jest";
 import { UserFactory } from "../../factories/UserFactory";
 import { BlogService } from '../../../src/modules/blog/services/BlogService';
 import blogServiceMock from "./BlogServiceMock"
@@ -42,7 +42,7 @@ describe("blog route tests", () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        if(err) throw err
+        if (err) throw err
         expect(res.body).toMatchObject(blogFactory.blog.toDto())
         done()
       })
@@ -55,8 +55,54 @@ describe("blog route tests", () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        if(err) throw err
+        if (err) throw err
         expect(res.body).toMatchObject([blogFactory.blog.toDto()])
+        done()
+      })
+  })
+
+  test("create blog", done => {
+    supertest(app)
+      .post('/')
+      .send(blogFactory.blogData)
+      .set('Accept', "application/json")
+      .expect(201)
+      .end((err, res) => {
+        if (err) throw err
+        done()
+      })
+  })
+
+  test("create blog should return bad request", done => {
+    supertest(app)
+      .post('/')
+      .set('Accept', "application/json")
+      .expect(400)
+      .end((err, res) => {
+        if (err) throw err
+        done()
+      })
+  })
+
+  test("update blog by uuid", done => {
+    supertest(app)
+      .put(`/${blogFactory.blog.guid.value}`)
+      .send(blogFactory.blogData)
+      .set('Accept', "application/json")
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err
+        done()
+      })
+  })
+
+  test("update blog by uuid should return bad request", done => {
+    supertest(app)
+      .put(`/${blogFactory.blog.guid.value}`)
+      .set('Accept', "application/json")
+      .expect(400)
+      .end((err, res) => {
+        if (err) throw err
         done()
       })
   })
