@@ -9,6 +9,10 @@ import {UserRouter} from "./modules/user/routes/UserRouter"
 
 export let apiRoutes = express.Router();
 
+// serve static files
+var path = require('path');
+apiRoutes.use("/public", express.static(path.join(__dirname, '../public')));
+
 // cookie parser
 apiRoutes.use(cookieParser())
 
