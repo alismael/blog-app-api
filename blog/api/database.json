@@ -3,14 +3,14 @@
     "driver": "mysql",
     "database": "blog",
     "user": "root",
-    "password": "abdo",
+    "password": "blog",
     "multipleStatements": true    
   },
   "test": {
     "driver": "mysql",
     "database": "blog_test",
     "user": "root",
-    "password": "abdo",
+    "password": "blog",
     "multipleStatements": true    
   },
   "prod": {
