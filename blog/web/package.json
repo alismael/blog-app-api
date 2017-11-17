@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --watch-poll"
   },
   "author": "",
   "license": "ISC",
