@@ -2,11 +2,13 @@ import React from 'react';
 import LoginForm from '../components/LoginForm.jsx';
 import { login } from '../actions/authActions';
 import { connect } from "react-redux"
+import { browserHistory } from 'react-router';
 
 @connect((store) => {
-  return {
-    user: store.user.user,
-  };
+	return {
+		user: store.user.user,
+		error: store.user.error
+	};
 })
 class LoginPage extends React.Component {
 
@@ -18,8 +20,8 @@ class LoginPage extends React.Component {
 
 		// set the initial component state
 		this.state = {
-			errors: {},
-			user: {
+			formErrors: {},
+			loginForm: {
 				username: '',
 				password: ''
 			}
@@ -30,15 +32,16 @@ class LoginPage extends React.Component {
 	}
 
 	validForm(username, password) {
-		var errors = {
-			username: (username.trim() == "") ? "required" : "",
-			password: (password.trim() == "") ? "required" : ""
+		var errors = {};
+
+		if (username.trim() == '') {
+			errors['username'] = 'required';
+		}
+		if (password.trim() == '') {
+			errors['password'] = 'required';
 		}
 
-		if (username.trim() == "" || password.trim() == "")
-			return { error: true, errors: errors };
-		else
-			return { error: false };
+		return errors;
 	}
 
 	/**
@@ -50,51 +53,69 @@ class LoginPage extends React.Component {
 		// prevent default action. in this case, action is the form submission event
 		event.preventDefault();
 
-		var username = this.state.user.username;
-		var password = this.state.user.password;
+		var username = this.state.loginForm.username;
+		var password = this.state.loginForm.password;
 
 		//validate form data
-		var result = this.validForm(username, password);
+		var errors = this.validForm(username, password);
 
 		// if form valid try login
-		if (!result.error) {
+		if (Object.keys(errors).length == 0) {
+			// Empty form errors
+			this.setState(prevState => ({
+				...prevState,
+				formErrors: {}
+			}))
+
+			// dispatch login action
 			this.props.dispatch(login(username, password));
 		} else {
-			this.setState({
-				errors: {
-					username: result.errors.username,
-					password: result.errors.password
+			this.setState(prevState => ({
+				...prevState,
+				formErrors: {
+					username: errors.username,
+					password: errors.password
 				}
-			});
+			}))
 		}
 
 	}
 
-	/**
- * Change the user object.
- *
- * @param {object} event - the JavaScript event object
- */
+	// Handle changes in login form inputs
 	onChange(event) {
 		const field = event.target.name;
-		const user = this.state.user;
-		user[field] = event.target.value;
+		const loginForm = this.state.loginForm;
+		loginForm[field] = event.target.value;
 
-		this.setState({
-			user
-		});
+		this.setState(prevState => ({
+			...prevState,
+			loginForm: loginForm
+		}))
 	}
 
 	/**
 	 * Render the component.
 	 */
 	render() {
+		const { user, error } = this.props;
+
+		// if already user logged in redirect to dashboard
+		if (user) {
+			browserHistory.push('/dashboard');
+		}
+
+		var errors = {
+			'summary': error,
+			'username': this.state.formErrors.username,
+			'password': this.state.formErrors.password
+		};
+
 		return (
 			<LoginForm
 				onSubmit={this.login}
 				onChange={this.onChange}
-				errors={this.state.errors}
-				user={this.state.user}
+				errors={errors}
+				user={this.state.loginForm}
 			/>
 		);
 	}
