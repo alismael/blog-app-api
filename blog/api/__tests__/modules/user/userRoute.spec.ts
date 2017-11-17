@@ -38,6 +38,17 @@ describe("user route tests", () => {
       .end((err, res) => done())
   })
 
+  test("register route should return bad request", (done) => {
+    supertest(app)
+      .post('/register')
+      .set('Accept', "application/json")
+      .expect(400)
+      .end((err, res) => {
+        if(err) throw err
+        done()
+      })
+  })
+
   test("login route", (done) => {
     supertest(app)
       .post('/login')
