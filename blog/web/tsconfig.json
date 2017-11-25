@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "pretty": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "jsx": "react"
+    },
+    "include": [
+        "./src/**/*.ts*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
