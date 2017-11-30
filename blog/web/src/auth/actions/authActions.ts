@@ -1,10 +1,10 @@
+import { service } from './../../Service/Service';
 import axios from "axios";
 
-export function login(username, password) {
+export function login(username: string, password: string) {
   return function (dispatch) {
     dispatch({ type: "USER_LOGIN" });
-
-    axios.post("/api/user/login", { 'username': username, 'password': password })
+    service.login({ 'username': username, 'password': password })
       .then((response) => {
         dispatch({ type: "USER_LOGIN_FULFILLED", payload: response.data })
       })
