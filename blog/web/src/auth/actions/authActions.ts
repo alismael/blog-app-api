@@ -1,5 +1,4 @@
 import { service } from './../../Service/Service';
-import axios from "axios";
 
 export function login(username: string, password: string) {
   return function (dispatch) {
