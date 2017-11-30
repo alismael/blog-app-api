@@ -1,11 +1,19 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from "react"
+import * as ReactDOM from "react-dom"
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { Provider } from "react-redux"
+import store from "./store"
 
-import { Hello } from "./components/Hello";
+import DashboardPage from "./dashboard/containers/DashboardPage"
 
 const app = document.getElementById('app')
 
 ReactDOM.render(
-    <Hello username="Typescript" />,
-    app
+  <Provider store={store}>
+    <MuiThemeProvider muiTheme={getMuiTheme()}>
+      <DashboardPage />
+    </MuiThemeProvider>
+  </Provider>,
+  app
 );
