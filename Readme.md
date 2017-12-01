@@ -9,7 +9,7 @@ vagrant box update
 vagrant up --provision
 ```
 
-- Restart docker containers:
+- Restart docker containers(not required):
 
 ```sh
 vagrant ssh
@@ -17,7 +17,7 @@ export COMPOSE_FILE=/vagrant/docker/docker-compose.yml
 docker-compose restart
 ```
 
-- Recreate docker containers:
+- Recreate docker containers(not required):
 
 ```sh
 vagrant ssh
