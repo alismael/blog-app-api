@@ -4,6 +4,7 @@ Blog-App using nodeJs, typescript and mysql
 
 ## Preparing the environment
 ```sh
+vagrant plugin install vagrant-docker-compose
 vagrant box update
 vagrant up --provision
 ```
@@ -34,8 +35,8 @@ docker exec -it mysql mysql -uroot -pblog
  Then run the next two commands
  ```sql
  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'blog';
- CREATE DATABASE blog character set utf8 collate utf8_bin;;
- CREATE DATABASE blog_test character set utf8 collate utf8_bin;;
+ CREATE DATABASE blog character set utf8 collate utf8_bin;
+ CREATE DATABASE blog_test character set utf8 collate utf8_bin;
  ```
 
 ## Install packages
@@ -56,7 +57,7 @@ npm install
 
 ```sh
 cd /vagrant/blog/api/
-npm run dev-migration
+npm run dev-migrate
  ```
 
 ## Start API
