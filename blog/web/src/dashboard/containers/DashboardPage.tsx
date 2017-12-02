@@ -2,22 +2,21 @@ import * as React from "react"
 import { connect } from "react-redux"
 import { fetchBlogs } from "../actions/blogActions"
 import { Blog } from "../../Service/models"
-import { BlogCard } from '../components/BlogCard'
-import { GridList } from 'material-ui/GridList'
+import  Dashboard from '../components/Dashboard'
 import { Store } from '../../Service/models' 
 import store from "../../store"
 
-export interface DashboardProps { 
+export interface IDashboardProps { 
   blogs: Blog[]
 }
 
-function select(state: Store): DashboardProps {
+function select(state: Store): IDashboardProps {
   return {
     blogs: state.blogs.blogs,
   };
 }
 
-class DashboardPage extends React.Component<DashboardProps, {}> {
+class DashboardPage extends React.Component<IDashboardProps, {}> {
   componentWillMount() {
     store.dispatch(fetchBlogs())
   }
@@ -26,15 +25,8 @@ class DashboardPage extends React.Component<DashboardProps, {}> {
     const { blogs } = this.props;
 
     return (
-      <GridList>
-			{/* View blogs  */}
-			{
-				blogs.map((blog: Blog) => (
-					<BlogCard key={blog.guid} blog={blog} />
-				))
-			}
-		</GridList>
-    );
+      <Dashboard blogs={blogs} />
+    )
   }
 }
 
