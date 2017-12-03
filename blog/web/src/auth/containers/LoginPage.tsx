@@ -1,126 +1,155 @@
-import React from 'react';
-import LoginForm from '../components/LoginForm.jsx';
-import { login } from '../actions/authActions';
+import * as React from "react"
 import { connect } from "react-redux"
-// import { browserHistory } from 'react-router';
-import createHistory from "history/createBrowserHistory"
+import { IUser } from "../../Service/models"
+import { Store } from '../../Service/models'
+import store from "../../store"
+// import createHistory from "history/createBrowserHistory"
+import { login } from '../actions/authActions'
+import LoginForm from '../components/LoginForm'
 
-@connect((store) => {
+export interface ILoginFormErrors {
+  username: string,
+  password: string,
+  summary: string
+}
+
+export interface ILoginForm {
+  [key: string]: any,
+  username: string,
+  password: string,
+  isValid: boolean,
+  errors: ILoginFormErrors
+}
+
+export interface ILoginState {
+  loginForm: ILoginForm
+}
+
+export interface ILoginProps {
+	user: IUser,
+	error: string
+}
+
+const initialForm: ILoginForm = {
+	username: '',
+	password: '',
+	isValid: false,
+	errors: {
+		username: '',
+		password: '',
+		summary: ''
+	}
+}
+
+const initialState: ILoginState = {
+	loginForm: initialForm
+}
+
+function select(state: Store): ILoginProps {
 	return {
-		user: store.user.user,
-		error: store.user.error
+		user: state.user.user,
+		error: state.user.error
 	};
-})
-class LoginPage extends React.Component {
-	browserHistory = createHistory()
+}
+
+class LoginPage extends React.Component<ILoginProps, ILoginState> {
+	// browserHistory = createHistory()
 	/**
 	 * Class constructor.
 	 */
-	constructor(props) {
+	constructor(props: ILoginProps) {
 		super(props);
 
-		// set the initial component state
-		this.state = {
-			formErrors: {},
-			loginForm: {
-				username: '',
-				password: ''
-			}
-		};
+		this.state = initialState
 
 		this.login = this.login.bind(this);
 		this.onChange = this.onChange.bind(this);
 	}
 
-	validForm(username, password) {
-		var errors = {};
-
-		if (username.trim() == '') {
-			errors['username'] = 'required';
+	// Form validation
+	validForm() {
+		let isValid: boolean = true
+		let errors: ILoginFormErrors = {
+			username: '',
+			password: '',
+			summary: ''
 		}
-		if (password.trim() == '') {
-			errors['password'] = 'required';
+
+		// validate username
+		if (this.state.loginForm.username.trim() == '') {
+			errors.username = 'This field is required'
+			isValid = false
 		}
 
-		return errors;
+		// validate password
+		if (this.state.loginForm.password.trim() == '') {
+			errors.password = 'This field is required'
+			isValid = false
+		}
+
+		// Update state
+		this.setState({
+			...this.state,
+			loginForm: {
+				...this.state.loginForm,
+				errors: errors,
+				isValid: isValid
+			}
+		})
+
+		return isValid
 	}
 
-	/**
-	 * Process the form.
-	 *
-	 * @param {object} event - the JavaScript event object
-	 */
-	login(event) {
-		// prevent default action. in this case, action is the form submission event
-		event.preventDefault();
-
-		var username = this.state.loginForm.username;
-		var password = this.state.loginForm.password;
-
-		//validate form data
-		var errors = this.validForm(username, password);
+	// Handle login form submittion
+	login(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
 
 		// if form valid try login
-		if (Object.keys(errors).length == 0) {
-			// Empty form errors
-			this.setState(prevState => ({
-				...prevState,
-				formErrors: {}
-			}))
-
+		if (this.validForm()) {
 			// dispatch login action
-			this.props.dispatch(login(username, password));
-		} else {
-			this.setState(prevState => ({
-				...prevState,
-				formErrors: {
-					username: errors.username,
-					password: errors.password
-				}
-			}))
+			var username = this.state.loginForm.username;
+			var password = this.state.loginForm.password;
+			store.dispatch(login(username, password));
 		}
-
 	}
 
 	// Handle changes in login form inputs
-	onChange(event) {
-		const field = event.target.name;
-		const loginForm = this.state.loginForm;
-		loginForm[field] = event.target.value;
+	onChange(e: React.FormEvent<HTMLInputElement>) {
+		const field = e.currentTarget.name;
+		const loginForm: ILoginForm = this.state.loginForm;
+		loginForm[field] = e.currentTarget.value;
 
-		this.setState(prevState => ({
-			...prevState,
+
+		// Update state
+		this.setState({
+			...this.state,
 			loginForm: loginForm
-		}))
+		})
 	}
 
-	/**
-	 * Render the component.
-	 */
+	// Render the component.
 	render() {
-		const { user, error } = this.props;
+		const { user } = this.props;
 
 		// if already user logged in redirect to dashboard
-		if (user) {
-			this.browserHistory.push('/dashboard');
-		}
-
-		var errors = {
-			'summary': error,
-			'username': this.state.formErrors.username,
-			'password': this.state.formErrors.password
-		};
+		// if (!user.isGuest) {
+		// 	this.browserHistory.push('/dashboard');
+		// }
 
 		return (
-			<LoginForm
-				onSubmit={this.login}
-				onChange={this.onChange}
-				errors={errors}
-				user={this.state.loginForm}
-			/>
+			<div>
+				<h1>Hi {user.username}</h1>
+
+				<LoginForm
+					onSubmit={this.login}
+					onChange={this.onChange}
+					form={this.state.loginForm}
+					errorSummary={this.props.error}
+				/>
+			</div>
 		);
 	}
 
 }
 
-export default LoginPage;
+export default connect(select)(LoginPage);

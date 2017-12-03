@@ -1,10 +1,10 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { BlogCard } from './BlogCard'
 import { GridList } from 'material-ui/GridList';
 import { Blog } from "../../Service/models"
+import { IDashboardProps } from '../containers/DashboardPage';
 
-const styles = {
+const styles: React.CSSProperties = {
 	root: {
 		display: 'flex',
 		flexWrap: 'wrap',
@@ -12,27 +12,27 @@ const styles = {
 	},
 	gridList: {
 		width: 500,
-		height: 450,
+		height: 420,
 		overflowY: 'auto',
 	},
 };
 
-export const Dashboard = (
-    blogs: Blog[]
-) => (
+const Dashboard = (props: IDashboardProps) => {
+	let blogs = props.blogs
+
+	return (
 		<GridList
-			// cellHeight={180}
-			// style={styles.gridList}
+			cellHeight={200}
+			style={styles.gridList}
 		>
-			{/* View blogs  */}
 			{
 				blogs.map((blog: Blog) => (
 					<BlogCard key={blog.guid} blog={blog} />
 				))
 			}
 		</GridList>
-	);
 
-Dashboard.propTypes = {
-	blogs: PropTypes.array.isRequired
-};
+	)
+}
+
+export default Dashboard
