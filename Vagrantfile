@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+unless Vagrant.has_plugin?("vagrant-docker-compose")
+  system("vagrant plugin install vagrant-docker-compose")
+  puts "Dependencies installed, please try the command again."
+  exit
+end
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -20,8 +26,7 @@ Vagrant.configure(2) do |config|
   end
 
   # don't mount vagrant shared folder
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ['actimeo=2']
+  config.vm.synced_folder ".", "/vagrant"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -51,58 +56,8 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "Checking curl"
-    if [[ -n $(curl --version) ]]; then
-      echo "curl already installed"
-    else
-      sudo apt-get update
-      sudo apt-get install -y -q curl
-    fi
+  config.vm.provision "shell", path: "bootstrap.sh", privileged: false
 
-    DOCKER_VERSION="1.8.1"
-    echo "Checking docker"
-    if [[ $(docker version --format '{{.Server.Version}}') == *"$DOCKER_VERSION"* ]]; then
-      echo "docker $DOCKER_VERSION already installed"
-    else
-      echo "Installing docker version $DOCKER_VERSION"
-      curl -sSL https://get.docker.com/ | sh
-      sudo usermod -aG docker vagrant
-    fi
-
-    echo "Checking pip"
-    if [[ -n $(pip --version) ]]; then
-      echo "pip already installed"
-    else
-      sudo apt-get install -y -q python-pip build-essential
-      echo "Checking docker-compose"
-    fi
-
-    if [[ -n $(docker-compose --version) ]]; then
-      echo "docker-compose already installed"
-    else
-      sudo pip install -U docker-compose
-      sudo chmod +x /usr/local/bin/docker-compose
-    fi
-
-    NODE_VERSION="8.6.0"
-    echo "Checking nodejs"
-    if [[ $('node -v') == *"$NODE_VERSION"* ]]; then
-      echo "node $NODE_VERSION already installed"
-    else
-      echo "Installing node version $NODE_VERSION"
-      curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-      sudo apt-get install -y nodejs
-      sudo apt-get install -y build-essential      
-    fi
-
-    # install gulp
-    sudo npm install -g gulp
-    
-    # install knex
-    sudo npm install -g knex
-
-    export COMPOSE_FILE=/vagrant/docker/docker-compose.yml
-    docker-compose up -d
-  SHELL
+  config.vm.provision :docker
+  config.vm.provision :docker_compose, yml: "/vagrant/docker/docker-compose.yml", run: "always"
 end
