@@ -1,36 +1,43 @@
-import { IConnection } from "mysql"
+import { Connection, OkPacket, RowDataPacket } from "mysql2"
 import { NoSuchElement, InternalServerError, InvalidState } from "../modules/common/ErrorHandler"
 
-export class DBIO<T> {
+type R = RowDataPacket
+type Ok = OkPacket
 
-  constructor(public query?: string, public params?: any[]) { }
-
-  public flatMap<B>(action: (a: T) => DBIO<B>): DBIO<B> {
+export abstract class IO<T> {
+  flatMap<B>(action: (a: T) => IO<B>): IO<B> {
     return new IOFlatMap(this, action)
   }
 
-  map<B>(action: (a: T) => B): DBIO<B> {
+  map<B>(action: (a: T) => B): IO<B> {
     return new IOMap(this, action)
   }
 
-  filter(action: (a: T) => boolean): DBIO<T> {
+  filter(action: (a: T) => boolean): IO<T> {
     return new IOFilter<T>(this, action)
   }
 
-  static ioSequance<A>(ios: DBIO<A>[]): DBIO<A[]> {
-    return new IOSequance(ios)
-  }
-
-  static successful<A>(a: A): DBIO<A> {
+  static successful<A>(a: A): IO<A> {
     return new IOSuccessful(a)
   }
 
-  static failed<A, E>(err: E): DBIO<A> {
+  static failed<A, E>(err: E): IO<A> {
     return new IOFail<A, E>(err)
   }
 
-  execute(connection: IConnection): Promise<T> {
-    return new Promise((resolve, reject) => {
+  static ioSequance<A>(ios: IO<A>[]): IO<A[]> {
+    return new IOSequance(ios)
+  }
+
+  abstract execute(connection: Connection): Promise<T>
+}
+
+export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
+
+  constructor(public query?: string, public params?: any[]) { super() }
+
+  execute(connection: Connection) {
+    return new Promise<R[] | R[][] | Ok | Ok[]>((resolve, reject) => {
       if(this.query && this.params) {
         connection.query(this.query, this.params, (err, result) => {
           if (err) 
@@ -44,8 +51,8 @@ export class DBIO<T> {
     })
   }
 
-  static run<T>(connection: IConnection, ioAction: DBIO<T>) {
-    return new Promise<T>((resolve, reject) => {
+  static run<T>(connection: Connection, ioAction: IO<T>) {
+    return new Promise((resolve, reject) => {
       connection.beginTransaction(err => {
         if (err) 
           reject(new InternalServerError(err))
@@ -73,57 +80,57 @@ export class DBIO<T> {
 
 }
 
-class IOFilter<A> extends DBIO<A> {
-  constructor(public io: DBIO<A>, public action: (a: A) => boolean) { super() }
+class IOFilter<A> extends IO<A> {
+  constructor(public io: IO<A>, public action: (a: A) => boolean) { super() }
 
-  execute(connection: IConnection): Promise<A> {
+  execute(connection: Connection) {
     return this.io.execute(connection)
       .then(result => {
         if (this.action(result)) 
           return result
         else 
-          throw new NoSuchElement()
+          throw new NoSuchElement
       })
   }
 }
 
-class IOFail<A, E> extends DBIO<A> {
+class IOFail<A, E> extends IO<A> {
   constructor(public err: E) { super() }
 
-  execute(_: IConnection): Promise<A> {
+  execute(_: Connection) {
     return Promise.reject(this.err)
   }
 }
 
-class IOSuccessful<A> extends DBIO<A> {
+class IOSuccessful<A> extends IO<A> {
   constructor(public val: A) { super() }
 
-  execute(_: IConnection): Promise<A> {
+  execute(_: Connection): Promise<A> {
     return Promise.resolve(this.val)
   }
 }
 
-class IOSequance<A> extends DBIO<A[]> {
-  constructor(public ios: DBIO<A>[]) { super() }
+class IOSequance<A> extends IO<A[]> {
+  constructor(public ios: IO<A>[]) { super() }
 
-  execute(connection: IConnection): Promise<A[]> {
+  execute(connection: Connection) {
     return Promise.all(this.ios.map(io => io.execute(connection)))
   }
 }
 
-class IOFlatMap<A, B> extends DBIO<B> {
-  constructor(public ioAction: DBIO<A>, public action: (a: A) => DBIO<B>) { super() }
+class IOFlatMap<A, B> extends IO<B> {
+  constructor(public ioAction: IO<A>, public action: (a: A) => IO<B>) { super() }
 
-  execute(connection: IConnection): Promise<B> {
+  execute(connection: Connection) {
     return this.ioAction.execute(connection)
       .then(a => this.action(a).execute(connection))
   }
 }
 
-class IOMap<A, B> extends DBIO<B> {
-  constructor(public ioAction: DBIO<A>, public action: (a: A) => B) { super() }
+class IOMap<A, B> extends IO<B> {
+  constructor(public ioAction: IO<A>, public action: (a: A) => B) { super() }
 
-  execute(connection: IConnection): Promise<B> {
+  execute(connection: Connection) {
     return this.ioAction.execute(connection)
       .then(a => this.action(a))
   }
