@@ -1,6 +1,7 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UserIdColumn, UUID, ITraceRecord } from "./../../common/models";
 import { Entity, Column, Composite, Primative } from "../../entity/models/Entity";
 import { UserPassword } from "./UserPassword";
+import { RowDataPacket } from "mysql2"
 
 export type JWT = string
 
@@ -28,13 +29,13 @@ export class UserAggregate {
 	constructor(public user: User, public userPassword: UserPassword) { }
 }
 
-export interface IUserRecord extends ITraceRecord {
+export interface IUserRecord extends ITraceRecord, RowDataPacket  {
   id: Id
   guid: string
   title: string
 }
 
-class UserEntity extends Entity<User, Primative> {
+class UserEntity extends Entity<User, IUserRecord, Primative> {
 
   public id = UserIdColumn("id")
   public uuid = new class extends Column<UserUUID, UUID> {
