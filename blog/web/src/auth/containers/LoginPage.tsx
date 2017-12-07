@@ -3,31 +3,31 @@ import { connect } from "react-redux"
 import { IUser } from "../../Service/models"
 import { Store } from '../../Service/models'
 import store from "../../store"
-// import createHistory from "history/createBrowserHistory"
 import { login } from '../actions/authActions'
 import LoginForm from '../components/LoginForm'
 
 export interface ILoginFormErrors {
-  username: string,
-  password: string,
-  summary: string
+	username: string,
+	password: string,
+	summary: string
 }
 
 export interface ILoginForm {
-  [key: string]: any,
-  username: string,
-  password: string,
-  isValid: boolean,
-  errors: ILoginFormErrors
+	[key: string]: any,
+	username: string,
+	password: string,
+	isValid: boolean,
+	errors: ILoginFormErrors
 }
 
 export interface ILoginState {
-  loginForm: ILoginForm
+	loginForm: ILoginForm
 }
 
 export interface ILoginProps {
 	user: IUser,
-	error: string
+	error: string,
+	history?: any
 }
 
 const initialForm: ILoginForm = {
@@ -53,7 +53,6 @@ function select(state: Store): ILoginProps {
 }
 
 class LoginPage extends React.Component<ILoginProps, ILoginState> {
-	// browserHistory = createHistory()
 	/**
 	 * Class constructor.
 	 */
@@ -64,6 +63,24 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
 
 		this.login = this.login.bind(this);
 		this.onChange = this.onChange.bind(this);
+	}
+
+	componentDidMount() {
+		const { user, history } = this.props;
+		
+		// if already user logged in redirect to dashboard
+		if (!user.isGuest) {
+			history.push('/dashboard')
+		}
+	}
+
+	componentDidUpdate() {
+		const { user, history } = this.props;
+		
+		// if already user logged in redirect to dashboard
+		if (!user.isGuest) {
+			history.push('/dashboard')
+		}
 	}
 
 	// Form validation
@@ -130,11 +147,6 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
 	// Render the component.
 	render() {
 		const { user } = this.props;
-
-		// if already user logged in redirect to dashboard
-		// if (!user.isGuest) {
-		// 	this.browserHistory.push('/dashboard');
-		// }
 
 		return (
 			<div>
