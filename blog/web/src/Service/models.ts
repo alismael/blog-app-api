@@ -27,19 +27,24 @@ export interface IBlogState {
 }
 
 export interface IUser {
-  id: number,
   guid: string
   username: string,
   img: string,
-  isGuest: boolean
+  readonly isGuest: boolean
 }
 
 export class GuesUser implements IUser {
-  id = 0;
   guid = 'Gues-User';
   username = 'Guest';
   img = 'default_user.png';
   isGuest = true
+}
+
+export class AuthenticatedUser implements IUser {
+  guid = 'Authenticated-User';
+  username = 'Authenticated';
+  img = 'default_user.png';
+  isGuest = false
 }
 
 export interface IUserState {
