@@ -1,4 +1,4 @@
-import { IUserState, GuesUser } from '../../Service/models'
+import { IUserState, GuesUser, AuthenticatedUser, IUser } from '../../Service/models'
 import { Action } from 'redux-actions';
 import {
   USER_LOGIN,
@@ -29,11 +29,13 @@ export function reducer(state: IUserState = initialState, action: Action<any>): 
       }
     }
     case USER_LOGIN_FULFILLED: {
+      const user: IUser = new AuthenticatedUser //TO-DO Add correct user data (guid, username, img)
+
       return {
         ...state,
         fetching: false,
         fetched: true,
-        user: action.payload,
+        user: user
       }
     }
   }
