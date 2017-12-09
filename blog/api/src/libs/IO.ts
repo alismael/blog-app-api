@@ -51,8 +51,8 @@ export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
     })
   }
 
-  static run<T>(connection: Connection, ioAction: IO<T>) {
-    return new Promise((resolve, reject) => {
+  static executeTransactionally<T>(connection: Connection, ioAction: IO<T>) {
+    return new Promise<T>((resolve, reject) => {
       connection.beginTransaction(err => {
         if (err) 
           reject(new InternalServerError(err))

@@ -1,17 +1,18 @@
 import { Trace, Id, Signture, CompositeTrace, stringColumn, UUID, ITraceRecord } from "./../../common/models"
 import { Entity, Column, Composite, Primative } from "../../entity/models/Entity"
 import { UserId } from "../../user/models/User"
-import { DBIO } from "../../../libs/IO"
+import { IO } from "../../../libs/IO"
 import { IBlogRepository } from "../repositories/IBlogRepository"
 import { BlogMysqlRepository } from "../repositories/BlogMysqlRepository"
 import { BadRequest } from "../../common/ErrorHandler";
+import { RowDataPacket } from "mysql2";
 
 export interface IInsertBlogRequest {
   title: string
   description: string
 }
 
-export interface IBlogRecord extends ITraceRecord {
+export interface IBlogRecord extends ITraceRecord, RowDataPacket {
   id: Id
   guid: string
   title: string
@@ -67,8 +68,8 @@ export class Blog {
   }
 }
 
-class BlogEntity extends Entity<Blog, Primative> {
-  private _blogRepository: IBlogRepository = new BlogMysqlRepository<Blog, Primative>(this);
+class BlogEntity extends Entity<Blog, IBlogRecord, Primative> {
+  private _blogRepository: IBlogRepository = new BlogMysqlRepository<IBlogRecord, Primative>(this.tableName())
 
   public id = new class extends Column<BlogId, Id> {
     constructor() { super("id") }
@@ -108,10 +109,11 @@ class BlogEntity extends Entity<Blog, Primative> {
     return new Blog(id, guid, data, trace);
   }
 
-  public getUserBlogs(userId: UserId): DBIO<Blog[]> {
-    return this._blogRepository.getUserBlogs(userId);
+  public getUserBlogs(userId: UserId): IO<Blog[]> {
+    return this._blogRepository.getUserBlogs(userId)
+      .map(records => records.map(record => this.map(<IBlogRecord>record)))
   }
 
 }
 
-export const blogEntity = new BlogEntity
+export const blogEntity = new BlogEntity()

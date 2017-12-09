@@ -1,20 +1,21 @@
-import { Entity, Primative } from '../../entity/models/Entity'
+import { RowDataPacket } from 'mysql2';
+import { Primative } from '../../entity/models/Entity'
 import { UserId } from '../../user/models/User'
-import { DBIO } from "../../../libs/IO"
+import { IO, DBIO } from "../../../libs/IO"
 import { EntityMysqlRepository } from '../../entity/repositories/EntityMysqlRepository'
+// import { blogEntity } from '../models/Blog';
 
-export class BlogMysqlRepository<Blog, S extends Primative> extends EntityMysqlRepository<Blog, S> {
-  constructor(entity: Entity<Blog, Primative>) {
-    super(entity)
+export class BlogMysqlRepository<R extends RowDataPacket, S extends Primative> extends EntityMysqlRepository<R, S> {
+  constructor(tableName: string) {
+    super(tableName)
   }
-
   // get entity
-  public getUserBlogs(userId: UserId): DBIO<Blog[]> {
+  public getUserBlogs(userId: UserId): IO<RowDataPacket[]> {
     let query = super.find()
       .where(`created_by = ?`, [userId.value])
       .toParam()
 
-    return new DBIO<Blog[]>(query.text, query.values)
-      .map(entities => entities.map((entity) => this._entity.map(entity)))
+    return new DBIO(query.text, query.values)
+      .map(records => (<RowDataPacket[]>records))
   }
 }

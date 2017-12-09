@@ -56,7 +56,7 @@ export class EntityMysqlRepository<R extends RowDataPacket, S extends Primative>
       .toParam()
 
     return new DBIO(query.text, query.values)
-      .map(result => (<OkPacket>result).insertId)
+      .map(result => (<OkPacket>result).affectedRows)
   }
 
   // Delete entity

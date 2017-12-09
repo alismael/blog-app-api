@@ -6,8 +6,8 @@ import * as bcrypt from 'bcrypt'
 import { userEntity, UserUUID, UserId, JWT } from "../models/User"
 import * as uuid from "uuid"
 import { UserPassword, UserPasswordData, userPasswordEntity, UserPasswordRef, RegistrationError } from "../models/UserPassword";
-import { DBIO } from "../../../libs/IO";
-import { userPasswordRepository } from "../repositories/UserPasswordMysqlRepository";
+import { DBIO, IO } from "../../../libs/IO";
+import { UserPasswordMysqlRepository } from "../repositories/UserPasswordMysqlRepository";
 import * as jsonWebToken from 'jsonwebtoken'
 
 
@@ -28,7 +28,7 @@ export class UserService {
     }, new Buffer(config.jwt.key, 'base64'), { expiresIn: config.jwt.expiresIn });
   }
 
-  private insertPassword(userId: UserId, data: UserPasswordData): DBIO<number> {
+  private insertPassword(userId: UserId, data: UserPasswordData): IO<number> {
     const hashed = this.hash(data.password)
     const userPasswordData = Object.assign({}, data, {
       password: hashed
@@ -41,8 +41,8 @@ export class UserService {
     )
   }
 
-  register(data: UserPasswordData): DBIO<number> {
-    let io = userPasswordRepository.findByEmailOrUserName(
+  register(data: UserPasswordData): IO<number> {
+    let io = new UserPasswordMysqlRepository(userPasswordEntity.tableName()).findByEmailOrUserName(
       userPasswordEntity.data.username.set(data.username),
       userPasswordEntity.data.email.set(data.email)
     )
@@ -67,8 +67,8 @@ export class UserService {
     return io
   }
 
-  login(username: string, plainPassword: string): DBIO<JWT> {
-    const verifyPassword = (userPassword: UserPassword): DBIO<JWT> => {
+  login(username: string, plainPassword: string): IO<JWT> {
+    const verifyPassword = (userPassword: UserPassword): IO<JWT> => {
       if (this.comparePasswords(plainPassword, userPassword.data.password))
         return userEntity.findOne(userEntity.id.set(userPassword.ref.userId))
           .flatMap(record => {
@@ -84,7 +84,7 @@ export class UserService {
     }
 
     let upe = userPasswordEntity
-    let io: DBIO<JWT> = upe.findOne(upe.data.username.set(username))
+    let io: IO<JWT> = upe.findOne(upe.data.username.set(username))
       .flatMap((mUserPassword: Maybe<UserPassword>) => {
         return mUserPassword.caseOf({
           just: verifyPassword,

@@ -70,5 +70,5 @@ class UserEntity extends Entity<User, IUserRecord, Primative> {
 
 }
 
-export const userEntity = new UserEntity()
+export const userEntity = new UserEntity
 
