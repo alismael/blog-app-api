@@ -1,7 +1,7 @@
 import { UserRouter } from './../../../src/modules/user/routes/UserRouter';
 import { UserService } from "../../../src/modules/user/services/UserService";
 import { UserPasswordData } from "../../../src/modules/user/models/UserPassword";
-import { DBIO } from "../../../src/libs/IO";
+import { IO } from "../../../src/libs/IO";
 import * as supertest from "supertest"
 import * as express from "express"
 import * as bodyParser from "body-parser"
@@ -15,12 +15,12 @@ describe("user route tests", () => {
 
   let userRoute = new class extends UserRouter {
     userService = new class extends UserService {
-      register(data: UserPasswordData): DBIO<number> {
-        return DBIO.successful(1)
+      register(data: UserPasswordData): IO<number> {
+        return IO.successful(1)
       }
       
-      login(username: string, plainPassword: string): DBIO<JWT> {
-        return DBIO.successful(token)
+      login(username: string, plainPassword: string): IO<JWT> {
+        return IO.successful(token)
       }
     }()
   }()

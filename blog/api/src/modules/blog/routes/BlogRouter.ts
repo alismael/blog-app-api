@@ -3,7 +3,7 @@ import { BlogData, Blog } from '../models/Blog'
 import { BlogService } from '../services/BlogService'
 import { connection } from '../../mysql/mysql'
 import { User } from '../../user/models/User'
-import { DBIO } from '../../../libs/IO'
+import { DBIO, IO } from '../../../libs/IO'
 import { Maybe } from 'tsmonad/lib/src'
 import { Unautherized, NoSuchElement, errorHandler } from './../../common/ErrorHandler'
 import * as _ from "lodash";
@@ -14,7 +14,7 @@ export class BlogRouter {
   blogService = new BlogService  
 
   getUserBlogs(req: Request, res: Response): Promise<Response> {
-    const userIO: DBIO<Maybe<User>> = req.body.user
+    const userIO: IO<Maybe<User>> = req.body.user
     const action = userIO.flatMap(user => {
       return user.caseOf({
         just: user => this.blogService.getUserBlogs(user),
@@ -22,7 +22,7 @@ export class BlogRouter {
       })
     })
 
-    return DBIO.run(connection, action)
+    return DBIO.executeTransactionally(connection, action)
       .then<Response>(result => {
         const blogs = _.map(result, (blog: Blog) => blog.toDto());
         return res.status(200).json(blogs)
@@ -43,7 +43,7 @@ export class BlogRouter {
   }
 
   createBlog(req: Request, res: Response): Promise<Response> {
-    const userIO: DBIO<Maybe<User>> = req.body.user
+    const userIO: IO<Maybe<User>> = req.body.user
 
     return BlogData.vaidateInsertBlogRequest(req.body)
       .then(blogData => {
@@ -53,7 +53,7 @@ export class BlogRouter {
             nothing: () => { throw new Unautherized }
           })
         })
-        return DBIO.run(connection, action)
+        return DBIO.executeTransactionally(connection, action)
           .then<Response>(_ => res.sendStatus(201))
           .catch<Response>(errorHandler(res))
       })
@@ -61,7 +61,7 @@ export class BlogRouter {
   }
 
   updateBlog(req: Request, res: Response): Promise<Response> {
-    const userIO: DBIO<Maybe<User>> = req.body.user
+    const userIO: IO<Maybe<User>> = req.body.user
 
     return BlogData.vaidateInsertBlogRequest(req.body)
       .then(blogData => {
@@ -71,7 +71,7 @@ export class BlogRouter {
             nothing: () => { throw new Unautherized }
           })
         })
-        return DBIO.run(connection, action)
+        return DBIO.executeTransactionally(connection, action)
           .then(_ => res.sendStatus(200))
           .catch(errorHandler(res))
       })

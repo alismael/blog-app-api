@@ -1,12 +1,12 @@
 import { connection } from './../src/modules/mysql/mysql'
-import { DBIO } from './../src/libs/IO'
+import { IO } from './../src/libs/IO'
 import global from "./../src/global"
 let logger = require('./../../api/src/logger')
 
 global()
 
 class DBContext {
-  run<T>(ioAction: DBIO<T>) {
+  run<T>(ioAction: IO<T>) {
     return new Promise<T>((resolve, reject) => {
       connection.beginTransaction(err => {
         if (err)

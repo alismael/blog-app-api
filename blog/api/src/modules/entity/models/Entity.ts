@@ -1,7 +1,8 @@
 import { Maybe } from 'tsmonad';
 import { IEntityRepository } from './../repositories/IEntityRepository'
 import { EntityMysqlRepository } from './../repositories/EntityMysqlRepository'
-import { DBIO } from "../../../libs/IO";
+import { IO } from "../../../libs/IO";
+import { RowDataPacket } from 'mysql2';
 
 export type Primative = string | boolean | number | Date;
 
@@ -21,21 +22,23 @@ export abstract class Composite<T, S extends Primative> {
   public abstract columns: (composite: T) => ColumnValue<S>[]
 }
 
-export abstract class Entity<T, S extends Primative> {
-  private _entityRepository: IEntityRepository<T, S> = new EntityMysqlRepository<T, S>(this);
+export abstract class Entity<T, R extends RowDataPacket, S extends Primative> {
+  private _entityRepository: IEntityRepository<R, S> = new EntityMysqlRepository<R, S>(this.tableName());
 
   abstract tableName(): string;
-  abstract map(object: any): T;
+  abstract map(object: R): T;
 
-  public findOne(column: ColumnValue<S>): DBIO<Maybe<T>> {
-    return this._entityRepository.findOne(column) 
+  public findOne(column: ColumnValue<S>): IO<Maybe<T>> {
+    return this._entityRepository.findOne(column).map(mr => {
+      return mr.map(r => this.map(r))
+    })
   }
 
-  public insert(...args: ColumnValue<S>[]): DBIO<number> {
-    return this._entityRepository.insert(args);
+  public insert(...args: ColumnValue<S>[]): IO<number> {
+    return this._entityRepository.insert(args)
   }
 
-  public update(condition: ColumnValue<S>, ...args: ColumnValue<S>[]): DBIO<number> {
-    return this._entityRepository.update(condition, args);
+  public update(condition: ColumnValue<S>, ...args: ColumnValue<S>[]): IO<number> {
+    return this._entityRepository.update(condition, args)
   }
 }

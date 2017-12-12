@@ -1,29 +1,15 @@
+import { OkPacket } from 'mysql2';
+import { RowDataPacket } from 'mysql2';
 import { Maybe } from 'tsmonad';
 import { IEntityRepository } from './IEntityRepository'
-import { Entity, ColumnValue, Primative } from './../models/Entity'
+import { ColumnValue, Primative } from './../models/Entity'
 import * as squel from "squel"
-import { DBIO } from "../../../libs/IO";
+import { DBIO, IO } from "../../../libs/IO";
 import { Select } from "squel";
 
-interface IOkPacket {
-  fieldCount: number,
-  affectedRows: number,
-  insertId: number,
-  serverStatus: number,
-  warningCount: number,
-  message: string,
-  protocol41: boolean,
-  changedRows: number
-}
+export class EntityMysqlRepository<R extends RowDataPacket, S extends Primative> implements IEntityRepository<R, S> {
 
-export class EntityMysqlRepository<T, S extends Primative> implements IEntityRepository<T, S> {
-  protected _entity: Entity<T, S>;
-  protected _table: string;
-
-  constructor(entity: Entity<T, S>) {
-    this._entity = entity;
-    this._table = entity.tableName();
-  }
+  constructor(private _table: string) { }
 
   // Find entity
   protected find(): Select {
@@ -32,22 +18,19 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
   }
 
   // Find entity by column value
-  public findOne(column: ColumnValue<S>): DBIO<Maybe<T>> {
+  public findOne(column: ColumnValue<S>): IO<Maybe<R>> {
     let query = squel.select({ separator: "\n" })
       .from(this._table)
+      .limit(1)
       .where(`${column.columnName} = ?`, [column.value])
       .toParam()
 
-    return new DBIO<T[]>(query.text, query.values)
-      .map(entites => {
-        return entites.head().map((enitiy) => {
-          return this._entity.map(enitiy)
-        })
-      })
+    return new DBIO(query.text, query.values)
+      .map(records => (<R[]>records).head())
   }
 
   // Add new entity
-  public insert(columns: ColumnValue<S>[]): DBIO<number> {
+  public insert(columns: ColumnValue<S>[]): IO<number> {
     let cols = columns.reduce((acc, next) =>
       Object.assign(acc, { [next.columnName]: `${next.value}` })
       , {})
@@ -57,12 +40,12 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
       .setFields(cols)
       .toParam()
 
-    return new DBIO<IOkPacket>(query.text, query.values)
-      .map(result => result.insertId)
+    return new DBIO(query.text, query.values)
+      .map(result => (<OkPacket>result).insertId)
   }
 
   // Update new entity
-  public update(condition: ColumnValue<S>, columns: ColumnValue<S>[]): DBIO<number> {
+  public update(condition: ColumnValue<S>, columns: ColumnValue<S>[]): IO<number> {
     let cols = columns.reduce((acc, next) =>
       Object.assign(acc, { [next.columnName]: next.value })
       , {})
@@ -73,7 +56,8 @@ export class EntityMysqlRepository<T, S extends Primative> implements IEntityRep
       .setFields(cols)
       .toParam()
 
-    return new DBIO<number>(query.text, query.values)
+    return new DBIO(query.text, query.values)
+      .map(result => (<OkPacket>result).affectedRows)
   }
 
   // Delete entity
