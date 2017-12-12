@@ -21,6 +21,7 @@ export class EntityMysqlRepository<R extends RowDataPacket, S extends Primative>
   public findOne(column: ColumnValue<S>): IO<Maybe<R>> {
     let query = squel.select({ separator: "\n" })
       .from(this._table)
+      .limit(1)
       .where(`${column.columnName} = ?`, [column.value])
       .toParam()
 
