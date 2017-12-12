@@ -36,7 +36,7 @@ export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
 
   constructor(public query?: string, public params?: any[]) { super() }
 
-  execute(connection: Connection) {
+  execute(connection: Connection): Promise<R[] | R[][] | Ok | Ok[]> {
     return new Promise<R[] | R[][] | Ok | Ok[]>((resolve, reject) => {
       if(this.query && this.params) {
         connection.query(this.query, this.params, (err, result) => {
@@ -51,7 +51,7 @@ export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
     })
   }
 
-  static executeTransactionally<T>(connection: Connection, ioAction: IO<T>) {
+  static executeTransactionally<T>(connection: Connection, ioAction: IO<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       connection.beginTransaction(err => {
         if (err) 
@@ -83,7 +83,7 @@ export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
 class IOFilter<A> extends IO<A> {
   constructor(public io: IO<A>, public action: (a: A) => boolean) { super() }
 
-  execute(connection: Connection) {
+  execute(connection: Connection): Promise<A> {
     return this.io.execute(connection)
       .then(result => {
         if (this.action(result)) 
@@ -97,7 +97,7 @@ class IOFilter<A> extends IO<A> {
 class IOFail<A, E> extends IO<A> {
   constructor(public err: E) { super() }
 
-  execute(_: Connection) {
+  execute(_: Connection): Promise<never> {
     return Promise.reject(this.err)
   }
 }
@@ -113,7 +113,7 @@ class IOSuccessful<A> extends IO<A> {
 class IOSequance<A> extends IO<A[]> {
   constructor(public ios: IO<A>[]) { super() }
 
-  execute(connection: Connection) {
+  execute(connection: Connection): Promise<A[]> {
     return Promise.all(this.ios.map(io => io.execute(connection)))
   }
 }
@@ -121,7 +121,7 @@ class IOSequance<A> extends IO<A[]> {
 class IOFlatMap<A, B> extends IO<B> {
   constructor(public ioAction: IO<A>, public action: (a: A) => IO<B>) { super() }
 
-  execute(connection: Connection) {
+  execute(connection: Connection): Promise<B> {
     return this.ioAction.execute(connection)
       .then(a => this.action(a).execute(connection))
   }
@@ -130,7 +130,7 @@ class IOFlatMap<A, B> extends IO<B> {
 class IOMap<A, B> extends IO<B> {
   constructor(public ioAction: IO<A>, public action: (a: A) => B) { super() }
 
-  execute(connection: Connection) {
+  execute(connection: Connection): Promise<B> {
     return this.ioAction.execute(connection)
       .then(a => this.action(a))
   }

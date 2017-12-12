@@ -3,7 +3,6 @@ import { Primative } from '../../entity/models/Entity'
 import { UserId } from '../../user/models/User'
 import { IO, DBIO } from "../../../libs/IO"
 import { EntityMysqlRepository } from '../../entity/repositories/EntityMysqlRepository'
-// import { blogEntity } from '../models/Blog';
 
 export class BlogMysqlRepository<R extends RowDataPacket, S extends Primative> extends EntityMysqlRepository<R, S> {
   constructor(tableName: string) {
