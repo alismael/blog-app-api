@@ -14,17 +14,7 @@ const styles = {
 	} as React.CSSProperties,
 	titleStyle: {
 		color: '#4a89dc'
-	} as React.CSSProperties,
-	divider: {
-		borderTopWidth: 0,
-		borderRightWidth: 3,
-		borderRightStyle: 'solid',
-		height: 45,
-		top: 0,
-    bottom: 0,
-    margin: 'auto',
-		borderRightColor: '#e1e1e1'
-	}
+	} as React.CSSProperties
 };
 
 export interface IAppNavProps {
