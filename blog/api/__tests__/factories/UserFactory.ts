@@ -1,6 +1,6 @@
 import { userPasswordEntity, UserPasswordRef, UserPassword, UserPasswordData } from './../../src/modules/user/models/UserPassword';
 import { userEntity, User, UserId, UserUUID, UserData, UserAggregate } from "../../src/modules/user/models/User";
-import { DBIO } from "../../src/libs/IO";
+import { IO } from "../../src/libs/IO";
 import * as bcrypt from 'bcrypt'
 import { config } from "../../src/config/config";
 import { Trace } from "../../src/modules/common/models";
@@ -28,7 +28,7 @@ export class UserFactory {
 		password: "test"
 	}
 	
-	user(): DBIO<UserAggregate> {
+	user(): IO<UserAggregate> {
     const e = userEntity
 		const pe = userPasswordEntity
 		const userUUID = new UserUUID(uuid.v4())

@@ -1,7 +1,7 @@
-import { DBIO } from "../../../libs/IO"
+import { IO } from "../../../libs/IO"
 import { UserId } from '../../user/models/User'
-import { Blog } from "../models/Blog";
+import { RowDataPacket } from "mysql2";
 
 export interface IBlogRepository {
-  getUserBlogs(userId: UserId): DBIO<Blog[]>
+  getUserBlogs(userId: UserId): IO<RowDataPacket[]>
 }

@@ -11,14 +11,14 @@ export class UserRouter {
   register(req: express.Request, res: express.Response) {
     UserPassword.vaidateRegistrationRequest(req.body)
     .then(userPassword => 
-      DBIO.run(connection, this.userService.register(userPassword))
+      DBIO.executeTransactionally(connection, this.userService.register(userPassword))
     )
     .then(_ => res.sendStatus(201))
     .catch(errorHandler(res))
   }
 
   login(req: express.Request, res: express.Response) {
-    DBIO.run(connection, this.userService.login(req.body.username, req.body.password))
+    DBIO.executeTransactionally(connection, this.userService.login(req.body.username, req.body.password))
     .then(result => {
       res.cookie("token", result)
       res.status(200).send({

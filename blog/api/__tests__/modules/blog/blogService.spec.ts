@@ -1,7 +1,7 @@
 import { db } from './../../db'
 import { BlogService } from './../../../src/modules/blog/services/BlogService'
 import { connection } from '../../../src/modules/mysql/mysql'
-import { DBIO } from '../../../src/libs/IO'
+import { IO } from '../../../src/libs/IO'
 import { Blog, IBlogRecord, BlogData } from '../../../src/modules/blog/models/Blog'
 import { USER, UserFactory } from '../../factories/UserFactory'
 import blogFactory from '../../factories/BlogFactory'
@@ -16,7 +16,7 @@ describe("blog service tests", () => {
   test("find by id", (done) => {
     const userIO = userFactory.user()
 
-    let action: DBIO<Maybe<Blog>> = userIO.flatMap(userRecord => {
+    let action: IO<Maybe<Blog>> = userIO.flatMap(userRecord => {
       return blogFactory.createBlog(userRecord.userPassword.trace)
         .flatMap(blog => service.findById(blog.id.value))
     })
@@ -40,7 +40,7 @@ describe("blog service tests", () => {
   test("find by guid", (done) => {
     let userIO = userFactory.user()
 
-    let action: DBIO<Maybe<Blog>> = userIO.flatMap(userRecord => {
+    let action: IO<Maybe<Blog>> = userIO.flatMap(userRecord => {
       return blogFactory.createBlog(userRecord.userPassword.trace)
         .flatMap(blog => service.findByGuid(blog.guid.value))
     })
@@ -75,7 +75,7 @@ describe("blog service tests", () => {
 
     db.run(action)
       .then(result => {
-        expect(result['affectedRows']).toBe(1)
+        expect(result).toBe(1)
         done()
       })
       .catch(err => {

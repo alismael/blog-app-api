@@ -30,6 +30,6 @@ export function isAuthenticated(req: express.Request, _: express.Response, next:
 		req.body.user = DBIO.successful(Maybe.nothing())
 		next()
 	}
-		
+
 
 }

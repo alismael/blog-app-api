@@ -2,6 +2,7 @@ import { UserId } from "./User";
 import { Trace, stringColumn, CompositeTrace, Id, UserIdColumn, ITraceRecord, Signture } from "./../../common/models";
 import { Entity, Composite, ColumnValue, Primative } from "../../entity/models/Entity";
 import { BadRequest } from "../../common/ErrorHandler";
+import { RowDataPacket } from "mysql2";
 
 export interface IRegistrationRequest {
   username: string
@@ -18,7 +19,7 @@ export class UserPasswordRef {
   constructor(public userId: UserId) { }
 }
 
-export interface IUserPasswordRecord extends ITraceRecord {
+export interface IUserPasswordRecord extends ITraceRecord, RowDataPacket {
   user_id: Id
   username: string
   email: string
@@ -61,7 +62,7 @@ export class UserPassword {
   ) { }
 }
 
-class UserPasswordEntity extends Entity<UserPassword, Primative> {
+class UserPasswordEntity extends Entity<UserPassword, IUserPasswordRecord, Primative> {
 
   public data = new class extends Composite<UserPasswordData, string> {
     public email = stringColumn("email")
@@ -103,4 +104,4 @@ class UserPasswordEntity extends Entity<UserPassword, Primative> {
 }
 
 
-export const userPasswordEntity = new UserPasswordEntity()
+export const userPasswordEntity = new UserPasswordEntity
