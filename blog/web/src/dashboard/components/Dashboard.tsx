@@ -3,6 +3,7 @@ import { BlogCard } from './BlogCard'
 import { GridList } from 'material-ui/GridList';
 import { Blog } from "../../Service/models"
 import { IDashboardProps } from '../containers/DashboardPage';
+import AppNav from '../../app/components/AppNav'
 
 const styles: React.CSSProperties = {
 	root: {
@@ -21,17 +22,20 @@ const Dashboard = (props: IDashboardProps) => {
 	let blogs = props.blogs
 
 	return (
-		<GridList
-			cellHeight={200}
-			style={styles.gridList}
-		>
-			{
-				blogs.map((blog: Blog) => (
-					<BlogCard key={blog.guid} blog={blog} />
-				))
-			}
-		</GridList>
+		<div>
+			<AppNav />
 
+			<GridList
+				cellHeight={200}
+				style={styles.gridList}
+			>
+				{
+					blogs.map((blog: Blog) => (
+						<BlogCard key={blog.guid} blog={blog} />
+					))
+				}
+			</GridList>
+		</div>
 	)
 }
 
