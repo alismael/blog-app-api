@@ -7,14 +7,14 @@ const styles = {
 		borderRightStyle: 'solid',
 		height: 45,
 		top: 0,
-    bottom: 0,
-    margin: 'auto',
+		bottom: 0,
+		margin: 'auto',
 		borderRightColor: '#e1e1e1'
 	}
 };
 
 export interface IVerticalDividerProps {
-	
+
 }
 
 class VerticalDivider extends React.Component<IVerticalDividerProps> {
@@ -29,7 +29,7 @@ class VerticalDivider extends React.Component<IVerticalDividerProps> {
 	render() {
 
 		return (
-            <div style={styles.divider}/>
+			<div style={styles.divider} />
 		);
 	}
 
