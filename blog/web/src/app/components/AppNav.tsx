@@ -6,9 +6,10 @@ import { AppBar } from 'material-ui'
 import NotificationBadge from '../../app/components/NotificationBadge'
 import AccountMenu from '../../app/components/AccountMenu'
 import VerticalDivider from '../../app/components/VerticalDivider'
+import SearchBox from '../../app/components/SearchBox'
 
 const styles = {
-  nav: {
+	nav: {
 		backgroundColor: '#fff',
 		marginBottom: '10px'
 	} as React.CSSProperties,
@@ -40,16 +41,17 @@ class AppNav extends React.Component<IAppNavProps> {
 		const { user } = this.props;
 
 		return (
-			<AppBar 
+			<AppBar
 				title="Blog App"
 				iconElementLeft={<div> </div>}
 				style={styles.nav}
 				titleStyle={styles.titleStyle}
-				>
+			>
+				<SearchBox />
 
-					<NotificationBadge notificationCount={5} /> 
-					<VerticalDivider />
-					<AccountMenu user={user} />
+				<NotificationBadge notificationCount={5} />
+				<VerticalDivider />
+				<AccountMenu user={user} />
 
 			</AppBar>
 		);
