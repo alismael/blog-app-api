@@ -1,7 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
-
 var BUILD_DIR = path.resolve(__dirname, 'public/');
 var APP_DIR = path.resolve(__dirname, 'src/');
 
