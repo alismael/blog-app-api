@@ -1,11 +1,37 @@
-// import * as express from 'express'
+// import { config } from './../../../config/config';
+import * as express from 'express'
 // import { File } from '../models/File'
 // import { FileService } from '../services/FileService'
 // var multer = require('multer')
 // var uuid = require('uuid')
-// var fs = require('fs')
+import * as fs from 'fs'
+import * as uuid from 'uuid'
+import * as Busboy from "busboy";
+import * as path from "path";
 
-// export let fileRouter = express.Router();
+export class FileRouter {
+  upload(req: express.Request, res: express.Response) {
+    const busboy = new Busboy({ headers: req.headers });
+    busboy.on('file', (_: string, file: NodeJS.ReadableStream, __: string, ___: string, ____: string) => {
+      let fileUUID = uuid.v4()
+      let saveTo = path.join((path.join(__dirname, `/../../../../dest/uploads/${fileUUID}`)))
+      let fstream = fs.createWriteStream(saveTo) 
+      // let fstream = fs.createWriteStream(`${config.uploadPath}/${fileUUID}`) 
+      file.pipe(fstream);
+      fstream.on('close', () => {
+          res.send(fileUUID);
+      });
+    });
+    req.pipe(busboy);      
+  }
+
+  route(): express.Router {
+    let fileRouter = express.Router();
+    fileRouter.post("/upload", (req, res) => this.upload(req, res))
+    return fileRouter
+  }
+
+}  
 
 // let fileService = new FileService();
 
