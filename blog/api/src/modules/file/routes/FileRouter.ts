@@ -1,24 +1,17 @@
-// import { config } from './../../../config/config';
+import { IFileService } from './../services/IFileService'
 import * as express from 'express'
-// import { File } from '../models/File'
-// import { FileService } from '../services/FileService'
-// var multer = require('multer')
-// var uuid = require('uuid')
-import * as fs from 'fs'
 import * as uuid from 'uuid'
-import * as Busboy from "busboy";
-import * as path from "path";
+import * as Busboy from "busboy"
 
 export class FileRouter {
+  constructor(public service: IFileService) {
+
+  }
   upload(req: express.Request, res: express.Response) {
     const busboy = new Busboy({ headers: req.headers });
     busboy.on('file', (_: string, file: NodeJS.ReadableStream, __: string, ___: string, ____: string) => {
       let fileUUID = uuid.v4()
-      let saveTo = path.join((path.join(__dirname, `/../../../../dest/uploads/${fileUUID}`)))
-      let fstream = fs.createWriteStream(saveTo) 
-      // let fstream = fs.createWriteStream(`${config.uploadPath}/${fileUUID}`) 
-      file.pipe(fstream);
-      fstream.on('close', () => {
+      this.service.upload(file, fileUUID).on('close', () => {
           res.send(fileUUID);
       });
     });

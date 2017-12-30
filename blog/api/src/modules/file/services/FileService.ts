@@ -1,7 +1,18 @@
-// import { File } from './../models/File'
+import { WriteStream } from 'fs';
+import { IFileService } from './IFileService';
+import * as path from "path";
+import * as fs from 'fs'
+import { UUID } from '../../common/models';
 
+export class FileService implements IFileService { 
+  upload(stream: NodeJS.ReadableStream, fileUUID: UUID): WriteStream {
+    let saveTo = path.join((path.join(__dirname, `/../../../../dest/uploads/${fileUUID}`)))
+    let fstream = fs.createWriteStream(saveTo) 
+    stream.pipe(fstream);
+    return fstream    
+  }
 
-// export class FileService {
+}
 //   private file = new File();
 
 

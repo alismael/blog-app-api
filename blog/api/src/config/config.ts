@@ -16,5 +16,6 @@ export const config = {
   },
   cookie: {
     jwt: "Authorization"
-  }
+  },
+  uploadPath: `${__dirname}/../uploads`
 }
