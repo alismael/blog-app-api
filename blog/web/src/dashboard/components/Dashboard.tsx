@@ -3,7 +3,7 @@ import { BlogCard } from './BlogCard'
 import { GridList } from 'material-ui/GridList';
 import { Blog } from "../../Service/models"
 import { IDashboardProps } from '../containers/DashboardPage';
-import AppNav from '../../app/components/AppNav'
+import Navbar from '../../app/components/navbar/Navbar'
 
 const styles: React.CSSProperties = {
 	root: {
@@ -23,7 +23,7 @@ const Dashboard = (props: IDashboardProps) => {
 
 	return (
 		<div>
-			<AppNav />
+			<Navbar />
 
 			<GridList
 				cellHeight={200}
