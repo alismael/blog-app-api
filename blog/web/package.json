@@ -19,6 +19,7 @@
     "@types/redux-actions": "^2.2.3",
     "@types/redux-promise-middleware": "0.0.9",
     "antd": "^3.1.0",
+    "awesome-typescript-loader": "^3.4.1",
     "axios": "^0.17.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.3",

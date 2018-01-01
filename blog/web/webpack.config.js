@@ -1,26 +1,26 @@
 var webpack = require('webpack');
 var path = require('path');
-
 var BUILD_DIR = path.resolve(__dirname, 'public/');
-var APP_DIR = path.resolve(__dirname, 'dest/');
+var APP_DIR = path.resolve(__dirname, 'src/');
 
 var config = {
-    entry: APP_DIR + '/index.js',
+    entry: APP_DIR + '/index.tsx',
     output: {
         path: BUILD_DIR,
         filename: 'bundle.js',
         publicPath: "/public/"
     },
     resolve: {
-        extensions: [".js", ".jsx", ".json"],
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
         modules: ["src", "node_modules"]
     },
     module: {
-        loaders: [
+        rules: [
+            // All files with a '.ts' or '.tsx' extension will be handled by
+            // 'awesome-typescript-loader'.
             {
-                test: /\.jsx?/,
-                include: APP_DIR,
-                loaders: ['babel-loader']
+                test: /\.(tsx|ts)?$/,
+                loader: "awesome-typescript-loader"
             }
         ]
     },
