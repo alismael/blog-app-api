@@ -5,7 +5,7 @@ const styles = {
 		borderTopWidth: 0,
 		borderRightWidth: 3,
 		borderRightStyle: 'solid',
-		height: '100%',
+		height: 63,
 		top: 0,
 		bottom: 0,
 		margin: 'auto',

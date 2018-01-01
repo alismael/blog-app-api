@@ -16,7 +16,8 @@ const { Header } = Layout;
 const styles = {
 	header: {
 		background: 'white',
-		borderBottom: '1px solid #e8e8e8'
+		borderBottom: '1px solid #e8e8e8',
+		height: 'fit-content'
 	} as  CSSProperties,
 	logo: {
 		fontSize: 25,
