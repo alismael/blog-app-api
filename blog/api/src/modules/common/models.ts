@@ -1,5 +1,5 @@
 import { UserId } from "./../user/models/User";
-import { Composite, Column } from "../entity/models/Entity";
+import { Composite, Column, Primative } from "../entity/models/Entity";
 import * as moment from "moment"
 
 export type Id = number
@@ -7,6 +7,10 @@ export type UUID = string
 
 export class Signture {
   constructor(public by: UserId, public at: Date) { }
+}
+
+export interface IHasValue<T> {
+  value: T
 }
 
 export class Trace {
@@ -39,6 +43,15 @@ export const UserIdColumn = (columnName: string) => new class extends Column<Use
     return value.value
   }
 }()
+
+export function uuidColumn<S extends Primative, T extends IHasValue<S>>(columnName: string): Column<T, S> {
+  return new class extends Column<T, S> {
+    constructor() { super(columnName) }
+    public getValue(value: T): S {
+      return value.value
+    }
+  }()
+} 
 
 export const DateColumn = (columnName: string) => new class extends Column<Date, string> {
   constructor() { super(columnName) }

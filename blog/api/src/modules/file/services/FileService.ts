@@ -2,17 +2,25 @@ import { WriteStream } from 'fs';
 import { IFileService } from './IFileService';
 import * as path from "path";
 import * as fs from 'fs'
-import { UUID } from '../../common/models';
+import { UUID, Trace } from '../../common/models';
+import { fileEntity, FileUUID } from '../models/File';
+import { UserId } from '../../user/models/User';
 
 export class FileService implements IFileService { 
-  upload(stream: NodeJS.ReadableStream, fileUUID: UUID): WriteStream {
+  upload(stream: NodeJS.ReadableStream, fileUUID: UUID, userId: UserId): WriteStream {
     let saveTo = path.join((path.join(__dirname, `/../../../../dest/uploads/${fileUUID}`)))
     let fstream = fs.createWriteStream(saveTo) 
-    stream.pipe(fstream);
+    stream.pipe(fstream)
+    fstream.on('close', () => {
+      fileEntity.insert(
+        fileEntity.uuid.set(new FileUUID(fileUUID)), 
+        ...fileEntity.trace.columns(Trace.createTrace(userId)))
+    });
     return fstream    
   }
 
 }
+
 //   private file = new File();
 
 
