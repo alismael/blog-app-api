@@ -23,11 +23,15 @@ export class FileRouter {
               let fileUUID = uuid.v4()
               this.service.upload(file, fileUUID, user.id).on('close', () => {
                 this.service.insert(new FileUUID(fileUUID), user.id).execute(connection)
-                  .then(_ => res.send(fileUUID))
+                  .then(_ => res.status(200)
+                    .send({
+                      uuid: fileUUID
+                    })
+                  )
                   .catch(errorHandler(res))
               })
             })
-            req.pipe(busboy);            
+            req.pipe(busboy);
           },
           nothing: () => {
             throw Unautherized
