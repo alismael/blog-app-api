@@ -1,6 +1,9 @@
-import * as stream from "stream";
-import { UUID } from "../../common/models";
+import * as stream from "stream"
+import { UserId } from "../../user/models/User"
+import { FileUUID } from "../models/File";
+import { IO } from "../../../libs/IO";
 
 export interface IFileService {
-  upload(stream: NodeJS.ReadableStream, uuid: UUID): stream.Writable
+  upload(stream: NodeJS.ReadableStream, fileName: string, userId: UserId): stream.Writable
+  insert(uuid: FileUUID, userId: UserId): IO<number>
 }

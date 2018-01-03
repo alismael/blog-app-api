@@ -30,7 +30,7 @@ class FileEntity extends Entity<File, IFileRecord, Primative> {
   }
   
   public tableName(): string {
-    return "user"
+    return "file"
   }
 
 }
