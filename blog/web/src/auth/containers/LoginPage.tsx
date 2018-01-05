@@ -5,6 +5,7 @@ import { Store } from '../../Service/models'
 import store from "../../store"
 import { login } from '../actions/authActions'
 import LoginForm from '../components/LoginForm'
+import { Row, Col } from "antd/lib/grid";
 
 export interface ILoginFormErrors {
 	username: string,
@@ -149,16 +150,18 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
 		const { user } = this.props;
 
 		return (
-			<div>
+			<Row>
 				<h1>Hi {user.username}</h1>
 
-				<LoginForm
-					onSubmit={this.login}
-					onChange={this.onChange}
-					form={this.state.loginForm}
-					errorSummary={this.props.error}
-				/>
-			</div>
+				<Col offset={10} span={4}>
+					<LoginForm
+						onSubmit={this.login}
+						onChange={this.onChange}
+						form={this.state.loginForm}
+						errorSummary={this.props.error}
+					/>
+				</Col>
+			</Row>
 		);
 	}
 
