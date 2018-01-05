@@ -1,22 +1,9 @@
 import * as React from 'react'
 import { BlogCard } from './BlogCard'
-import { GridList } from 'material-ui/GridList';
 import { Blog } from "../../Service/models"
-import { IDashboardProps } from '../containers/DashboardPage';
+import { IDashboardProps } from '../containers/DashboardPage'
 import Navbar from '../../app/components/navbar/Navbar'
-
-const styles: React.CSSProperties = {
-	root: {
-		display: 'flex',
-		flexWrap: 'wrap',
-		justifyContent: 'space-around',
-	},
-	gridList: {
-		width: 500,
-		height: 420,
-		overflowY: 'auto',
-	},
-};
+import { Row, Col } from 'antd/lib/grid';
 
 const Dashboard = (props: IDashboardProps) => {
 	let blogs = props.blogs
@@ -25,16 +12,15 @@ const Dashboard = (props: IDashboardProps) => {
 		<div>
 			<Navbar />
 
-			<GridList
-				cellHeight={200}
-				style={styles.gridList}
-			>
+			<Row gutter={16} style={{marginTop: 10, maxWidth: '100%'}}>
 				{
 					blogs.map((blog: Blog) => (
-						<BlogCard key={blog.guid} blog={blog} />
+						<Col span={6}>
+							<BlogCard key={blog.guid} blog={blog} />
+						</Col>
 					))
 				}
-			</GridList>
+			</Row>
 		</div>
 	)
 }

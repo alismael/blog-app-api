@@ -1,24 +1,27 @@
 import * as React from "react"
-import {GridTile} from 'material-ui/GridList'
-import IconButton from 'material-ui/IconButton'
-import StarBorder from 'material-ui/svg-icons/toggle/star-border'
 import { Blog } from "../../Service/models"
+import { Card, Icon, Avatar } from 'antd';
+const { Meta } = Card;
 
-export interface BlogCardProps { 
+export interface BlogCardProps {
   blog: Blog
 }
 
 export class BlogCard extends React.Component<BlogCardProps, {}> {
   render() {
     return (
-      <GridTile
-          key={this.props.blog.img}
+      <Card
+        key={this.props.blog.guid}
+        cover={<img alt={this.props.blog.data.title} src={this.props.blog.img} />}
+        actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}
+        style={{marginBottom: 10}}
+        >
+        <Meta
+          avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
           title={this.props.blog.data.title}
-          subtitle={<span>by <b>{this.props.blog.trace.createdBy}</b></span>}
-          actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
-      >
-        <img src={this.props.blog.img} />
-      </GridTile>
+          description={this.props.blog.data.description}
+        />
+      </Card>
     );
   }
 }
