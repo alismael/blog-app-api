@@ -43,20 +43,20 @@ docker exec -it mysql mysql -uroot -pblog
 
 API packages
  ```sh
-cd /vagrant/blog/api/src/
+cd /api/src/
 npm install
 ```
 
 Front-end packages
  ```sh
-cd /vagrant/blog/web/src/
+cd /web/src/
 npm install
 ```
 
 ## Migration
 
 ```sh
-cd /vagrant/blog/api/
+cd /api/
 npm run dev-migrate
  ```
 
@@ -64,11 +64,11 @@ npm run dev-migrate
 
 Gulp watch
  ```sh
-cd /vagrant/blog/api/src/
+cd /api/src/
 gulp watch
 ```
 Start node server 
  ```sh
-cd /vagrant/blog/api/src/
+cd /api/src/
 npm start
 ```
