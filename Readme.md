@@ -1,4 +1,4 @@
-## Blog
+## blog-app-api
 
 Blog-App using nodeJs, typescript and mysql
 
@@ -41,15 +41,8 @@ docker exec -it mysql mysql -uroot -pblog
 
 ## Install packages
 
-API packages
  ```sh
-cd /api/src/
-npm install
-```
-
-Front-end packages
- ```sh
-cd /web/src/
+cd /api/
 npm install
 ```
 
@@ -64,11 +57,11 @@ npm run dev-migrate
 
 Gulp watch
  ```sh
-cd /api/src/
-gulp watch
+cd /api/
+gulp
 ```
 Start node server 
  ```sh
-cd /api/src/
-npm start
+cd /api/
+npm run dev
 ```
