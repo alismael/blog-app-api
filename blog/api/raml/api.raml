@@ -69,3 +69,17 @@ uses:
           body: 
             application/json:
               example: ok
+/file:
+  /upload:
+    post:
+      description: upload file
+      body: 
+        multipart/form-data:
+          type: file
+      responses: 
+        200:
+          body: 
+            application/json: Types.UUID
+              
+              
+    

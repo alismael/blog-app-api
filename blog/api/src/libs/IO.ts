@@ -1,3 +1,4 @@
+import { logger } from './../logger';
 import { Connection, OkPacket, RowDataPacket } from "mysql2"
 import { NoSuchElement, InternalServerError, InvalidState } from "../modules/common/ErrorHandler"
 
@@ -39,11 +40,15 @@ export class DBIO extends IO<R[] | R[][] | Ok | Ok[]> {
   execute(connection: Connection): Promise<R[] | R[][] | Ok | Ok[]> {
     return new Promise<R[] | R[][] | Ok | Ok[]>((resolve, reject) => {
       if(this.query && this.params) {
+        logger.debug(this.query)
+        logger.debug(JSON.stringify(this.params))
         connection.query(this.query, this.params, (err, result) => {
           if (err) 
             reject(new InternalServerError(err))
-          else 
+          else {
+            logger.debug(JSON.stringify(result))
             resolve(result)
+          }
         })
       } else {
         reject(new InvalidState)

@@ -1,34 +1,39 @@
-// import { Entity } from './../../entity/models/Entity'
-// import { IFileRepository } from './../repositories/IFileRepository'
-// import { FileMysqlRepository } from './../repositories/FileMysqlRepository'
+import { Trace, Signture, CompositeTrace, UUID, ITraceRecord, IHasValue, uuidColumn } from "./../../common/models";
+import { Entity, Primative } from "../../entity/models/Entity";
+import { RowDataPacket } from "mysql2"
+import { UserId } from "../../user/models/User";
 
-// // File repository
-// let _fileRepository: IFileRepository = new FileMysqlRepository();
+export class FileUUID implements IHasValue<string> {
+  constructor(public value: string) { }
+}
 
-// export class File extends Entity {
+export class File {
+  constructor(
+    public uuid: FileUUID,
+    public trace: Trace) { }
+}
 
+export interface IFileRecord extends ITraceRecord, RowDataPacket  {
+  uuid: string
+}
 
-//   // Public attributes
-//   public id: number;
-//   public title: string;
-//   public object_id: number;
-//   public object_model: string;
-//   public guid: string;
-//   public created_by: number;
-//   public created_at: string;
-//   public updated_by: number;
-//   public updated_at: string;
+class FileEntity extends Entity<File, IFileRecord, Primative> {
 
-//   public tableName() {
-//     return "file";
-//   }
+  public uuid = uuidColumn<UUID, FileUUID>("uuid")
+  public trace = CompositeTrace
 
-//   public tableColumns() {
-//     return ['id', 'title', 'object_id', 'object_model', 'guid', 'created_by', 'created_at', 'updated_by', 'updated_at'];
-//   }
+  public map(object: IFileRecord): File {
+    const uuid = new FileUUID(object.uuid),
+      trace = new Trace(new Signture(new UserId(object.created_by), new Date(object.created_at)), new Signture(new UserId(object.updated_by), new Date(object.updated_at)))
 
-//   // Attach file with object
-//   public attach(objectId: number, objectModel: string, files: string[]) {
-//     return _fileRepository.attach(objectId, objectModel, files);
-//   }
-// }
+    return new File(uuid, trace);
+  }
+  
+  public tableName(): string {
+    return "file"
+  }
+
+}
+
+export const fileEntity = new FileEntity
+
