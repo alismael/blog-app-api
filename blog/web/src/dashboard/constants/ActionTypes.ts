@@ -1,6 +1,0 @@
-export const FETCH_BLOGS = 'FETCH_BLOGS';
-export const FETCH_BLOGS_REJECTED = 'FETCH_BLOGS_REJECTED';
-export const FETCH_BLOGS_FULFILLED = 'FETCH_BLOGS_FULFILLED';
-export const ADD_BLOG = 'ADD_BLOG';
-export const DELETE_BLOG = 'DELETE_BLOG';
-export const EDIT_BLOG = 'EDIT_BLOG';
