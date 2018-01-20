@@ -40,12 +40,6 @@ Vagrant.configure(2) do |config|
   # mysql
   config.vm.network "forwarded_port", guest: 3306, host: 3306
 
-  # api
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
-
-  # front-end
-  config.vm.network "forwarded_port", guest: 8001, host: 8001
-
   # haproxy
   config.vm.network "forwarded_port", guest: 9090, host: 8080
 
