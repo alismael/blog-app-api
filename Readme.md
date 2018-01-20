@@ -6,6 +6,8 @@ Blog-App using nodeJs, typescript and mysql
 ```sh
 vagrant plugin install vagrant-docker-compose
 vagrant box update
+
+cd /root-folder/
 vagrant up --provision
 ```
 
@@ -39,11 +41,24 @@ docker exec -it mysql mysql -uroot -pblog
  CREATE DATABASE blog_test character set utf8 collate utf8_bin;
  ```
 
-## Install packages
+# Starting development server
 
+Install packages
  ```sh
 cd /api/
 npm install
+```
+
+Gulp watch
+ ```sh
+cd /api/
+gulp
+```
+
+Start a development server
+ ```sh
+cd /api/
+npm run dev
 ```
 
 ## Migration
@@ -52,16 +67,3 @@ npm install
 cd /api/
 npm run dev-migrate
  ```
-
-## Start API
-
-Gulp watch
- ```sh
-cd /api/
-gulp
-```
-Start node server 
- ```sh
-cd /api/
-npm run dev
-```
